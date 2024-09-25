@@ -11,7 +11,9 @@
     "Viard Timothée"
   ],
   "scripts": {
-    "dev": "pnpm run -r --parallel dev"
+    "dev": "pnpm run -r --parallel dev",
+    "db:up": "docker-compose -f docker-compose.dev.yml up -d",
+    "db:down": "docker-compose -f docker-compose.dev.yml down"
   },
   "keywords": [],
   "license": "ISC"

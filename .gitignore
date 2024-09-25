@@ -1,5 +1,6 @@
 # Dependencies and build artifacts
 node_modules
+dist
 build
 tmp
 
@@ -15,7 +16,3 @@ tmp
 # Environment
 .env*
 !.env.example
-
-# Database
-/database
-docker-compose.dev.yml
