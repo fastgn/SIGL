@@ -1,7 +1,7 @@
-import env from './services/env-service.js';
+import env from './services/env-service';
 env.init();
 import express from 'express';
-import router from './routes/router.js';
+import router from './routes/router';
 import cors, { CorsOptions } from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
