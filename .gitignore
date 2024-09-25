@@ -1,0 +1,20 @@
+# Dependencies and build artifacts
+node_modules
+build
+tmp
+
+# Editors specific
+.fleet
+.idea
+.vscode
+*.code-workspace
+
+# Platform specific
+.DS_Store
+
+# Environment
+.env
+
+# Database
+/database
+docker-compose.dev.yml
