@@ -15,12 +15,15 @@
     "format": "pnpm run -r --parallel format",
     "lint": "pnpm run -r --parallel lint",
     "db:up": "docker-compose -f docker-compose.dev.yml up -d",
-    "db:down": "docker-compose -f docker-compose.dev.yml down"
+    "db:down": "docker-compose -f docker-compose.dev.yml down",
+    "prepare": "husky"
   },
   "devDependencies": {
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.2.5"
   },
   "keywords": [],
