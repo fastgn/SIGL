@@ -49,9 +49,7 @@ export default class EnvService {
     // Afficher les erreurs de validation
     if (!validation.success) {
       for (const error of validation.error.issues) {
-        console.error(
-          `Invalid environment variable "${error.path}": ${error.message}`
-        );
+        console.error(`Invalid environment variable "${error.path}": ${error.message}`);
       }
       process.exit(1);
     }

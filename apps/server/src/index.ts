@@ -1,10 +1,10 @@
-import env from './services/env-service';
+import env from "./services/env-service";
 env.init();
-import express from 'express';
-import router from './routes/router';
-import cors, { CorsOptions } from 'cors';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
+import express from "express";
+import router from "./routes/router";
+import cors, { CorsOptions } from "cors";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = env.get.PORT;
@@ -15,7 +15,11 @@ const corsOptions: CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(
+  bodyParser.json({
+    limit: "50mb",
+  }),
+);
 app.use(cookieParser());
 
 // Endpoints
