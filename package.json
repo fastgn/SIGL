@@ -15,6 +15,8 @@
   "scripts": {
     "dev": "set TURBO_TELEMETRY_DISABLED=1&& turbo dev",
     "build": "set TURBO_TELEMETRY_DISABLED=1&& turbo build",
+    "test": "pnpm run -r --parallel test",
+    "test:watch": "pnpm run -r --parallel test:watch",
     "format": "pnpm run -r --parallel format",
     "lint": "pnpm run -r --parallel lint",
     "db:up": "docker-compose -f docker-compose.dev.yml up -d",

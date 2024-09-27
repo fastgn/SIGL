@@ -1,21 +1,41 @@
 import dotenv from "dotenv";
 import z from "zod";
 
+/**
+ * Variables d'environnement requises obligatoirement
+ */
+export type RequiredAppEnv = {
+  CLIENT_URL: string;
+  DATABASE_URL: string;
+  TOKEN_SECRET: string;
+};
+
+/**
+ * Variables d'environnement optionnelles
+ */
+export type OptionalAppEnv = {
+  PORT: number;
+  NODE_ENV: EnvironmentName;
+};
+
+/**
+ * Variables d'environnement de l'application
+ */
+export type AppEnv = RequiredAppEnv & OptionalAppEnv;
+
+/**
+ * Enumération des types d'environnement
+ */
 enum EnvironmentName {
   DEVELOPMENT = "development",
   PRODUCTION = "production",
   TEST = "test",
 }
 
-type RequiredAppEnv = {
-  PORT: number;
-  CLIENT_URL: string;
-  DATABASE_URL: string;
-  TOKEN_SECRET: string;
-  NODE_ENV: EnvironmentName;
-};
-
-const DEFAULT_ENV: Partial<RequiredAppEnv> = {
+/**
+ * Variables d'environnement par défaut
+ */
+const DEFAULT_ENV: OptionalAppEnv = {
   PORT: 3000,
   NODE_ENV: EnvironmentName.DEVELOPMENT,
 };
@@ -24,7 +44,7 @@ const DEFAULT_ENV: Partial<RequiredAppEnv> = {
  * Service pour gérer les variables d'environnement
  */
 export default class EnvService {
-  private static variables: RequiredAppEnv & { [key: string]: string | number };
+  private static variables: AppEnv & { [key: string]: string | number };
 
   private static validationSchema = z.object({
     PORT: z
@@ -40,16 +60,24 @@ export default class EnvService {
    * Charger les variables d'environnement
    * @param options Options de chargement
    * @param options.skipEnvFile Ne pas charger les variables d'environnement à partir du fichier .env
+   * @param options.skipProcessEnv Ne pas charger les variables d'environnement du process
+   * @param options.env Variables d'environnement à ajouter ou remplacer
    * @throws Error si une variable d'environnement est manquante ou invalide
    */
-  public static init(options?: { skipEnvFile?: boolean }): void {
+  public static init(options?: {
+    skipEnvFile?: boolean;
+    skipProcessEnv?: boolean;
+    env?: { [key: string]: string | number | boolean };
+  }): void {
     console.log("Chargement des variables d'environnement...");
     if (!options?.skipEnvFile) dotenv.config();
+    const processEnv = options?.skipProcessEnv ? {} : process.env;
 
     // Valider les variables d'environnement
     const validation = this.validationSchema.safeParse({
       ...DEFAULT_ENV,
-      ...process.env,
+      ...processEnv,
+      ...options?.env,
     });
 
     // Afficher les erreurs de validation
@@ -61,10 +89,10 @@ export default class EnvService {
       throw new Error(message);
     }
 
-    this.variables = validation.data as RequiredAppEnv;
+    this.variables = validation.data as AppEnv;
   }
 
-  public static get get() {
+  public static get get(): AppEnv {
     return this.variables;
   }
 }

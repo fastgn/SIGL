@@ -78,6 +78,9 @@ importers:
       vite:
         specifier: ^5.4.1
         version: 5.4.8(@types/node@20.16.7)
+      vitest:
+        specifier: ^2.1.1
+        version: 2.1.1(@types/node@20.16.7)
 
   apps/server:
     dependencies:

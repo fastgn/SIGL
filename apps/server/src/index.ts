@@ -1,4 +1,4 @@
-import env from "./services/env-service";
+import env from "./services/env.service";
 try {
   env.init();
 } catch (error) {
