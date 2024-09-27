@@ -6,7 +6,8 @@
     "start": "node dist/index.js",
     "dev": "tsx --watch src/index.ts",
     "build": "tsc",
-    "format": "prettier --write ./src",
+    "test": "vitest",
+    "format": "prettier --write ./src ./test",
     "lint": "eslint ./src",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -36,6 +37,7 @@
     "@types/node": "^20.12.7",
     "prisma": "^5.12.1",
     "tsx": "^4.7.2",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.4",
+    "vitest": "^2.1.1"
   }
 }

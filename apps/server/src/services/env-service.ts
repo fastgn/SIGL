@@ -4,9 +4,10 @@ import z from "zod";
 enum EnvironmentName {
   DEVELOPMENT = "development",
   PRODUCTION = "production",
+  TEST = "test",
 }
 
-type RequiredEnv = {
+type RequiredAppEnv = {
   PORT: number;
   CLIENT_URL: string;
   DATABASE_URL: string;
@@ -14,7 +15,7 @@ type RequiredEnv = {
   NODE_ENV: EnvironmentName;
 };
 
-const DEFAULT_ENV: Partial<RequiredEnv> = {
+const DEFAULT_ENV: Partial<RequiredAppEnv> = {
   PORT: 3000,
   NODE_ENV: EnvironmentName.DEVELOPMENT,
 };
@@ -23,22 +24,27 @@ const DEFAULT_ENV: Partial<RequiredEnv> = {
  * Service pour gérer les variables d'environnement
  */
 export default class EnvService {
-  private static variables: RequiredEnv & NodeJS.ProcessEnv;
+  private static variables: RequiredAppEnv & { [key: string]: string | number };
 
   private static validationSchema = z.object({
     PORT: z
-      .string()
-      .transform((val) => parseInt(val, 10))
-      .default(String(DEFAULT_ENV.PORT)),
+      .union([z.string(), z.number()])
+      .transform((val) => (typeof val === "string" ? parseInt(val, 10) : val)),
     CLIENT_URL: z.string(),
     DATABASE_URL: z.string(),
     TOKEN_SECRET: z.string(),
     NODE_ENV: z.nativeEnum(EnvironmentName),
   });
 
-  public static async init(): Promise<void> {
+  /**
+   * Charger les variables d'environnement
+   * @param options Options de chargement
+   * @param options.skipEnvFile Ne pas charger les variables d'environnement à partir du fichier .env
+   * @throws Error si une variable d'environnement est manquante ou invalide
+   */
+  public static init(options?: { skipEnvFile?: boolean }): void {
     console.log("Chargement des variables d'environnement...");
-    dotenv.config();
+    if (!options?.skipEnvFile) dotenv.config();
 
     // Valider les variables d'environnement
     const validation = this.validationSchema.safeParse({
@@ -48,16 +54,17 @@ export default class EnvService {
 
     // Afficher les erreurs de validation
     if (!validation.success) {
+      let message = "Invalid environment variables:";
       for (const error of validation.error.issues) {
-        console.error(`Invalid environment variable "${error.path}": ${error.message}`);
+        message += `\n- "${error.path}": ${error.message}`;
       }
-      process.exit(1);
+      throw new Error(message);
     }
 
-    this.variables = validation.data as RequiredEnv & NodeJS.ProcessEnv;
+    this.variables = validation.data as RequiredAppEnv;
   }
 
-  public static get get(): RequiredEnv & NodeJS.ProcessEnv {
+  public static get get() {
     return this.variables;
   }
 }

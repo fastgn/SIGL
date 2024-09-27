@@ -1,5 +1,11 @@
 import env from "./services/env-service";
-env.init();
+try {
+  env.init();
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+}
+
 import express from "express";
 import router from "./routes/router";
 import cors, { CorsOptions } from "cors";
