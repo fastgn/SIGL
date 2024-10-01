@@ -6,7 +6,6 @@ import z from "zod";
  */
 export type RequiredAppEnv = {
   CLIENT_URL: string;
-  DATABASE_URL: string;
   TOKEN_SECRET: string;
 };
 
@@ -51,7 +50,6 @@ export default class EnvService {
       .union([z.string(), z.number()])
       .transform((val) => (typeof val === "string" ? parseInt(val, 10) : val)),
     CLIENT_URL: z.string(),
-    DATABASE_URL: z.string(),
     TOKEN_SECRET: z.string(),
     NODE_ENV: z.nativeEnum(EnvironmentName),
   });

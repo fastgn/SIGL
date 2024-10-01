@@ -23,5 +23,7 @@
 1. Lancer la base de données PostgreSQL
    - Via Docker: `pnpm run db:up`
    - Via pgAdmin: Débrouille toi
-2. Copier le fichier `apps/server/.env.example` et le renommer en `apps/server/.env` et adapter les variables d'environnement à votre machine
-3. Lancer le projet: `pnpm run dev`
+   - Rends toi dans `/packages/database` et exécute `pnpm run db:migrate` pour mettre à jour la base
+1. Copier le fichier `apps/server/.env.example` et le renommer en `apps/server/.env` et adapter les variables d'environnement à votre machine
+1. Copier le fichier `apps/client/.env.example` et le renommer en `apps/client/.env` et adapter les variables d'environnement à votre machine
+1. Lancer le projet: `pnpm run dev`
