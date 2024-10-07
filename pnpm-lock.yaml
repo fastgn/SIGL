@@ -225,8 +225,6 @@ importers:
         specifier: ^4.4.4
         version: 4.9.5
 
-  packages/database/prisma: {}
-
 packages:
 
   '@alloc/quick-lru@5.2.0':
