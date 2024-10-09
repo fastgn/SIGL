@@ -1,6 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
   output = "./prisma"
@@ -14,11 +17,150 @@ datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
 }
+// schema.prisma
 
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique
-  email        String   @unique
-  password     String
-  registerDate DateTime @default(now())
+  id              Int         @id @default(autoincrement())
+  name             String
+  first_name          String
+  birth_date  DateTime
+  gender           String
+  mail            String      @unique
+  password        String
+  phone       String
+  active           Boolean
+  creationDate DateTime @default(now())
+  update_date DateTime @default(now())
+
+  // Relations
+  EducationalTutor EducationalTutor?
+  Apprentice        Apprentice?
+  ApprenticeMentor  ApprenticeMentor?
+  Teacher           Teacher?
+  CurriculumManager CurriculumManager?
+  ApprenticeCoordinator ApprenticeCoordinator?
+  Admin              Admin?
 }
+model FormationCenter {
+  id                  Int     @id @default(autoincrement())
+  name                String
+  adress              String
+  city                String
+  country             String
+  student_number      Int?
+  description         String?
+  field               String?
+
+  ApprenticeCoordinator ApprenticeCoordinator[]
+  CurriculumManager CurriculumManager[]
+}
+
+model EducationalTutor {
+  id        Int     @id @default(autoincrement())
+  user_id   Int     @unique
+  user      User    @relation(fields: [user_id], references: [id])
+
+  Apprentice Apprentice[]
+}
+
+model Apprentice {
+  id   Int      @id @default(autoincrement())
+  user_id       Int     @unique
+  user          User    @relation(fields: [user_id], references: [id])
+  company_id    Int?
+  company       Compagny? @relation(fields: [company_id], references: [id])
+  promotion     String
+  poste         String?
+  EducationalTutor_id Int
+  EducationalTutor EducationalTutor @relation(fields: [EducationalTutor_id], references: [id])
+  ApprenticeMentor_id Int
+  ApprenticeMentor ApprenticeMentor @relation(fields: [ApprenticeMentor_id], references: [id])
+  trainingDiary_id Int @unique
+  trainingDiary TrainingDiary @relation(fields: [trainingDiary_id], references: [id])
+}
+
+model ApprenticeMentor {
+  id            Int     @id @default(autoincrement())
+  user_id       Int     @unique
+  user          User    @relation(fields: [user_id], references: [id])
+  company_id    Int
+  company       Compagny @relation(fields: [company_id], references: [id])
+  poste         String?
+
+  Apprentice Apprentice[]
+}
+
+model Teacher {
+  id                   Int     @id @default(autoincrement())
+  user_id              Int     @unique
+  user                 User    @relation(fields: [user_id], references: [id])
+  start_date           DateTime
+  end_date             DateTime?
+  formation_center_id  Int
+
+  Specialite Specialite[]
+}
+
+model CurriculumManager {
+  id                   Int     @id @default(autoincrement())
+  user_id              Int     @unique
+  user                 User    @relation(fields: [user_id], references: [id])
+  FormationCenter_id  Int?
+  FormationCenter     FormationCenter? @relation(fields: [FormationCenter_id], references: [id])
+  date_debut           DateTime
+  date_fin             DateTime?
+}
+
+
+
+model ApprenticeCoordinator {
+  id                   Int     @id @default(autoincrement())
+  user_id              Int     @unique
+  user                 User    @relation(fields: [user_id], references: [id])
+  FormationCenter_id  Int
+  FormationCenter     FormationCenter @relation(fields: [FormationCenter_id], references: [id])
+  date_debut           DateTime
+  date_fin             DateTime?
+}
+
+model Admin {
+  id_admin    Int     @id @default(autoincrement())
+  user_id     Int     @unique
+  user        User    @relation(fields: [user_id], references: [id])
+}
+
+
+
+model Compagny {
+  id                    Int     @id @default(autoincrement())
+  name                   String
+  address               String
+  city                 String
+  country                  String
+  description           String?
+  apprentice_number       Int?
+  OPCO                  String?
+
+  Apprentice Apprentice[]
+  ApprenticeMentor ApprenticeMentor[]
+  Specialite Specialite[]
+}
+
+model Specialite {
+  id          Int     @id @default(autoincrement())
+  name        String
+  
+  Teacher Teacher[]
+  Compagny Compagny[]
+}
+
+model TrainingDiary {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  event       String[]
+  delivrable  String[]
+
+  Apprentice Apprentice?
+}
+
