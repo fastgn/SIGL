@@ -11,7 +11,6 @@ import router from "./routes/router";
 import cors, { CorsOptions } from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import { initDB } from "./providers/db";
 
 const app = express();
 const port = env.get.PORT;
@@ -39,16 +38,13 @@ app.use(router);
 
 app.listen(port, async () => {
   console.log(`[*] Server is running at http://localhost:${port}`);
-  initDB().then(async (db) => {
-    try {
-      await db.$connect();
-      console.log("[*] Connected to database");
-      await db.user.findMany().then((users) => {
-        console.log("[*] Users in database:", users);
-      });
-    } catch (error) {
-      console.error("[!] Error connecting to database:", error);
-      process.exit(1);
-    }
-  });
+  // initDB().then(async (db) => {
+  //   try {
+  //     await db.$connect();
+  //     console.log("[*] Connected to database");
+  //   } catch (error) {
+  //     console.error("[!] Error connecting to database:", error);
+  //     process.exit(1);
+  //   }
+  // });
 });
