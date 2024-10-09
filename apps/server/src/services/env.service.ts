@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import z from "zod";
+import logger from "../utils/logger";
 
 /**
  * Variables d'environnement requises obligatoirement
@@ -42,10 +43,10 @@ const DEFAULT_ENV: OptionalAppEnv = {
 /**
  * Service pour gérer les variables d'environnement
  */
-export default class EnvService {
-  private static variables: AppEnv & { [key: string]: string | number };
+class EnvService {
+  private variables: (AppEnv & { [key: string]: string | number }) | undefined;
 
-  private static validationSchema = z.object({
+  private validationSchema = z.object({
     PORT: z
       .union([z.string(), z.number()])
       .transform((val) => (typeof val === "string" ? parseInt(val, 10) : val)),
@@ -62,12 +63,11 @@ export default class EnvService {
    * @param options.env Variables d'environnement à ajouter ou remplacer
    * @throws Error si une variable d'environnement est manquante ou invalide
    */
-  public static init(options?: {
+  public init(options?: {
     skipEnvFile?: boolean;
     skipProcessEnv?: boolean;
     env?: { [key: string]: string | number | boolean };
   }): void {
-    console.log("Chargement des variables d'environnement...");
     if (!options?.skipEnvFile) dotenv.config();
     const processEnv = options?.skipProcessEnv ? {} : process.env;
 
@@ -90,7 +90,21 @@ export default class EnvService {
     this.variables = validation.data as AppEnv;
   }
 
-  public static get get(): AppEnv {
+  public get get(): AppEnv {
+    if (!this.variables) {
+      throw new Error("Environment variables have not been initialized.");
+    }
     return this.variables;
   }
 }
+
+const env = new EnvService();
+try {
+  env.init();
+} catch (error) {
+  logger.error("Error loading environment variables, env file may be missing or invalid");
+  console.error(error);
+  process.exit(1);
+}
+
+export default env;

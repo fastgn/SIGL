@@ -1,0 +1,59 @@
+{
+  "/auth/login": {
+    "post": {
+      "summary": "Route de connexion",
+      "tags": ["Auth"],
+      "description": "Permet à un utilisateur de se connecter à l'application en fournissant son email et son mot de passe",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "L'email de l'utilisateur"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Le mot de passe de l'utilisateur"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Connexion réussie",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Le token JWT de l'utilisateur"
+                  },
+                  "user": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Requête invalide"
+        },
+        "401": {
+          "description": "Identifiants invalides"
+        },
+        "500": {
+          "description": "Erreur serveur"
+        }
+      }
+    }
+  }
+}
