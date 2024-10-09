@@ -74,8 +74,8 @@ model Apprentice {
   EducationalTutor EducationalTutor @relation(fields: [EducationalTutor_id], references: [id])
   ApprenticeMentor_id Int
   ApprenticeMentor ApprenticeMentor @relation(fields: [ApprenticeMentor_id], references: [id])
-  trainingDiary_id Int @unique
-  trainingDiary TrainingDiary @relation(fields: [trainingDiary_id], references: [id])
+
+  TrainingDiary TrainingDiary?
 }
 
 model ApprenticeMentor {
@@ -159,7 +159,7 @@ model TrainingDiary {
   description String?
   event       String[]
   delivrable  String[]
-
-  Apprentice Apprentice?
+  apprentice_id Int    @unique
+  apprentice Apprentice @relation(fields: [apprentice_id], references: [id])
 }
 
