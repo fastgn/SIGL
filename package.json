@@ -21,7 +21,8 @@
     "lint": "pnpm run -r --parallel lint",
     "db:up": "docker-compose -f docker-compose.dev.yml up -d",
     "db:down": "docker-compose -f docker-compose.dev.yml down",
-    "prepare": "husky"
+    "prepare": "husky",
+    "image:build:server": "docker build . --target server --tag harryonbreadboard/sigl-server:latest"
   },
   "devDependencies": {
     "eslint-config-prettier": "^9.1.0",

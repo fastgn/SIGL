@@ -9,13 +9,20 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write ./src ./test",
-    "lint": "eslint ./src ./test"
+    "lint": "eslint ./src ./test",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:init": "npx prisma migrate dev --name init",
+    "db:seed": "tsx ./prisma/seeds/seed.ts",
+    "db:seed-f": "pnpm run db:reset &&tsx ./prisma/seeds/seed.ts",
+    "db:reset": "npx prisma db push --force-reset"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fastgn/database": "workspace:^0.0.1",
+    "@prisma/client": "^5.20.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
