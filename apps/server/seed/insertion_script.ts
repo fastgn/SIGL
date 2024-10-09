@@ -1,9 +1,8 @@
 // Importez le client Prisma
-// import { PrismaClient } from '@prisma/client';
-import { initDB } from "../src/providers/db";
+import { PrismaClient } from "@prisma/client";
+const db = new PrismaClient();
 
 async function main() {
-  const db = await initDB();
   // Vider la base de données
   console.log("Suppression des données existantes...");
   await db.apprentice.deleteMany({});
