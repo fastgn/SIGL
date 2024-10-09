@@ -18,5 +18,4 @@ const initDB = async () => {
   return dbClient;
 };
 
-export default getClient;
-export { initDB };
+export { initDB, getClient };

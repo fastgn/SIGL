@@ -43,6 +43,9 @@ app.listen(port, async () => {
     try {
       await db.$connect();
       console.log("[*] Connected to database");
+      await db.user.findMany().then((users) => {
+        console.log("[*] Users in database:", users);
+      });
     } catch (error) {
       console.error("[!] Error connecting to database:", error);
       process.exit(1);

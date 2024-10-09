@@ -6,6 +6,11 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "./prisma"
+  
+  // make sure to pick the right one(s) for your usecase
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#binarytargets-options
+  binaryTargets = ["windows"]
 }
 
 datasource db {
@@ -54,6 +59,8 @@ model EducationalTutor {
   id        Int     @id @default(autoincrement())
   user_id   Int     @unique
   user      User    @relation(fields: [user_id], references: [id])
+
+  Apprentice Apprentice[]
 }
 
 model Apprentice {
@@ -62,8 +69,14 @@ model Apprentice {
   user          User    @relation(fields: [user_id], references: [id])
   company_id    Int?
   company       Compagny? @relation(fields: [company_id], references: [id])
-  Promotion     String
+  promotion     String
   poste         String?
+  EducationalTutor_id Int
+  EducationalTutor EducationalTutor @relation(fields: [EducationalTutor_id], references: [id])
+  ApprenticeMentor_id Int
+  ApprenticeMentor ApprenticeMentor @relation(fields: [ApprenticeMentor_id], references: [id])
+  trainingDiary_id Int @unique
+  trainingDiary TrainingDiary @relation(fields: [trainingDiary_id], references: [id])
 }
 
 model ApprenticeMentor {
@@ -73,6 +86,8 @@ model ApprenticeMentor {
   company_id    Int
   company       Compagny @relation(fields: [company_id], references: [id])
   poste         String?
+
+  Apprentice Apprentice[]
 }
 
 model Teacher {
@@ -139,5 +154,13 @@ model Specialite {
   Compagny Compagny[]
 }
 
+model TrainingDiary {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  event       String[]
+  delivrable  String[]
 
+  Apprentice Apprentice?
+}
 
