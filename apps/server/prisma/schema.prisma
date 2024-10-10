@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  
+
   // make sure to pick the right one(s) for your usecase
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#binarytargets-options
   binaryTargets = ["windows", "debian-openssl-1.1.x", "native"]
@@ -16,150 +16,145 @@ datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
 }
-// schema.prisma
 
 model User {
-  id              Int         @id @default(autoincrement())
-  name             String
-  first_name          String
-  birth_date  DateTime
-  gender           String
-  mail            String      @unique
-  password        String
-  phone       String
-  active           Boolean
+  id           Int      @id @default(autoincrement())
+  name         String
+  first_name   String
+  birthDate    DateTime
+  gender       String
+  mail         String   @unique
+  password     String
+  phone        String
+  active       Boolean
   creationDate DateTime @default(now())
-  update_date DateTime @default(now())
+  updateDate   DateTime @default(now())
 
   // Relations
-  EducationalTutor EducationalTutor?
-  Apprentice        Apprentice?
-  ApprenticeMentor  ApprenticeMentor?
-  Teacher           Teacher?
-  CurriculumManager CurriculumManager?
-  ApprenticeCoordinator ApprenticeCoordinator?
-  Admin              Admin?
+  educationalTutor      EducationalTutor?
+  apprentice            Apprentice?
+  apprenticeMentor      ApprenticeMentor?
+  teacher               Teacher?
+  curriculumManager     CurriculumManager?
+  apprenticeCoordinator ApprenticeCoordinator?
+  admin                 Admin?
 }
-model FormationCenter {
-  id                  Int     @id @default(autoincrement())
-  name                String
-  adress              String
-  city                String
-  country             String
-  student_number      Int?
-  description         String?
-  field               String?
 
-  ApprenticeCoordinator ApprenticeCoordinator[]
-  CurriculumManager CurriculumManager[]
+model FormationCenter {
+  id             Int     @id @default(autoincrement())
+  name           String
+  adress         String
+  city           String
+  country        String
+  student_number Int?
+  description    String?
+  field          String?
+
+  apprenticeCoordinator ApprenticeCoordinator[]
+  curriculumManager     CurriculumManager[]
 }
 
 model EducationalTutor {
-  id        Int     @id @default(autoincrement())
-  user_id   Int     @unique
-  user      User    @relation(fields: [user_id], references: [id])
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
 
-  Apprentice Apprentice[]
+  apprentice Apprentice[]
 }
 
 model Apprentice {
-  id   Int      @id @default(autoincrement())
-  user_id       Int     @unique
-  user          User    @relation(fields: [user_id], references: [id])
-  company_id    Int?
-  company       Compagny? @relation(fields: [company_id], references: [id])
-  promotion     String
-  poste         String?
-  EducationalTutor_id Int
-  EducationalTutor EducationalTutor @relation(fields: [EducationalTutor_id], references: [id])
-  ApprenticeMentor_id Int
-  ApprenticeMentor ApprenticeMentor @relation(fields: [ApprenticeMentor_id], references: [id])
+  id                 Int              @id @default(autoincrement())
+  userId             Int              @unique
+  user               User             @relation(fields: [userId], references: [id])
+  companyId          Int?
+  company            Compagny?        @relation(fields: [companyId], references: [id])
+  promotion          String
+  poste              String?
+  educationalTutorId Int
+  educationalTutor   EducationalTutor @relation(fields: [educationalTutorId], references: [id])
+  apprenticeMentorId Int
+  apprenticeMentor   ApprenticeMentor @relation(fields: [apprenticeMentorId], references: [id])
 
-  TrainingDiary TrainingDiary?
+  trainingDiary TrainingDiary?
 }
 
 model ApprenticeMentor {
-  id            Int     @id @default(autoincrement())
-  user_id       Int     @unique
-  user          User    @relation(fields: [user_id], references: [id])
-  company_id    Int
-  company       Compagny @relation(fields: [company_id], references: [id])
-  poste         String?
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  companyId Int
+  company   Compagny @relation(fields: [companyId], references: [id])
+  poste     String?
 
-  Apprentice Apprentice[]
+  apprentice Apprentice[]
 }
 
 model Teacher {
-  id                   Int     @id @default(autoincrement())
-  user_id              Int     @unique
-  user                 User    @relation(fields: [user_id], references: [id])
-  start_date           DateTime
-  end_date             DateTime?
-  formation_center_id  Int
+  id                Int       @id @default(autoincrement())
+  userId            Int       @unique
+  user              User      @relation(fields: [userId], references: [id])
+  startDate         DateTime
+  endDate           DateTime?
+  formationCenterId Int
 
-  Specialite Specialite[]
+  speciality Speciality[]
 }
 
 model CurriculumManager {
-  id                   Int     @id @default(autoincrement())
-  user_id              Int     @unique
-  user                 User    @relation(fields: [user_id], references: [id])
-  FormationCenter_id  Int?
-  FormationCenter     FormationCenter? @relation(fields: [FormationCenter_id], references: [id])
-  date_debut           DateTime
-  date_fin             DateTime?
+  id                Int              @id @default(autoincrement())
+  userId            Int              @unique
+  user              User             @relation(fields: [userId], references: [id])
+  formationCenterId Int?
+  formationCenter   FormationCenter? @relation(fields: [formationCenterId], references: [id])
+  dateDebut         DateTime
+  dateFin           DateTime?
 }
 
-
-
 model ApprenticeCoordinator {
-  id                   Int     @id @default(autoincrement())
-  user_id              Int     @unique
-  user                 User    @relation(fields: [user_id], references: [id])
-  FormationCenter_id  Int
-  FormationCenter     FormationCenter @relation(fields: [FormationCenter_id], references: [id])
-  date_debut           DateTime
-  date_fin             DateTime?
+  id                Int             @id @default(autoincrement())
+  userId            Int             @unique
+  user              User            @relation(fields: [userId], references: [id])
+  formationCenterId Int
+  formationCenter   FormationCenter @relation(fields: [formationCenterId], references: [id])
+  dateDebut         DateTime
+  dateFin           DateTime?
 }
 
 model Admin {
-  id_admin    Int     @id @default(autoincrement())
-  user_id     Int     @unique
-  user        User    @relation(fields: [user_id], references: [id])
+  idAdmin Int  @id @default(autoincrement())
+  userId  Int  @unique
+  user    User @relation(fields: [userId], references: [id])
 }
-
-
 
 model Compagny {
-  id                    Int     @id @default(autoincrement())
-  name                   String
-  address               String
-  city                 String
-  country                  String
-  description           String?
-  apprentice_number       Int?
-  OPCO                  String?
+  id               Int     @id @default(autoincrement())
+  name             String
+  address          String
+  city             String
+  country          String
+  description      String?
+  apprenticeNumber Int?
+  opco             String?
 
-  Apprentice Apprentice[]
-  ApprenticeMentor ApprenticeMentor[]
-  Specialite Specialite[]
+  apprentice       Apprentice[]
+  apprenticeMentor ApprenticeMentor[]
+  speciality       Speciality[]
 }
 
-model Specialite {
-  id          Int     @id @default(autoincrement())
-  name        String
-  
-  Teacher Teacher[]
-  Compagny Compagny[]
+model Speciality {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  teacher  Teacher[]
+  compagny Compagny[]
 }
 
 model TrainingDiary {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  event       String[]
-  delivrable  String[]
-  apprentice_id Int    @unique
-  apprentice Apprentice @relation(fields: [apprentice_id], references: [id])
+  id           Int        @id @default(autoincrement())
+  name         String
+  description  String?
+  event        String[]
+  delivrable   String[]
+  apprenticeId Int        @unique
+  apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
 }
-
