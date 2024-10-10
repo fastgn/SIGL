@@ -12,6 +12,7 @@
     "lint": "eslint ./src ./test",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:reset": "prisma migrate reset",
     "db:deploy": "prisma migrate deploy",
     "db:init": "npx prisma migrate dev --name init",
     "db:seed": "tsx ./prisma/seeds/seed.ts",
@@ -23,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.20.0",
+    "@sigl/types": "workspace:*",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",

@@ -1,11 +1,11 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "first_name" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
     "birthDate" TIMESTAMP(3) NOT NULL,
     "gender" TEXT NOT NULL,
-    "mail" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "active" BOOLEAN NOT NULL,
@@ -19,10 +19,10 @@ CREATE TABLE "User" (
 CREATE TABLE "FormationCenter" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "adress" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "country" TEXT NOT NULL,
-    "student_number" INTEGER,
+    "studentNumber" INTEGER,
     "description" TEXT,
     "field" TEXT,
 
@@ -129,7 +129,7 @@ CREATE TABLE "TrainingDiary" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "event" TEXT[],
-    "delivrable" TEXT[],
+    "deliverable" TEXT[],
     "apprenticeId" INTEGER NOT NULL,
 
     CONSTRAINT "TrainingDiary_pkey" PRIMARY KEY ("id")
@@ -148,7 +148,7 @@ CREATE TABLE "_SpecialityToTeacher" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_mail_key" ON "User"("mail");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "EducationalTutor_userId_key" ON "EducationalTutor"("userId");
