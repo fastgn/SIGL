@@ -50,12 +50,12 @@ app.get("/", (_req: Request, res: Response) => {
   res.send("Bienvenue sur l'API FASTGN !");
 });
 
-app.use((_req: Request, res: Response, _next: NextFunction) => {
+app.use((_req: Request, res: Response) => {
   logger.warn("404 - Route non trouvée");
   res.status(404).send("Désolé, cette route n'existe pas !");
 });
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response) => {
   logger.error(`Erreur serveur : ${err.message}`);
   res.status(500).send("Erreur interne du serveur");
 });

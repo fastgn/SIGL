@@ -4,8 +4,7 @@ import api from "./services/api.service";
 import DemoForm from "./components/demo/demo-form";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [message, setMessage] = useState("");
+  const [, setMessage] = useState("");
 
   useEffect(() => {
     api.get("/").then((response) => {
