@@ -1,16 +1,18 @@
 import axios, { AxiosInstance } from "axios";
-import env from "./env.service";
 
 /**
  * Service d'intéraction avec l'API
  */
 class ApiService {
-  private api: AxiosInstance = axios.create({
-    baseURL: env.get.API_URL,
-    withCredentials: true,
-  });
+  private api: AxiosInstance = axios.create();
 
-  constructor() {
+  constructor() {}
+
+  public init(url: string): void {
+    this.api = axios.create({
+      baseURL: url,
+      withCredentials: true,
+    });
     // Ajout d'un intercepteur pour chaque réponse
     this.api.interceptors.response.use(
       (response) => {

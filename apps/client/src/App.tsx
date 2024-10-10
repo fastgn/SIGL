@@ -9,6 +9,7 @@ function App() {
   useEffect(() => {
     api.get("/").then((response) => {
       setMessage(response.data);
+      console.log(response.data);
     });
   }, []);
 

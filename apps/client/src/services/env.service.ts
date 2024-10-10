@@ -45,9 +45,7 @@ class EnvService {
     API_URL: z.string(),
   });
 
-  constructor() {
-    this.init();
-  }
+  constructor() {}
 
   /**
    * Charger les variables d'environnement
