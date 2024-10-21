@@ -39,5 +39,35 @@
         "type": "string"
       }
     }
+  },
+
+  "trainingDiary": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "event": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "delibrable": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "apprentice_id": {
+        "type": "int"
+      }
+    }
   }
 }

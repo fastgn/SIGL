@@ -37,8 +37,13 @@ app.use((req, _res, next) => {
 });
 
 // Routes
+import authenticateToken from "./middleware/authMiddleware";
+
 import authRoutes from "./routes/authRoutes";
+import diaryRoutes from "./routes/diaryRoutes";
+
 app.use("/auth", authRoutes);
+app.use("/diary", authenticateToken, diaryRoutes);
 
 import userRoutes from "./routes/userRoutes";
 app.use("/user", userRoutes);
