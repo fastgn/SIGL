@@ -37,6 +37,7 @@ const swaggerSpec = swaggerJsDoc({
   apis: [],
 });
 
+// @ts-expect-error: TypeScript does not recognize the paths property
 swaggerSpec.paths = { ...swaggerSpec.paths, ...paths };
 
 router.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

@@ -1,39 +1,27 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 
 import logger from "../utils/logger";
-
-interface User {
-  id: string;
-  profile_image: string;
-  firstName: string;
-  name: string;
-  email: string;
-  phone: string;
-  password?: string;
-  birth_date: string;
-  gender: string;
-  active: boolean;
-  updated_date: string;
-  created_date: string;
-}
 
 const userModel = () => ({
   findByKey: async (
     key: keyof User,
-    value: string,
+    value: unknown,
     withPassword: boolean = false,
   ): Promise<User | null> => {
     const db = new PrismaClient();
+
     try {
-      const user: User = await db.user.findUnique({
+      const user: User | null = await db.user.findUnique({
         where: {
           [key]: value,
         },
-      });
-
-      if (user && !withPassword) {
-        delete user.password;
-      }
+        omit: withPassword
+          ? undefined
+          : {
+              password: true,
+            },
+        // eslint-disable-next-line
+      } as any);
 
       return user;
     } catch (error) {
@@ -43,7 +31,6 @@ const userModel = () => ({
   },
 
   findById: async (id: string, withPassword: boolean = false) => {
-    // Changez le type en string
     return await userModel().findByKey("id", id, withPassword);
   },
 
