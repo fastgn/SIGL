@@ -10,8 +10,8 @@ const trainingDiaryModel = () => ({
         data: {
           description: "Journal de formation",
           event: [],
-          delivrable: [],
-          apprentice_id: user_id,
+          deliverable: [],
+          apprenticeId: user_id,
         },
       });
       return trainingDiary;

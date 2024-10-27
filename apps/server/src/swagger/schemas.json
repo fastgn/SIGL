@@ -59,13 +59,13 @@
           "type": "string"
         }
       },
-      "delibrable": {
+      "deliverable": {
         "type": "array",
         "items": {
           "type": "string"
         }
       },
-      "apprentice_id": {
+      "apprenticeId": {
         "type": "int"
       }
     }
