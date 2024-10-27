@@ -12,7 +12,7 @@ async function main() {
   await db.curriculumManager.deleteMany({});
   await db.educationalTutor.deleteMany({});
   await db.formationCenter.deleteMany({});
-  await db.specialite.deleteMany({});
+  await db.speciality.deleteMany({});
   await db.teacher.deleteMany({});
   await db.compagny.deleteMany({});
   await db.user.deleteMany({});

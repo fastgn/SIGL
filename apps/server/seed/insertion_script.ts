@@ -20,9 +20,9 @@ async function main() {
   // Insertion d'utilisateurs
   const user1 = await db.user.create({
     data: {
-      name: "Doe",
-      first_name: "John",
-      birth_date: new Date("1990-01-01"),
+      lastName: "Doe",
+      firstName: "John",
+      birthDate: new Date("1990-01-01"),
       gender: "Male",
       mail: "john.doe@example.com",
       password: "securepassword",
@@ -33,9 +33,9 @@ async function main() {
 
   const user2 = await db.user.create({
     data: {
-      name: "Smith",
-      first_name: "Jane",
-      birth_date: new Date("1992-02-02"),
+      lastName: "Smith",
+      firstName: "Jane",
+      birthDate: new Date("1992-02-02"),
       gender: "Female",
       mail: "jane.smith@example.com",
       password: "securepassword",
@@ -47,9 +47,9 @@ async function main() {
   //const user3 =
   await db.user.create({
     data: {
-      name: "joe",
-      first_name: "Didon",
-      birth_date: new Date("1993-02-02"),
+      lastName: "joe",
+      firstName: "Didon",
+      birthDate: new Date("1993-02-02"),
       gender: "Male",
       mail: "joe.bidon@exemple.com",
       password: "securepassword",
@@ -62,10 +62,10 @@ async function main() {
   const center1 = await db.formationCenter.create({
     data: {
       name: "Centre de Formation A",
-      adress: "123 Rue Exemple",
+      address: "123 Rue Exemple",
       city: "Paris",
       country: "France",
-      student_number: 100,
+      studentNumber: 100,
       description: "Un centre de formation pour les professionnels.",
       field: "Informatique",
     },
@@ -75,10 +75,10 @@ async function main() {
   await db.formationCenter.create({
     data: {
       name: "Centre de Formation B",
-      adress: "456 Avenue Exemple",
+      address: "456 Avenue Exemple",
       city: "Lyon",
       country: "France",
-      student_number: 50,
+      studentNumber: 50,
       description: "Centre spécialisé dans l'éducation technique.",
       field: "Bâtiment",
     },
@@ -87,13 +87,13 @@ async function main() {
   // Insertion de tuteurs éducatifs
   const tutor1 = await db.educationalTutor.create({
     data: {
-      user_id: user1.id,
+      userId: user1.id,
     },
   });
 
   const tutor2 = await db.educationalTutor.create({
     data: {
-      user_id: user2.id,
+      userId: user2.id,
     },
   });
 
@@ -105,8 +105,8 @@ async function main() {
       city: "Marseille",
       country: "France",
       description: "Une entreprise leader dans le secteur.",
-      apprentice_number: 20,
-      OPCO: "OPCO A",
+      apprenticeNumber: 20,
+      opco: "OPCO A",
     },
   });
 
@@ -118,15 +118,15 @@ async function main() {
       city: "Toulouse",
       country: "France",
       description: "Entreprise innovante dans le domaine.",
-      apprentice_number: 30,
-      OPCO: "OPCO B",
+      apprenticeNumber: 30,
+      opco: "OPCO B",
     },
   });
 
   const apprenticeMentor1 = await db.apprenticeMentor.create({
     data: {
-      user_id: user1.id,
-      company_id: company1.id,
+      userId: user1.id,
+      companyId: company1.id,
       poste: "Ingénieur Principal",
     },
   });
@@ -134,24 +134,24 @@ async function main() {
   // Insertion d'apprentis
   const apprentice1 = await db.apprentice.create({
     data: {
-      user_id: user1.id,
+      userId: user1.id,
       promotion: "2024",
       poste: "Développeur",
-      EducationalTutor_id: tutor1.id,
-      ApprenticeMentor_id: apprenticeMentor1.id, // Assurez-vous que l'ID existe
-      company_id: company1.id,
+      educationalTutorId: tutor1.id,
+      apprenticeMentorId: apprenticeMentor1.id, // Assurez-vous que l'ID existe
+      companyId: company1.id,
     },
   });
 
   //const apprentice2 =
   await db.apprentice.create({
     data: {
-      user_id: user2.id,
+      userId: user2.id,
       promotion: "2024",
       poste: "Ingénieur",
-      EducationalTutor_id: tutor2.id,
-      ApprenticeMentor_id: apprenticeMentor1.id, // Assurez-vous que l'ID existe
-      company_id: company1.id,
+      educationalTutorId: tutor2.id,
+      apprenticeMentorId: apprenticeMentor1.id, // Assurez-vous que l'ID existe
+      companyId: company1.id,
     },
   });
 
@@ -161,21 +161,21 @@ async function main() {
       name: "Cahier de formation de John Doe",
       description: "Cahier de formation pour les événements de formation de l'apprenti",
       event: ["Événement 1", "Événement 2", "Événement 3"],
-      delivrable: ["Livrable 1", "Livrable 2", "Livrable 3"],
-      apprentice_id: apprentice1.id,
+      deliverable: ["Livrable 1", "Livrable 2", "Livrable 3"],
+      apprenticeId: apprentice1.id,
     },
   });
 
   // Insertion de spécialités
   //const specialty1 =
-  await db.specialite.create({
+  await db.speciality.create({
     data: {
       name: "Développement Web",
     },
   });
 
   //const specialty2 =
-  await db.specialite.create({
+  await db.speciality.create({
     data: {
       name: "Data Science",
     },
@@ -183,9 +183,9 @@ async function main() {
 
   const user4 = await db.user.create({
     data: {
-      name: "Menigot",
-      first_name: "Sebastien",
-      birth_date: new Date("1973-02-02"),
+      lastName: "Menigot",
+      firstName: "Sebastien",
+      birthDate: new Date("1973-02-02"),
       gender: "Male",
       mail: "Menigot.Sebastien@exemple.com",
       password: "securepassword",
@@ -197,10 +197,10 @@ async function main() {
   //const CurriculumManager1 =
   await db.curriculumManager.create({
     data: {
-      user_id: user4.id,
-      FormationCenter_id: center1.id,
-      date_debut: new Date("2021-01-01"),
-      date_fin: new Date("2025-12-31"),
+      userId: user4.id,
+      formationCenterId: center1.id,
+      dateDebut: new Date("2021-01-01"),
+      dateFin: new Date("2025-12-31"),
     },
   });
 

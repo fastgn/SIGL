@@ -19,8 +19,8 @@ datasource db {
 
 model User {
   id           Int      @id @default(autoincrement())
-  name         String
-  first_name   String
+  lastName     String
+  firstName    String
   birthDate    DateTime
   gender       String
   mail         String   @unique
@@ -41,14 +41,14 @@ model User {
 }
 
 model FormationCenter {
-  id             Int     @id @default(autoincrement())
-  name           String
-  adress         String
-  city           String
-  country        String
-  student_number Int?
-  description    String?
-  field          String?
+  id            Int     @id @default(autoincrement())
+  name          String
+  address       String
+  city          String
+  country       String
+  studentNumber Int?
+  description   String?
+  field         String?
 
   apprenticeCoordinator ApprenticeCoordinator[]
   curriculumManager     CurriculumManager[]
@@ -154,7 +154,7 @@ model TrainingDiary {
   name         String
   description  String?
   event        String[]
-  delivrable   String[]
+  deliverable  String[]
   apprenticeId Int        @unique
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
 }
