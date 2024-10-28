@@ -50,6 +50,21 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        blue: {
+          0: "#0C589C",
+          1: "#2468A5",
+          2: "#3C79AF",
+          3: "#548AB9",
+          4: "#6D9AC3",
+          5: "#85ABCD",
+          6: "#9DBCD7",
+          7: "#B6CCE1",
+          8: "#CEDDEB",
+          9: "#E6EEF5",
+          10: "#F2F6FA",
+        },
+        admin: "#30A9DA",
+        onBlue: "#FFFFFF",
       },
       keyframes: {
         "accordion-down": {
@@ -73,7 +88,21 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      boxShadow: {
+        0: "0px 4px 6px 0px rgba(0, 0, 0, 0.09)",
+        1: "0px 2px 2px 0px rgba(0, 0, 0, 0.25)",
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    function ({ addComponents, theme }) {
+      addComponents({
+        ".text-p-bold": {
+          fontSize: theme("fontSize.p-bold"),
+          fontWeight: theme("fontWeight.p-bold"),
+          lineHeight: theme("lineHeight.p-bold"),
+        },
+      });
+    },
+  ],
 };
