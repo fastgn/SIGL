@@ -4,7 +4,7 @@ export const HomePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div>
-        <Banner />
+        <Banner isAdmin={true} />
       </div>
       <div>
         <h1>Home</h1>
