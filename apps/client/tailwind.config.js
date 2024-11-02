@@ -95,6 +95,7 @@ export default {
     },
   },
   plugins: [
+    require("tailwindcss-animate"),
     function ({ addComponents, theme }) {
       addComponents({
         ".text-p-bold": {

@@ -9,10 +9,9 @@ class ApiService {
   constructor() {}
 
   public init(url: string): void {
-    this.api = axios.create({
-      baseURL: url,
-      withCredentials: true,
-    });
+    this.api.defaults.baseURL = url;
+    this.api.defaults.withCredentials = true;
+
     // Ajout d'un intercepteur pour chaque réponse
     this.api.interceptors.response.use(
       (response) => {
