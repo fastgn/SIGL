@@ -11,7 +11,6 @@ import { Toaster } from "@/components/ui/sonner";
 env.init();
 
 api.init(env.get.API_URL);
-console.log(env.get.API_URL);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

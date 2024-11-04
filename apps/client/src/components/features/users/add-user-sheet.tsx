@@ -43,14 +43,21 @@ export const AddUserSheet = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    api.post("/user", data).then((res) => {
-      console.log("User added", res);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>,
-      );
-    });
+    api.post("/user", data).then(
+      (res) => {
+        console.log(res);
+        switch (res.status) {
+          case 201:
+          case 200:
+            toast.success("Utilisateur ajouté avec succès");
+            break;
+        }
+      },
+      (error) => {
+        const message = error.response?.data?.message || "Une erreur est survenue";
+        toast.error(message);
+      },
+    );
   };
 
   return (
