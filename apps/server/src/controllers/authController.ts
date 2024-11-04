@@ -1,23 +1,22 @@
-import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import userModel from "../models/userModel";
+import { ControllerResponse } from "../types/controller";
+import { ControllerError, ControllerSuccess } from "../utils/controller";
 
 const authController = {
-  login: async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: "Veuillez renseigner tous les champs" });
+  login: async (payload: { email: string; password: string }): Promise<ControllerResponse> => {
+    if (!payload.email || !payload.password) {
+      return ControllerError.INVALID_PARAMS();
     }
 
     // Get the user from the database
-    const user = await userModel().findByEmail(email, true);
+    const user = await userModel().findByEmail(payload.email, true);
 
     // Si l'utilisateur n'existe pas ou que le mot de passe est incorrect
-    if (!user || !user.password || !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ message: "Identifiants invalides" });
+    if (!user || !user.password || !bcrypt.compareSync(payload.password, user.password)) {
+      return ControllerError.UNAUTHORIZED({ message: "Email ou mot de passe incorrect" });
     }
 
     // Create a JWT token
@@ -25,7 +24,7 @@ const authController = {
       expiresIn: "1h",
     });
 
-    return res.status(200).json({ token });
+    return ControllerSuccess.SUCCESS({ data: { token } });
   },
 };
 

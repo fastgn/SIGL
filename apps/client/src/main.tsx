@@ -6,14 +6,15 @@ import "./index.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { HomePage } from "@/components/features/home/HomePage.tsx";
 import { DemoPage } from "@/components/features/demo/DemoPage.tsx";
+import { Toaster } from "@/components/ui/sonner";
 
 env.init();
 
 api.init(env.get.API_URL);
-console.log(env.get.API_URL);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <Toaster />
     <BrowserRouter>
       <Routes>
         <Route path="/home" element={<HomePage />} />

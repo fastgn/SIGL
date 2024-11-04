@@ -38,8 +38,10 @@ app.use((req, _res, next) => {
 
 // Routes
 import authRoutes from "./routes/authRoutes";
-
 app.use("/auth", authRoutes);
+
+import userRoutes from "./routes/userRoutes";
+app.use("/user", userRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";

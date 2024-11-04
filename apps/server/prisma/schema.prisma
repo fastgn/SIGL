@@ -23,7 +23,7 @@ model User {
   firstName    String
   birthDate    DateTime
   gender       String
-  email         String   @unique
+  email        String   @unique
   password     String
   phone        String
   active       Boolean
@@ -68,12 +68,12 @@ model Apprentice {
   user               User             @relation(fields: [userId], references: [id])
   companyId          Int?
   company            Compagny?        @relation(fields: [companyId], references: [id])
-  promotion          String
+  promotion          String?
   poste              String?
-  educationalTutorId Int
-  educationalTutor   EducationalTutor @relation(fields: [educationalTutorId], references: [id])
-  apprenticeMentorId Int
-  apprenticeMentor   ApprenticeMentor @relation(fields: [apprenticeMentorId], references: [id])
+  educationalTutorId Int?
+  educationalTutor   EducationalTutor? @relation(fields: [educationalTutorId], references: [id])
+  apprenticeMentorId Int?
+  apprenticeMentor   ApprenticeMentor? @relation(fields: [apprenticeMentorId], references: [id])
 
   trainingDiary TrainingDiary?
 }
@@ -82,8 +82,8 @@ model ApprenticeMentor {
   id        Int      @id @default(autoincrement())
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
-  companyId Int
-  company   Compagny @relation(fields: [companyId], references: [id])
+  companyId Int?
+  company   Compagny? @relation(fields: [companyId], references: [id])
   poste     String?
 
   apprentice Apprentice[]
@@ -95,7 +95,7 @@ model Teacher {
   user              User      @relation(fields: [userId], references: [id])
   startDate         DateTime
   endDate           DateTime?
-  formationCenterId Int
+  formationCenterId Int?
 
   speciality Speciality[]
 }
@@ -114,8 +114,8 @@ model ApprenticeCoordinator {
   id                Int             @id @default(autoincrement())
   userId            Int             @unique
   user              User            @relation(fields: [userId], references: [id])
-  formationCenterId Int
-  formationCenter   FormationCenter @relation(fields: [formationCenterId], references: [id])
+  formationCenterId Int?
+  formationCenter   FormationCenter? @relation(fields: [formationCenterId], references: [id])
   dateDebut         DateTime
   dateFin           DateTime?
 }
