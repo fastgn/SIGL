@@ -24,14 +24,17 @@ import { Form, FormField, FormItem, FormControl, FormLabel } from "@/components/
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/utilities/utils";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import api from "@/services/api.service";
+import { useState } from "react";
 
 const FormSchema = UserSchema.create;
 
 export const AddUserSheet = () => {
+  const [submitting, setSubmitting] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -43,6 +46,7 @@ export const AddUserSheet = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    setSubmitting(true);
     api.post("/user", data).then(
       (res) => {
         console.log(res);
@@ -52,10 +56,12 @@ export const AddUserSheet = () => {
             toast.success("Utilisateur ajouté avec succès");
             break;
         }
+        setSubmitting(false);
       },
       (error) => {
         const message = error.response?.data?.message || "Une erreur est survenue";
         toast.error(message);
+        setSubmitting(false);
       },
     );
   };
@@ -63,7 +69,7 @@ export const AddUserSheet = () => {
   return (
     <SheetContent>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6 py-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="relative grid gap-6 py-4">
           <SheetHeader>
             <SheetTitle>Ajouter un utilisateur</SheetTitle>
             <SheetDescription>
@@ -79,7 +85,7 @@ export const AddUserSheet = () => {
               <FormItem className="grid grid-cols-4 items-center gap-4 mt-0">
                 <FormLabel className="text-right">Prénom</FormLabel>
                 <FormControl>
-                  <Input className="col-span-3" {...field} />
+                  <Input className="col-span-3" {...field} disabled={submitting} />
                 </FormControl>
               </FormItem>
             )}
@@ -92,7 +98,7 @@ export const AddUserSheet = () => {
               <FormItem className="grid grid-cols-4 items-center gap-4 mt-0">
                 <FormLabel className="text-right">Nom</FormLabel>
                 <FormControl>
-                  <Input className="col-span-3" {...field} />
+                  <Input className="col-span-3" {...field} disabled={submitting} />
                 </FormControl>
               </FormItem>
             )}
@@ -105,7 +111,7 @@ export const AddUserSheet = () => {
               <FormItem className="grid grid-cols-4 items-center gap-4 mt-0">
                 <FormLabel className="text-right">Email</FormLabel>
                 <FormControl>
-                  <Input className="col-span-3" {...field} />
+                  <Input className="col-span-3" {...field} disabled={submitting} />
                 </FormControl>
               </FormItem>
             )}
@@ -126,6 +132,7 @@ export const AddUserSheet = () => {
                           "w-[240px] pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground",
                         )}
+                        disabled={submitting}
                       >
                         {field.value ? (
                           <span className="text-sm">
@@ -158,7 +165,6 @@ export const AddUserSheet = () => {
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4 mt-0">
                 <FormLabel className="text-right">Téléphone</FormLabel>
-                {/* {field.error ? <p>{field.error.message}</p> : null} */}
                 <FormControl>
                   <PhoneInput
                     defaultCountry="FR"
@@ -166,6 +172,7 @@ export const AddUserSheet = () => {
                     className="col-span-3"
                     international
                     {...field}
+                    disabled={submitting}
                   />
                 </FormControl>
               </FormItem>
@@ -178,7 +185,11 @@ export const AddUserSheet = () => {
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4 mt-0">
                 <FormLabel className="text-right">Role</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={submitting}
+                >
                   <FormControl>
                     <SelectTrigger className="col-span-3">
                       <SelectValue placeholder="Role" />
@@ -206,7 +217,9 @@ export const AddUserSheet = () => {
           ></FormField>
 
           <SheetFooter>
-            <Button type="submit">Ajouter</Button>
+            <Button type="submit" disabled={submitting} className="min-w-24">
+              {submitting ? <UpdateIcon className="h-4 w-4 animate-spin" /> : "Ajouter"}
+            </Button>
           </SheetFooter>
         </form>
       </Form>

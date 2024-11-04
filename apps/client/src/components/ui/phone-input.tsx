@@ -97,7 +97,7 @@ const CountrySelect = ({ disabled, value, onChange, options }: CountrySelectProp
           <CommandInput placeholder="Search country..." />
           <CommandList className="overflow-y-hidden">
             <CommandEmpty>No country found.</CommandEmpty>
-            <ScrollArea className="h-72">
+            <ScrollArea className="h-60">
               <CommandGroup>
                 {options
                   .filter((x) => x.value)
