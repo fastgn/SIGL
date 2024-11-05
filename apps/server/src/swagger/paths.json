@@ -55,5 +55,17 @@
         }
       }
     }
+  },
+  "/diary": {
+    "post": {
+      "summary": "Création d'un journal de formation",
+      "tags": ["Diary"],
+      "description": "Permet à un admin de créer un journal de formation",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ]
+    }
   }
 }

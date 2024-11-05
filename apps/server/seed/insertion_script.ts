@@ -157,7 +157,6 @@ async function main() {
   //const TrainingDiary1 =
   await db.trainingDiary.create({
     data: {
-      name: "Cahier de formation de John Doe",
       description: "Cahier de formation pour les événements de formation de l'apprenti",
       event: ["Événement 1", "Événement 2", "Événement 3"],
       deliverable: ["Livrable 1", "Livrable 2", "Livrable 3"],

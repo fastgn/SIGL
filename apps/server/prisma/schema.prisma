@@ -151,7 +151,6 @@ model Speciality {
 
 model TrainingDiary {
   id           Int        @id @default(autoincrement())
-  name         String
   description  String?
   event        String[]
   deliverable  String[]
