@@ -1,6 +1,6 @@
-import { PrismaClient, User } from "@prisma/client";
-
+import { User } from "@prisma/client";
 import logger from "../utils/logger";
+import { db } from "../providers/db";
 
 const userModel = () => ({
   findByKey: async (
@@ -8,8 +8,6 @@ const userModel = () => ({
     value: unknown,
     withPassword: boolean = false,
   ): Promise<User | null> => {
-    const db = new PrismaClient();
-
     try {
       const user: User | null = await db.user.findUnique({
         where: {

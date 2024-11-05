@@ -1,7 +1,4 @@
-// Importez le client Prisma
-// import { PrismaClient } from '@prisma/client';
-import { PrismaClient } from "@prisma/client";
-const db = new PrismaClient();
+import db from "../src/providers/db";
 
 async function main() {
   // Vider la base de données

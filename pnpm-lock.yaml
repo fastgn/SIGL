@@ -246,6 +246,9 @@ importers:
       swagger-ui-express:
         specifier: ^5.0.1
         version: 5.0.1(express@4.21.1)
+      vitest-mock-extended:
+        specifier: ^2.0.2
+        version: 2.0.2(typescript@5.6.3)(vitest@2.1.2(@types/node@20.16.11))
       winston:
         specifier: ^3.15.0
         version: 3.15.0
@@ -3379,6 +3382,14 @@ packages:
     peerDependencies:
       typescript: '>=4.2.0'
 
+  ts-essentials@10.0.3:
+    resolution: {integrity: sha512-/FrVAZ76JLTWxJOERk04fm8hYENDo0PWSP3YLQKxevLwWtxemGcl5JJEzN4iqfDlRve0ckyfFaOBu4xbNH/wZw==}
+    peerDependencies:
+      typescript: '>=4.5.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
@@ -3532,6 +3543,12 @@ packages:
         optional: true
       terser:
         optional: true
+
+  vitest-mock-extended@2.0.2:
+    resolution: {integrity: sha512-n3MBqVITKyclZ0n0y66hkT4UiiEYFQn9tteAnIxT0MPz1Z8nFcPUG3Cf0cZOyoPOj/cq6Ab1XFw2lM/qM5EDWQ==}
+    peerDependencies:
+      typescript: 3.x || 4.x || 5.x
+      vitest: '>=2.0.0'
 
   vitest@2.1.2:
     resolution: {integrity: sha512-veNjLizOMkRrJ6xxb+pvxN6/QAWg95mzcRjtmkepXdN87FNfxAss9RKe2far/G9cQpipfgP2taqg0KiWsquj8A==}
@@ -6597,6 +6614,10 @@ snapshots:
     dependencies:
       typescript: 5.6.3
 
+  ts-essentials@10.0.3(typescript@5.6.3):
+    optionalDependencies:
+      typescript: 5.6.3
+
   ts-interface-checker@0.1.13: {}
 
   tslib@2.7.0: {}
@@ -6745,6 +6766,12 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.7.5
       fsevents: 2.3.3
+
+  vitest-mock-extended@2.0.2(typescript@5.6.3)(vitest@2.1.2(@types/node@20.16.11)):
+    dependencies:
+      ts-essentials: 10.0.3(typescript@5.6.3)
+      typescript: 5.6.3
+      vitest: 2.1.2(@types/node@20.16.11)
 
   vitest@2.1.2(@types/node@20.16.11):
     dependencies:

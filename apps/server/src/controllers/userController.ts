@@ -1,11 +1,11 @@
 import { EnumUserRole, UserSchema } from "../../../../packages/types/dist";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import z from "zod";
 import { ControllerResponse } from "../types/controller";
+import { db } from "../providers/db";
 
-const authController = {
+const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
     try {
       let form;
@@ -15,8 +15,6 @@ const authController = {
       } catch (_err) {
         return ControllerError.INVALID_PARAMS();
       }
-
-      const db = new PrismaClient();
 
       // Vérifier si l'email est déjà utilisée
       const emailAlreadyUsed = await db.user.findFirst({
@@ -75,11 +73,11 @@ const authController = {
       // Retirer le mot de passe de la réponse
       const { password, ...userWithoutPassword } = user;
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      return ControllerError.INTERNAL();
+      return ControllerError.INTERNAL({ message: error });
     }
   },
 };
 
-export default authController;
+export default userController;
