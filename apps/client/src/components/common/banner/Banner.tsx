@@ -15,6 +15,10 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
       name: "Demo form",
       link: "/demo",
     },
+    {
+      name: "Login",
+      link: "/login",
+    },
   ];
 
   const isSelected = (link: string) => location.pathname === link;

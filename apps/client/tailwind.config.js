@@ -65,6 +65,10 @@ export default {
         },
         admin: "#30A9DA",
         onBlue: "#FFFFFF",
+        error: {
+          dark: "#691911",
+          light: "#F4D6D2",
+        },
       },
       keyframes: {
         "accordion-down": {

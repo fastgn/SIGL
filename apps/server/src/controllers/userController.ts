@@ -29,6 +29,7 @@ const userController = {
       }
 
       const newPassword = Math.random().toString(36).slice(-8);
+      console.log("New password: ", newPassword);
       const passwordHash = bcrypt.hashSync(newPassword, 10);
 
       // Objet role créé en fonction du rôle de l'utilisateur

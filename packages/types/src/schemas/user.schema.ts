@@ -14,8 +14,14 @@ const create = z.object({
   birthDate: z.coerce.date(),
 });
 
+const login = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
 const UserSchema = {
   create,
+  login,
 };
 
 export { UserSchema };
