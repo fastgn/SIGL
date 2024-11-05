@@ -7,6 +7,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { HomePage } from "@/components/features/home/HomePage.tsx";
 import { DemoPage } from "@/components/features/demo/DemoPage.tsx";
 import { Toaster } from "@/components/ui/sonner";
+import { LoginPage } from "./components/features/login/LoginPage";
+import { AuthProvider } from "./contexts/AuthContext";
 
 env.init();
 
@@ -16,12 +18,15 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Toaster />
     <BrowserRouter>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/demo" element={<DemoPage />} />
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="*" element={<h1>404</h1>} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/demo" element={<DemoPage />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="*" element={<h1>404</h1>} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 );
