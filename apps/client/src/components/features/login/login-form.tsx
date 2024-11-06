@@ -19,6 +19,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { getErrorInformation } from "@/utilities/utils";
 
 const FormSchema = UserSchema.login;
 
@@ -49,18 +50,29 @@ const LoginForm = () => {
             navigate("/");
             break;
           case 401:
-            setAlertTitle("Login failed");
-            setAlertDescription("Invalid email or password.");
+            setAlertTitle("Mauvais identifiants");
+            setAlertDescription("Veuillez vérifier votre email et votre mot de passe.");
             break;
           default:
-            setAlertTitle("Login failed");
-            setAlertDescription("An unknown error occurred.");
+            const error = getErrorInformation(res.status);
+            setAlertTitle(error?.name || "Impossible de se connecter");
+            setAlertDescription(
+              error?.description || "Une erreur s'est produite lors de la connexion.",
+            );
             break;
         }
       },
       (err) => {
-        setAlertTitle("Login failed");
-        setAlertDescription("An error occurred while logging in: " + err.message);
+        if (err.status == 401) {
+          setAlertTitle("Mauvais identifiants");
+          setAlertDescription("Veuillez vérifier votre email et votre mot de passe.");
+          return;
+        }
+        const error = getErrorInformation(err.status);
+        setAlertTitle(error?.name || "Impossible de se connecter");
+        setAlertDescription(
+          error?.description || "Une erreur s'est produite lors de la connexion.",
+        );
       },
     );
   };
@@ -112,12 +124,12 @@ const LoginForm = () => {
               onCheckedChange={(checked) => setRemember(checked === true)}
             />
             <Label htmlFor="remember" className="font-normal">
-              Remember me
+              Se souvenir de moi
             </Label>
           </div>
 
           <Button type="submit" variant="user" className="w-40">
-            Login
+            Se connecter
           </Button>
         </form>
       </Form>
