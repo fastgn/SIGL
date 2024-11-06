@@ -14,7 +14,7 @@ services:
       TOKEN_SECRET: "YOUR_SECRET"
       DATABASE_URL: "postgres://postgres_user:password@database:5432/postgres_db?schema=public"
     command: >
-      bash -c "pnpm run db:deploy
+      bash -c "pnpm db:reset
       && pnpm run start"
 
   database:

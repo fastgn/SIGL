@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-import { UserSchema } from "../../../../packages/types/dist";
+import { UserSchema } from "@sigl/types";
 import z from "zod";
 import { User } from "@prisma/client";
 import { db } from "../providers/db";

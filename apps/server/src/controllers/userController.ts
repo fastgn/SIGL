@@ -1,4 +1,4 @@
-import { EnumUserRole, UserSchema } from "../../../../packages/types/dist";
+import { EnumUserRole, UserSchema } from "@sigl/types";
 import bcrypt from "bcrypt";
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import z from "zod";

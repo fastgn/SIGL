@@ -1,4 +1,3 @@
-import trainingDiaryModel from "../models/trainingDiary";
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import { db } from "../providers/db";
 

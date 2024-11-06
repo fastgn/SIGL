@@ -5,19 +5,20 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx --watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.build.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write ./src ./test",
     "lint": "eslint ./src ./test",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:reset": "prisma migrate reset",
     "db:deploy": "prisma migrate deploy",
-    "db:init": "npx prisma migrate dev --name init",
+    "db:init": "prisma migrate dev --name init",
     "db:seed": "tsx ./prisma/seeds/seed.ts",
     "db:seed-f": "pnpm run db:reset &&tsx ./prisma/seeds/seed.ts",
-    "db:reset": "npx prisma db push --force-reset"
+    "db:reset": "prisma db push --force-reset"
   },
   "keywords": [],
   "author": "",
@@ -33,9 +34,9 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.20.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "vitest-mock-extended": "^2.0.2",
     "winston": "^3.15.0",
     "zod": "^3.23.8"
   },
@@ -50,9 +51,9 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "@types/winston": "^2.4.4",
-    "prisma": "^5.20.0",
     "tsx": "^4.7.2",
     "typescript": "^5.4.4",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.1",
+    "vitest-mock-extended": "^2.0.2"
   }
 }
