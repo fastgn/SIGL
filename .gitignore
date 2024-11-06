@@ -17,6 +17,7 @@ tmp
 # Environment
 .env*
 !.env.example
+!.env.production
 
 # Logs
 *.log

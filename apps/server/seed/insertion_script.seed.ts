@@ -1,5 +1,5 @@
 // Importez le client Prisma
-import db from "../src/providers/db";
+import { db } from "../src/providers/db";
 
 async function main() {
   // Vider la base de données
