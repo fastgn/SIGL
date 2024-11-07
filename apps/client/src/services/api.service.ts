@@ -32,6 +32,8 @@ class ApiService {
 
   public put = this.api.put;
 
+  public patch = this.api.patch;
+
   public delete = this.api.delete;
 }
 

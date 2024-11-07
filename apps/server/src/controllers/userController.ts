@@ -5,6 +5,7 @@ import z from "zod";
 import { ControllerResponse } from "../types/controller";
 import { db } from "../providers/db";
 import logger from "../utils/logger";
+import { removePassword } from "../utils/user";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -73,12 +74,105 @@ const userController = {
       });
 
       // Retirer le mot de passe de la réponse
-      const { password, ...userWithoutPassword } = user;
+      const userWithoutPassword = removePassword(user);
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
     } catch (error: any) {
       console.error(error);
       logger.error(`Erreur serveur : ${error.message}`);
-      return ControllerError.INTERNAL({ message: error });
+      return ControllerError.INTERNAL();
+    }
+  },
+  get: async (id: number): Promise<ControllerResponse> => {
+    try {
+      if (!id || isNaN(id)) {
+        return ControllerError.INVALID_PARAMS();
+      }
+      const user = await db.user.findFirst({
+        where: {
+          id,
+        },
+        include: {
+          apprentice: true,
+          apprenticeCoordinator: true,
+          apprenticeMentor: true,
+          curriculumManager: true,
+          educationalTutor: true,
+          teacher: true,
+        },
+      });
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+      const userWithoutPassword = removePassword(user);
+      return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getAll: async (): Promise<ControllerResponse> => {
+    try {
+      const users = await db.user.findMany({
+        include: {
+          apprentice: true,
+          apprenticeCoordinator: true,
+          apprenticeMentor: true,
+          curriculumManager: true,
+          educationalTutor: true,
+          teacher: true,
+        },
+      });
+      if (!users || users.length === 0) {
+        return ControllerError.NOT_FOUND();
+      }
+      const usersWithoutPassword = users.map(removePassword);
+      return ControllerSuccess.SUCCESS({ data: usersWithoutPassword });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+  delete: async (id: number): Promise<ControllerResponse> => {
+    let user;
+    try {
+      user = await db.user.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+    if (!user) {
+      return ControllerError.NOT_FOUND();
+    }
+    return ControllerSuccess.SUCCESS({ data: user });
+  },
+  updatePasswordAdmin: async (
+    id: number,
+    password: string,
+    confirmPassword: string,
+  ): Promise<ControllerResponse> => {
+    try {
+      if (password !== confirmPassword) {
+        return ControllerError.INVALID_PARAMS({
+          message: "Passwords do not match",
+        });
+      }
+      const passwordHash = bcrypt.hashSync(password, 10);
+      const user = await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          password: passwordHash,
+        },
+      });
+      return ControllerSuccess.SUCCESS();
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
     }
   },
 };
