@@ -7,6 +7,7 @@ import { User } from "@prisma/client";
 import { db } from "../providers/db";
 import { ControllerResponse } from "../types/controller";
 import { ControllerError, ControllerSuccess } from "../utils/controller";
+import logger from "../utils/logger";
 
 const authController = {
   login: async (payload: z.infer<typeof UserSchema.login>): Promise<ControllerResponse> => {
@@ -15,6 +16,7 @@ const authController = {
     try {
       form = UserSchema.login.parse(payload);
     } catch (_err) {
+      logger.error("Invalid params: ", _err);
       return ControllerError.INVALID_PARAMS();
     }
 

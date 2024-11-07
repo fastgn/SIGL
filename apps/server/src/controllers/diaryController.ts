@@ -4,7 +4,6 @@ import { db } from "../providers/db";
 const diaryController = {
   createDiary: async (user_id: number) => {
     //const { user_id } = req.body;
-
     if (!user_id) {
       return ControllerError.INVALID_PARAMS({ message: "user_id est requis" });
     }
@@ -37,9 +36,8 @@ const diaryController = {
 
     return ControllerSuccess.SUCCESS({ message: "Journal créé avec succès", data: diary });
   },
-  deleteDiary: async (user_id: number) => {
-    //const { user_id } = req.body;
 
+  deleteDiary: async (user_id: number) => {
     if (!user_id) {
       return ControllerError.INVALID_PARAMS({ message: "user_id est requis" });
     }

@@ -4,6 +4,7 @@ import { ControllerError, ControllerSuccess } from "../utils/controller";
 import z from "zod";
 import { ControllerResponse } from "../types/controller";
 import { db } from "../providers/db";
+import logger from "../utils/logger";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -76,6 +77,7 @@ const userController = {
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
     } catch (error: any) {
       console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL({ message: error });
     }
   },
