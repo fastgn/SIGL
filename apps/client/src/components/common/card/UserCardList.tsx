@@ -17,20 +17,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
+import { UserType } from "@/components/features/home/HomePage.tsx";
 
 interface UserCardListProps {
-  users: User[];
+  users: UserType[];
   onDeleteUser: (id: number) => void;
+  onResquestRefresh: () => void;
 }
 
-export const UserCardList = ({ users, onDeleteUser }: UserCardListProps) => {
+export const UserCardList = ({ users, onDeleteUser, onResquestRefresh }: UserCardListProps) => {
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
 
   const handleDeleteConfirm = () => {
@@ -44,7 +39,7 @@ export const UserCardList = ({ users, onDeleteUser }: UserCardListProps) => {
     <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
       <Sheet>
         <SheetTrigger asChild>
-          <Card className="flex w-full p-[1.875rem] justify-center items-center gap-[0.8125rem] rounded-[1.125rem] border-[5px] border-dashed border-[var(--Blue-blue-8,#CEDDEB)] bg-[rgba(255,255,255,0)]">
+          <Card className="flex w-full p-[1.875rem] h-[10rem] justify-center items-center gap-[0.8125rem] rounded-[1.125rem] border-[5px] border-dashed border-[var(--Blue-blue-8,#CEDDEB)] bg-[rgba(255,255,255,0)]">
             <svg
               width="94"
               height="93"
@@ -69,12 +64,16 @@ export const UserCardList = ({ users, onDeleteUser }: UserCardListProps) => {
             </svg>
           </Card>
         </SheetTrigger>
-        <AddUserSheet />
+        <AddUserSheet
+          onAdd={() => {
+            onResquestRefresh();
+          }}
+        />
       </Sheet>
       {users.map((user) => (
         <Card
           key={user.id}
-          className="flex w-full justify-between p-[1.875rem] items-start gap-[0.8125rem] rounded-[1.125rem] bg-[#FFF] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.09)]"
+          className="flex w-full justify-between h-[10rem] p-[1.875rem] items-start gap-[0.8125rem] rounded-[1.125rem] bg-[#FFF] shadow-[0px_4px_6px_0px_rgba(0,0,0,0.09)]"
         >
           <div className="flex flex-row">
             <CardHeader className="p-0">
@@ -121,9 +120,11 @@ export const UserCardList = ({ users, onDeleteUser }: UserCardListProps) => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel onClick={() => setUserToDelete(null)}>
-                    Cancel
+                    Annuler
                   </AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteConfirm}>Continue</AlertDialogAction>
+                  <AlertDialogAction className="bg-destructive" onClick={handleDeleteConfirm}>
+                    Supprimer
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

@@ -13,6 +13,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Banner } from "@/components/common/banner/Banner.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
+import api from "@/services/api.service";
+import { UserTypeReq } from "@/components/features/home/HomePage.tsx";
+import { EnumUserRole } from "@sigl/types";
+import { toast } from "sonner";
+import { getErrorInformation } from "@/utilities/utils.ts";
 
 interface User {
   id: number;
@@ -21,7 +27,7 @@ interface User {
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: string[];
   birthDate: string;
   phone: string;
   profileImage: string;
@@ -39,25 +45,33 @@ export const UserDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    // In a real application, you would fetch the user data from an API
-    // For this example, we'll use mock data
     if (id === undefined) {
       return;
     }
-    const mockUser: User = {
-      id: parseInt(id),
-      lastName: "Doe",
-      firstName: "John",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      password: "********", // In reality, you wouldn't display the actual password
-      role: "Developer",
-      birthDate: "1990-01-01",
-      phone: "+1 234 567 8900",
-      profileImage: "https://api.dicebear.com/6.x/initials/svg?seed=JD",
-    };
-    setUser(mockUser);
-    setEditedUser(mockUser);
+    api.get(`/user/${id}`).then((res) => {
+      const userReq = res.data.data as UserTypeReq;
+      const role: string[] = [];
+      if (userReq.apprentice) role.push(EnumUserRole.APPRENTICE);
+      if (userReq.apprenticeCoordinator) role.push(EnumUserRole.APPRENTICE_COORDINATOR);
+      if (userReq.apprenticeMentor) role.push(EnumUserRole.APPRENTICE_MENTOR);
+      if (userReq.curriculumManager) role.push(EnumUserRole.CURICULUM_MANAGER);
+      if (userReq.educationalTutor) role.push(EnumUserRole.EDUCATIONAL_TUTOR);
+      if (userReq.teacher) role.push(EnumUserRole.TEACHER);
+      const user: User = {
+        id: userReq.id,
+        lastName: userReq.lastName,
+        firstName: userReq.firstName,
+        name: userReq.lastName + " " + userReq.firstName,
+        email: userReq.email,
+        password: "*******",
+        role: role,
+        birthDate: userReq.birthDate,
+        phone: userReq.phone,
+        profileImage: "",
+      };
+      setUser(user);
+      setEditedUser(user);
+    });
   }, [id]);
 
   const handleEdit = () => {
@@ -82,9 +96,33 @@ export const UserDetailsPage = () => {
 
   const handlePasswordChange = () => {
     if (user && newPassword === confirmPassword) {
-      setUser({ ...user, password: newPassword });
-      setNewPassword("");
-      // In a real application, you would send the new password to your API here
+      api
+        .patch(`/user/${user.id}/password`, {
+          password: newPassword,
+          confirmPassword: confirmPassword,
+        })
+        .then(
+          (res) => {
+            console.log("pp");
+            switch (res.status) {
+              case 200:
+              case 201:
+                toast.success("Mot de passe modifié avec succès");
+                break;
+              default:
+                console.log("here");
+                toast.error(getErrorInformation(res.status).name);
+            }
+          },
+          (error) => {
+            switch (error.status) {
+              default:
+                toast.error(getErrorInformation(error.status).name);
+            }
+          },
+        );
+    } else {
+      toast.error("Les mots de passe ne correspondent pas");
     }
   };
 
@@ -128,7 +166,18 @@ export const UserDetailsPage = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex justify-center">
-              <image href={user.profileImage} className="w-24 h-24 rounded-full bg-blue-500" />
+              <Avatar className="w-24 h-24 rounded-full">
+                <AvatarImage
+                  src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.name}`}
+                  alt={user.name}
+                />
+                <AvatarFallback>
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -224,7 +273,7 @@ export const UserDetailsPage = () => {
                 <Input
                   id="birthDate"
                   name="birthDate"
-                  value={editedUser.birthDate}
+                  value={new Date(editedUser.birthDate).toLocaleDateString("fr-FR")}
                   onChange={handleInputChange}
                   readOnly={!isEditing}
                 />

@@ -2,49 +2,117 @@ import { Banner } from "@/components/common/banner/Banner.tsx";
 import { UserCardList } from "@/components/common/card/UserCardList.tsx";
 import { useEffect, useState } from "react";
 import { SearchBar } from "@/components/common/searchBar/SearchBar.tsx";
+import api from "@/services/api.service";
+import { EnumUserRole } from "@sigl/types";
+import { getErrorInformation } from "@/utilities/utils.ts";
+import { toast } from "sonner";
 
-// Sample user data
-const initialUsers = [
-  { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "Developer" },
-  { id: 2, name: "Bob Smith", email: "bob@example.com", role: "Designer" },
-  { id: 3, name: "Charlie Brown", email: "charlie@example.com", role: "Manager" },
-  { id: 4, name: "Diana Ross", email: "diana@example.com", role: "Product Owner" },
-  { id: 5, name: "Ethan Hunt", email: "ethan@example.com", role: "Tester" },
-];
+export type UserTypeReq = {
+  id: number;
+  lastName: string;
+  firstName: string;
+  birthDate: string;
+  gender: string;
+  email: string;
+  phone: string;
+  active: boolean;
+  creationDate: string;
+  updateDate: string;
+  apprentice: boolean;
+  apprenticeCoordinator: boolean;
+  apprenticeMentor: boolean;
+  curriculumManager: boolean;
+  educationalTutor: boolean;
+  teacher: boolean;
+};
+
+export type UserType = {
+  id: number;
+  name: string;
+  email: string;
+  role: string[];
+};
 
 export const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [users, setUsers] = useState(initialUsers);
-
+  const [users, setUsers] = useState([] as UserType[]);
   const [listFilter, setListFilter] = useState<number>();
   const [sortOption, setSortOption] = useState<number>();
-  const [filteredUsers, setFilteredUsers] = useState(initialUsers);
+  const [filteredUsers, setFilteredUsers] = useState([] as UserType[]);
+
+  const fetchUsers = async () => {
+    api
+      .get("/user")
+      .then((response) => {
+        const users = (response.data.data as UserTypeReq[]).map((user) => {
+          const role: string[] = [];
+          if (user.apprentice) role.push(EnumUserRole.APPRENTICE);
+          if (user.apprenticeCoordinator) role.push(EnumUserRole.APPRENTICE_COORDINATOR);
+          if (user.apprenticeMentor) role.push(EnumUserRole.APPRENTICE_MENTOR);
+          if (user.curriculumManager) role.push(EnumUserRole.CURICULUM_MANAGER);
+          if (user.educationalTutor) role.push(EnumUserRole.EDUCATIONAL_TUTOR);
+          if (user.teacher) role.push(EnumUserRole.TEACHER);
+          return {
+            id: user.id,
+            name: user.lastName + " " + user.firstName,
+            email: user.email,
+            role: role,
+          };
+        });
+        setUsers(users);
+        setFilteredUsers(users);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   useEffect(() => {
     if (!searchTerm && !listFilter && !sortOption) {
-      setFilteredUsers(initialUsers);
+      setFilteredUsers(users);
     } else {
-      const filteredUsers = initialUsers.filter(
+      const filteredUsers = users.filter(
         (user) =>
-          (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.role.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          (!listFilter || user.role.toLowerCase() === filters[listFilter - 1]?.name.toLowerCase()),
+          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (user.role.some((r) => r.toLowerCase().includes(searchTerm.toLowerCase())) &&
+            (!listFilter || user.role.includes(filters[listFilter - 1]?.name.toLowerCase()))),
       );
       setFilteredUsers(filteredUsers);
     }
   }, [listFilter, searchTerm, sortOption]);
 
   const handleDeleteUser = (id: number) => {
-    // a remplacer par une requete API
-    setUsers(users.filter((user) => user.id !== id));
+    api
+      .delete(`/user/${id}`)
+      .then((res) => {
+        switch (res.status) {
+          case 200:
+            toast.success("Utilisateur supprimé avec succès");
+            break;
+          default:
+            toast.error(getErrorInformation(res.status).name);
+            break;
+        }
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+        toast.error(getErrorInformation(error.status).name);
+      });
   };
 
   const filters = [
-    { id: 1, name: "Developer" },
-    { id: 2, name: "Designer" },
-    { id: 3, name: "Manager" },
-    { id: 4, name: "Tester" },
-    { id: 5, name: "Product Owner" },
+    { id: 1, name: EnumUserRole.APPRENTICE },
+    { id: 2, name: EnumUserRole.APPRENTICE_MENTOR },
+    { id: 3, name: EnumUserRole.APPRENTICE_COORDINATOR },
+    { id: 4, name: EnumUserRole.TEACHER },
+    { id: 5, name: EnumUserRole.EDUCATIONAL_TUTOR },
+    { id: 6, name: EnumUserRole.CURICULUM_MANAGER },
   ];
 
   const sortOptions = [
@@ -72,7 +140,6 @@ export const HomePage = () => {
         <h1 className="text-[#000] font-inter text-[1.875rem] font-semibold leading-[2.25rem] tracking-[-0.01406rem]">
           Gestions utilisateurs
         </h1>
-        {/*<Navbar searchTerm={searchTerm} onSearchChange={setSearchTerm}/>*/}
         <div className="w-full">
           <SearchBar
             searchTerm={searchTerm}
@@ -83,7 +150,13 @@ export const HomePage = () => {
             setSortOption={setSortOptions}
           />
         </div>
-        <UserCardList users={filteredUsers} onDeleteUser={handleDeleteUser} />
+        <UserCardList
+          users={filteredUsers}
+          onDeleteUser={handleDeleteUser}
+          onResquestRefresh={() => {
+            fetchUsers();
+          }}
+        />
       </div>
     </div>
   );

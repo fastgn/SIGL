@@ -32,7 +32,7 @@ import { useState } from "react";
 
 const FormSchema = UserSchema.create;
 
-export const AddUserSheet = () => {
+export const AddUserSheet = ({ onAdd }: { onAdd: () => void }) => {
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -54,6 +54,7 @@ export const AddUserSheet = () => {
           case 201:
           case 200:
             toast.success("Utilisateur ajouté avec succès");
+            onAdd();
             break;
         }
         setSubmitting(false);
