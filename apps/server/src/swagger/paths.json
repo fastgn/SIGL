@@ -56,16 +56,160 @@
       }
     }
   },
-  "/diary": {
+  "/diary/{userId}": {
     "post": {
       "summary": "Création d'un journal de formation",
       "tags": ["Diary"],
       "description": "Permet à un admin de créer un journal de formation",
-      "security": [
+      "parameters": [
         {
-          "bearerAuth": []
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'utilisateur"
         }
-      ]
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération d'un journal de formation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "integer", "description": "Status du succes de la requete" },
+                  "message": { "type": "string", "description": "Message de la requete" },
+                  "data": {
+                    "type": "object",
+                    "description": "Données de la requete",
+                    "properties": {
+                      "id": { "type": "integer", "description": "Id du journal" },
+                      "description": { "type": "string", "description": "Description du journal" },
+                      "apprenticeId": {
+                        "type": "integer",
+                        "description": "Id de l'apprenti lié au journal"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Suppression d'un journal de formation",
+      "tags": ["Diary"],
+      "description": "Permet à un admin de supprimer un journal de formation",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'utilisateur"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération d'un journal de formation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "integer", "description": "Status du succes de la requete" },
+                  "message": { "type": "string", "description": "Message de la requete" },
+                  "data": {
+                    "type": "object",
+                    "description": "Données de la requete",
+                    "properties": {
+                      "id": { "type": "integer", "description": "Id du journal" },
+                      "description": { "type": "string", "description": "Description du journal" },
+                      "apprenticeId": {
+                        "type": "integer",
+                        "description": "Id de l'apprenti lié au journal"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Récupération des journaux de formation",
+      "tags": ["Diary"],
+      "description": "Permet à un utilisateur de récupérer la liste des journaux de formation",
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'utilisateur"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération d'un journal de formation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "integer", "description": "Status du succes de la requete" },
+                  "message": { "type": "string", "description": "Message de la requete" },
+                  "data": {
+                    "type": "object",
+                    "description": "Données de la requete",
+                    "properties": {
+                      "id": { "type": "integer", "description": "Id du journal" },
+                      "description": { "type": "string", "description": "Description du journal" },
+                      "apprenticeId": {
+                        "type": "integer",
+                        "description": "Id de l'apprenti lié au journal"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/event": {
+    "post": {
+      "summary": "Création d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un admin de créer un événement"
+    },
+    "delete": {
+      "summary": "Suppression d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un admin de supprimer un événement"
+    },
+    "get": {
+      "summary": "Récupération des événements",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de récupérer la liste des événements"
+    },
+    "put": {
+      "summary": "Modification d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un admin de modifier un événement"
     }
   }
 }

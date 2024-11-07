@@ -4,12 +4,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { HomePage } from "@/components/features/home/HomePage.tsx";
+import { UsersPage } from "@/components/features/users/UsersPage.tsx";
 import { Toaster } from "@/components/ui/sonner";
-import { UserDetailsPage } from "@/components/features/users/UserInfoPage.tsx";
+import { UserDetailsPage } from "@/components/features/users/user/UserInfoPage.tsx";
 import { LoginPage } from "./components/features/login/LoginPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "@/routes/ProtectedRoute.tsx";
+import { EventsPage } from "@/components/features/events/EventsPage.tsx";
 
 env.init();
 api.init(env.get.API_URL);
@@ -21,10 +22,11 @@ createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/home" element={<ProtectedRoute component={HomePage} />} />
+          <Route path="/users" element={<ProtectedRoute component={UsersPage} />} />
           <Route path="/users/:id" element={<ProtectedRoute component={UserDetailsPage} />} />
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="*" element={<Navigate to="/home" />} />
+          <Route path="/events" element={<ProtectedRoute component={EventsPage} />} />
+          <Route path="/" element={<Navigate to="/users" />} />
+          <Route path="*" element={<Navigate to="/users" />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
