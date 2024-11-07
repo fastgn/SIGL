@@ -105,7 +105,7 @@ export const UserCardList = ({ users, onDeleteUser, onResquestRefresh }: UserCar
               </Button>
             </Link>
             <AlertDialog>
-              <AlertDialogTrigger>
+              <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm" onClick={() => setUserToDelete(user.id)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
