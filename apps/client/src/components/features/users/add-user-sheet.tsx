@@ -196,7 +196,7 @@ export const AddUserSheet = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={EnumUserRole.APPRENTICE}>Apprentit</SelectItem>
+                    <SelectItem value={EnumUserRole.APPRENTICE}>Apprenti</SelectItem>
                     <SelectItem value={EnumUserRole.APPRENTICE_COORDINATOR}>
                       Coordinateur d'apprentissage
                     </SelectItem>

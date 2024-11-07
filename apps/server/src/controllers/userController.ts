@@ -21,7 +21,6 @@ const userController = {
         where: {
           email: form.email,
         },
-      
       });
       if (emailAlreadyUsed) {
         return ControllerError.INVALID_PARAMS({
@@ -34,24 +33,24 @@ const userController = {
       const passwordHash = bcrypt.hashSync(newPassword, 10);
 
       // Objet role créé en fonction du rôle de l'utilisateur
-      const defaultRoleObjects: Record<EnumUserRole, { [key: string]: {} }> = {
+      const defaultRoleObjects: Record<EnumUserRole, { [key: string]: { create: {} } }> = {
         [EnumUserRole.APPRENTICE]: {
-          apprentice: {},
+          apprentice: { create: {} },
         },
         [EnumUserRole.APPRENTICE_COORDINATOR]: {
-          apprenticeCoordinator: {},
+          apprenticeCoordinator: { create: {} },
         },
         [EnumUserRole.APPRENTICE_MENTOR]: {
-          apprenticeMentor: {},
+          apprenticeMentor: { create: {} },
         },
         [EnumUserRole.CURICULUM_MANAGER]: {
-          curriculumManager: {},
+          curriculumManager: { create: {} },
         },
         [EnumUserRole.EDUCATIONAL_TUTOR]: {
-          educationalTutor: {},
+          educationalTutor: { create: {} },
         },
         [EnumUserRole.TEACHER]: {
-          teacher: {},
+          teacher: { create: {} },
         },
       };
 

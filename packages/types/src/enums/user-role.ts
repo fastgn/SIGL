@@ -2,7 +2,7 @@ export enum EnumUserRole {
   // Tuteur pédagogique
   EDUCATIONAL_TUTOR = "educational_tutor",
   
-  // Apprentit
+  // Apprenti
   APPRENTICE = "apprentice",
 
   // Maître d'apprentissage
