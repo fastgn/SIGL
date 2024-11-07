@@ -9,14 +9,6 @@ export const LoginPage = () => {
       >
         <img src="/SIGL_Light.svg" alt="logo" className="h-40" />
         <LoginForm />
-        <div className="flex flex-col justify-center gap-2 items-center">
-          <a href="/forgot-password" className="text-blue-0 transition-colors hover:text-blue-2">
-            Mot de passe oublié ?
-          </a>
-          <a href="/register" className="text-blue-0 transition-colors hover:text-blue-2">
-            Créer un compte
-          </a>
-        </div>
       </div>
     </div>
   );

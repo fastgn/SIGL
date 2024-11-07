@@ -1,8 +1,16 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button.tsx";
-import { AvatarIcon } from "@radix-ui/react-icons";
+import { AvatarIcon, ExitIcon } from "@radix-ui/react-icons";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
+  const { setToken } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<SVGSVGElement>(null);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -10,14 +18,34 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
     {
       name: "Gestion utilisateurs",
       link: "/home",
-    },
-    {
-      name: "Login",
-      link: "/login",
-    },
+    }
   ];
 
   const isSelected = (link: string) => location.pathname === link;
+
+  useEffect(() => {
+    // Ferme le menu si l'on clique en dehors de celui-ci
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
+
+  const logout = () => {
+    setToken(null);
+    navigate("/login");
+  };
 
   return (
     <div className="flex w-full h-fit items-center gap-8 px-[4.375rem] py-[1rem] bg-blue-9 shadow-0">
@@ -49,7 +77,22 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
         ))}
       </div>
       <div className="flex flex-grow"></div>
-      <AvatarIcon className="h-10 w-10 rounded-3xl bg-white shadow-1" />
+      <AvatarIcon
+        className="h-10 w-10 rounded-3xl bg-white shadow-1"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        ref={profileRef}
+      />
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          className="absolute top-16 right-16 flex flex-col gap-4 bg-white shadow-1 rounded-lg p-4"
+        >
+          <Button variant="link" onClick={() => logout()} className="flex items-center gap-4">
+            <ExitIcon className="h-5 w-4 font-bold" />
+            Logout
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

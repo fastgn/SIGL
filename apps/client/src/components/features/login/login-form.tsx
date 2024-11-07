@@ -14,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { getErrorInformation } from "@/utilities/utils";
 
-const FormSchema = UserSchema.login;
+const FormSchema = UserSchema.login.extend({ remember: z.boolean() });
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -31,7 +31,11 @@ const LoginForm = () => {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {},
+    defaultValues: {
+      email: "",
+      password: "",
+      remember: false,
+    },
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
@@ -46,13 +50,14 @@ const LoginForm = () => {
             setAlertTitle("Mauvais identifiants");
             setAlertDescription("Veuillez vérifier votre email et votre mot de passe.");
             break;
-          default:
+          default: {
             const error = getErrorInformation(res.status);
             setAlertTitle(error?.name || "Impossible de se connecter");
             setAlertDescription(
               error?.description || "Une erreur s'est produite lors de la connexion.",
             );
             break;
+          }
         }
       },
       (err) => {
@@ -111,10 +116,19 @@ const LoginForm = () => {
           />
 
           <div className="flex flex-row items-start space-x-3 space-y-0">
-            <Checkbox
-              id="remember"
-              checked={remember}
-              onCheckedChange={(checked) => setRemember(checked === true)}
+            <FormField
+              control={form.control}
+              name="remember"
+              render={({ field }) => (
+                <Checkbox
+                  id="remember"
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    setRemember(checked === true);
+                  }}
+                />
+              )}
             />
             <Label htmlFor="remember" className="font-normal">
               Se souvenir de moi

@@ -9,9 +9,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { UserDetailsPage } from "@/components/features/users/UserInfoPage.tsx";
 import { LoginPage } from "./components/features/login/LoginPage";
 import { AuthProvider } from "./contexts/AuthContext";
+import ProtectedRoute from "@/routes/ProtectedRoute.tsx";
 
 env.init();
-
 api.init(env.get.API_URL);
 
 createRoot(document.getElementById("root")!).render(
@@ -21,10 +21,10 @@ createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/users/:id" element={<UserDetailsPage />} />
+          <Route path="/home" element={<ProtectedRoute component={HomePage} />} />
+          <Route path="/users/:id" element={<ProtectedRoute component={UserDetailsPage} />} />
           <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="*" element={<h1>404</h1>} />
+          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
