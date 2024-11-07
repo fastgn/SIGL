@@ -58,6 +58,7 @@ export const AddUserSheet = ({ onAdd }: { onAdd: () => void }) => {
             break;
         }
         setSubmitting(false);
+        form.reset();
       },
       (error) => {
         const message = error.response?.data?.message || "Une erreur est survenue";
