@@ -57,17 +57,17 @@ model FormationCenter {
 model EducationalTutor {
   id     Int  @id @default(autoincrement())
   userId Int  @unique
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   apprentice Apprentice[]
 }
 
 model Apprentice {
-  id                 Int              @id @default(autoincrement())
-  userId             Int              @unique
-  user               User             @relation(fields: [userId], references: [id])
+  id                 Int               @id @default(autoincrement())
+  userId             Int               @unique
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyId          Int?
-  company            Compagny?        @relation(fields: [companyId], references: [id])
+  company            Compagny?         @relation(fields: [companyId], references: [id])
   promotion          String?
   poste              String?
   educationalTutorId Int?
@@ -79,9 +79,9 @@ model Apprentice {
 }
 
 model ApprenticeMentor {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  userId    Int       @unique
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyId Int?
   company   Compagny? @relation(fields: [companyId], references: [id])
   poste     String?
@@ -92,7 +92,7 @@ model ApprenticeMentor {
 model Teacher {
   id                Int       @id @default(autoincrement())
   userId            Int       @unique
-  user              User      @relation(fields: [userId], references: [id])
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   startDate         DateTime?
   endDate           DateTime?
   formationCenterId Int?
@@ -103,7 +103,7 @@ model Teacher {
 model CurriculumManager {
   id                Int              @id @default(autoincrement())
   userId            Int              @unique
-  user              User             @relation(fields: [userId], references: [id])
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   formationCenterId Int?
   formationCenter   FormationCenter? @relation(fields: [formationCenterId], references: [id])
   dateDebut         DateTime?
@@ -111,9 +111,9 @@ model CurriculumManager {
 }
 
 model ApprenticeCoordinator {
-  id                Int             @id @default(autoincrement())
-  userId            Int             @unique
-  user              User            @relation(fields: [userId], references: [id])
+  id                Int              @id @default(autoincrement())
+  userId            Int              @unique
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   formationCenterId Int?
   formationCenter   FormationCenter? @relation(fields: [formationCenterId], references: [id])
   dateDebut         DateTime?
@@ -123,7 +123,7 @@ model ApprenticeCoordinator {
 model Admin {
   idAdmin Int  @id @default(autoincrement())
   userId  Int  @unique
-  user    User @relation(fields: [userId], references: [id])
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Compagny {

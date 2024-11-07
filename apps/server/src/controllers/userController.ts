@@ -122,9 +122,6 @@ const userController = {
           teacher: true,
         },
       });
-      if (!users || users.length === 0) {
-        return ControllerError.NOT_FOUND();
-      }
       const usersWithoutPassword = users.map(removePassword);
       return ControllerSuccess.SUCCESS({ data: usersWithoutPassword });
     } catch (error: any) {
