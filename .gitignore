@@ -4,6 +4,8 @@ node_modules
 dist
 build
 tmp
+coverage
+pnpm-lock.yaml
 
 # Editors specific
 .fleet

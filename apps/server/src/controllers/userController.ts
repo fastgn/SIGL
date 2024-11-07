@@ -21,6 +21,7 @@ const userController = {
         where: {
           email: form.email,
         },
+      
       });
       if (emailAlreadyUsed) {
         return ControllerError.INVALID_PARAMS({
