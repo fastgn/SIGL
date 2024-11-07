@@ -5,7 +5,6 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { HomePage } from "@/components/features/home/HomePage.tsx";
-import { DemoPage } from "@/components/features/demo/DemoPage.tsx";
 import { Toaster } from "@/components/ui/sonner";
 import { UserDetailsPage } from "@/components/features/users/UserInfoPage.tsx";
 import { LoginPage } from "./components/features/login/LoginPage";
@@ -22,11 +21,11 @@ createRoot(document.getElementById("root")!).render(
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/users/:id" element={<UserDetailsPage />} />
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="*" element={<h1>404</h1>} />
-      </Routes>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/users/:id" element={<UserDetailsPage />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route path="*" element={<h1>404</h1>} />
+        </Routes>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

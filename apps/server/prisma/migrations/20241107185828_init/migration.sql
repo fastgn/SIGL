@@ -42,10 +42,10 @@ CREATE TABLE "Apprentice" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "companyId" INTEGER,
-    "promotion" TEXT NOT NULL,
+    "promotion" TEXT,
     "poste" TEXT,
-    "educationalTutorId" INTEGER NOT NULL,
-    "apprenticeMentorId" INTEGER NOT NULL,
+    "educationalTutorId" INTEGER,
+    "apprenticeMentorId" INTEGER,
 
     CONSTRAINT "Apprentice_pkey" PRIMARY KEY ("id")
 );
@@ -54,7 +54,7 @@ CREATE TABLE "Apprentice" (
 CREATE TABLE "ApprenticeMentor" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "companyId" INTEGER NOT NULL,
+    "companyId" INTEGER,
     "poste" TEXT,
 
     CONSTRAINT "ApprenticeMentor_pkey" PRIMARY KEY ("id")
@@ -64,9 +64,9 @@ CREATE TABLE "ApprenticeMentor" (
 CREATE TABLE "Teacher" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "startDate" TIMESTAMP(3) NOT NULL,
+    "startDate" TIMESTAMP(3),
     "endDate" TIMESTAMP(3),
-    "formationCenterId" INTEGER NOT NULL,
+    "formationCenterId" INTEGER,
 
     CONSTRAINT "Teacher_pkey" PRIMARY KEY ("id")
 );
@@ -76,7 +76,7 @@ CREATE TABLE "CurriculumManager" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "formationCenterId" INTEGER,
-    "dateDebut" TIMESTAMP(3) NOT NULL,
+    "dateDebut" TIMESTAMP(3),
     "dateFin" TIMESTAMP(3),
 
     CONSTRAINT "CurriculumManager_pkey" PRIMARY KEY ("id")
@@ -86,8 +86,8 @@ CREATE TABLE "CurriculumManager" (
 CREATE TABLE "ApprenticeCoordinator" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "formationCenterId" INTEGER NOT NULL,
-    "dateDebut" TIMESTAMP(3) NOT NULL,
+    "formationCenterId" INTEGER,
+    "dateDebut" TIMESTAMP(3),
     "dateFin" TIMESTAMP(3),
 
     CONSTRAINT "ApprenticeCoordinator_pkey" PRIMARY KEY ("id")
@@ -126,7 +126,6 @@ CREATE TABLE "Speciality" (
 -- CreateTable
 CREATE TABLE "TrainingDiary" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
     "description" TEXT,
     "event" TEXT[],
     "deliverable" TEXT[],
@@ -196,16 +195,16 @@ ALTER TABLE "Apprentice" ADD CONSTRAINT "Apprentice_userId_fkey" FOREIGN KEY ("u
 ALTER TABLE "Apprentice" ADD CONSTRAINT "Apprentice_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Compagny"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Apprentice" ADD CONSTRAINT "Apprentice_educationalTutorId_fkey" FOREIGN KEY ("educationalTutorId") REFERENCES "EducationalTutor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Apprentice" ADD CONSTRAINT "Apprentice_educationalTutorId_fkey" FOREIGN KEY ("educationalTutorId") REFERENCES "EducationalTutor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Apprentice" ADD CONSTRAINT "Apprentice_apprenticeMentorId_fkey" FOREIGN KEY ("apprenticeMentorId") REFERENCES "ApprenticeMentor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Apprentice" ADD CONSTRAINT "Apprentice_apprenticeMentorId_fkey" FOREIGN KEY ("apprenticeMentorId") REFERENCES "ApprenticeMentor"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ApprenticeMentor" ADD CONSTRAINT "ApprenticeMentor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ApprenticeMentor" ADD CONSTRAINT "ApprenticeMentor_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Compagny"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ApprenticeMentor" ADD CONSTRAINT "ApprenticeMentor_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Compagny"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -220,7 +219,7 @@ ALTER TABLE "CurriculumManager" ADD CONSTRAINT "CurriculumManager_formationCente
 ALTER TABLE "ApprenticeCoordinator" ADD CONSTRAINT "ApprenticeCoordinator_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ApprenticeCoordinator" ADD CONSTRAINT "ApprenticeCoordinator_formationCenterId_fkey" FOREIGN KEY ("formationCenterId") REFERENCES "FormationCenter"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ApprenticeCoordinator" ADD CONSTRAINT "ApprenticeCoordinator_formationCenterId_fkey" FOREIGN KEY ("formationCenterId") REFERENCES "FormationCenter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Admin" ADD CONSTRAINT "Admin_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

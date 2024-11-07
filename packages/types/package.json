@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
     "dev": "tsc --watch",
     "format": "prettier --write ./src",
     "lint": "eslint ./src"

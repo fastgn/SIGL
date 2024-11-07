@@ -17,8 +17,8 @@ FROM base AS build
 COPY . /usr/src/app/
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-# Build libs
-RUN pnpm run --filter "./packages/**" -r build
+# Build libs in cjs
+RUN pnpm run --filter "./packages/**" -r build:cjs
 
 # RUN pnpm deploy --filter=client /prod/client
 RUN pnpm deploy --filter=server /prod/server

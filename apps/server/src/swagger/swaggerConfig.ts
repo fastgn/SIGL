@@ -19,6 +19,10 @@ const swaggerSpec = swaggerJsDoc({
       description: "API pour la gestion de SIGL",
     },
     servers: [
+      {
+        url: `https://sigl-web-app.francecentral.cloudapp.azure.com/api`,
+        description: "Serveur distant",
+      },
       { url: `http://localhost:${env.get.PORT}`, description: "Serveur local de développement" },
     ],
     components: {

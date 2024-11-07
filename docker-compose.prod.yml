@@ -1,12 +1,12 @@
 version: "3.1"
 services:
   server:
-    image: "harryonbreadboard/sigl-server"
+    image: "harryonbreadboard/sigl-server:0.0.2"
     ports:
       - "5600:5600"
     environment:
       PORT: 5600
-      CLIENT_URL: "http://localhost:4200"
+      CLIENT_URL: "YOUR_ACCESS_URL"
       TOKEN_SECRET: "YOUR_SECRET"
       DATABASE_URL: "postgres://postgres_user:password@database:5432/postgres_db?schema=public"
     command: >
