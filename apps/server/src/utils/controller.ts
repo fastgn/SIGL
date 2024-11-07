@@ -24,6 +24,13 @@ export const ControllerError: {
       data,
     };
   },
+  NOT_FOUND: ({ message, data } = {}) => {
+    return {
+      status: 404,
+      message: message || "Not found",
+      data,
+    };
+  },
 };
 
 export const ControllerSuccess: {
