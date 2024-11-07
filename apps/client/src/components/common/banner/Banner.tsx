@@ -12,10 +12,6 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
       link: "/home",
     },
     {
-      name: "Demo form",
-      link: "/demo",
-    },
-    {
       name: "Login",
       link: "/login",
     },
