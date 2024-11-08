@@ -1,0 +1,11 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+# Build files
+dist
+
+# Ignore the public folder
+public/**
+# Don't ignore seed files
+!public/**/seed_*

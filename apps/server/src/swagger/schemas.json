@@ -1,0 +1,73 @@
+{
+  "User": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "profile_image": {
+        "type": "string"
+      },
+      "firstName": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "phone": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "birth_date": {
+        "type": "string"
+      },
+      "gender": {
+        "type": "string"
+      },
+      "active": {
+        "type": "boolean"
+      },
+      "updated_date": {
+        "type": "string"
+      },
+      "created_date": {
+        "type": "string"
+      }
+    }
+  },
+
+  "trainingDiary": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "event": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "deliverable": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "apprenticeId": {
+        "type": "int"
+      }
+    }
+  }
+}

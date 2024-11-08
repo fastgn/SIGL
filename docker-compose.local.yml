@@ -1,0 +1,38 @@
+version: "3.1"
+services:
+  server:
+    image: "harryonbreadboard/sigl-server"
+    depends_on:
+      - database
+    networks:
+      - sigl
+    ports:
+      - "5600:5600"
+    environment:
+      PORT: 5600
+      CLIENT_URL: "http://localhost:4200"
+      TOKEN_SECRET: "YOUR_SECRET"
+      DATABASE_URL: "postgres://postgres_user:password@database:5432/postgres_db?schema=public"
+    command: >
+      bash -c "pnpm db:reset
+      && pnpm run start"
+
+  database:
+    image: postgres:16.4-alpine
+    restart: always
+    networks:
+      - sigl
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_DB: "postgres_db"
+
+volumes:
+  db:
+
+networks:
+  sigl:

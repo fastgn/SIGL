@@ -1,0 +1,43 @@
+{
+  "name": "sigl-eseo",
+  "version": "0.0.1",
+  "description": "",
+  "authors": [
+    "Boudier Nathanaël",
+    "Gouverneur Florian",
+    "Leroux Antoine",
+    "NDE Noumi Steve Darius",
+    "Roche Guillaume",
+    "Viard Timothée"
+  ],
+  "keywords": [],
+  "license": "ISC",
+  "scripts": {
+    "dev": "set TURBO_TELEMETRY_DISABLED=1&& turbo dev",
+    "build": "set TURBO_TELEMETRY_DISABLED=1&& turbo build",
+    "build:packages": "set TURBO_TELEMETRY_DISABLED=1&& pnpm run --parallel --filter=./packages/** build",
+    "test": "pnpm run -r --parallel test",
+    "test:watch": "pnpm run -r --parallel test:watch",
+    "format": "pnpm run -r --parallel format",
+    "lint": "pnpm run -r --parallel lint",
+    "db:up": "docker-compose -f docker-compose.dev.yml up -d",
+    "db:down": "docker-compose -f docker-compose.dev.yml down",
+    "prepare": "husky",
+    "image:build:server": "docker build . --target server --tag harryonbreadboard/sigl-server:latest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.2.5",
+    "turbo": "^2.1.2",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.0.1"
+  },
+  "packageManager": "pnpm@9.0.2"
+}

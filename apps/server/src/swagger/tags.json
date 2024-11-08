@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Auth",
+    "description": "Operations sur l'authentification"
+  },
+  {
+    "name": "Diary",
+    "description": "Operations sur le Journal de formation"
+  }
+]

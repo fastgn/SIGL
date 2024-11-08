@@ -1,0 +1,19 @@
+{
+    "ui": "tui",
+    "$schema": "https://turbo.build/schema.json",
+    "tasks": {
+        "//#build:packages": {},
+        "build": {
+            "outputs": [
+                "dist/**"
+            ]
+        },
+        "dev": {
+            "persistent": true,
+            "cache": false,
+            "dependsOn": [
+                "//#build:packages"
+            ]
+        }
+    }
+}

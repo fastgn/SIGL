@@ -1,0 +1,25 @@
+# Dependencies and build artifacts
+.turbo
+node_modules
+dist
+build
+tmp
+coverage
+pnpm-lock.yaml
+
+# Editors specific
+.fleet
+.idea
+.vscode
+*.code-workspace
+
+# Platform specific
+.DS_Store
+
+# Environment
+.env*
+!.env.example
+!.env.production
+
+# Logs
+*.log
