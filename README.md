@@ -25,6 +25,7 @@
 1. Lancer la base de données PostgreSQL
    - Via Docker: `pnpm run db:up`
    - Via pgAdmin: Débrouille toi
-1. Mettre à jour la base de données : `pnpm run --filter server db:migrate`
+1. Mettre à jour la base de données : `pnpm run --filter server db:migrate:dev`
+1. Inserer des données pour développer : `pnpm run --filter server db:seed:dev`
 1. Mettre à jour les types de BDD : `pnpm run --filter server db:generate`
 1. Lancer le projet: `pnpm run dev`

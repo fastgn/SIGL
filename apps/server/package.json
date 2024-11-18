@@ -17,8 +17,7 @@
     "db:migrate:reset": "prisma migrate reset",
     "db:deploy": "prisma migrate deploy",
     "db:init": "prisma migrate dev --name init",
-    "db:seed": "tsx ./prisma/seeds/seed.ts",
-    "db:seed-f": "pnpm run db:reset &&tsx ./prisma/seeds/seed.ts",
+    "db:seed:dev": "tsx ./prisma/seeds/dev.seed.ts",
     "db:reset": "prisma db push --force-reset"
   },
   "keywords": [],
