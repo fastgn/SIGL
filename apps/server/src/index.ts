@@ -42,14 +42,12 @@ app.use((req, _res, next) => {
 });
 
 // Routes
-import authenticateToken from "./middleware/authMiddleware";
-
 import authRoutes from "./routes/authRoutes";
 import diaryRoutes from "./routes/diaryRoutes";
 import userRoutes from "./routes/userRoutes";
 
 app.use("/auth", authRoutes);
-app.use("/diary", authenticateToken, diaryRoutes);
+app.use("/diary", diaryRoutes);
 app.use("/user", userRoutes);
 
 // Swagger
