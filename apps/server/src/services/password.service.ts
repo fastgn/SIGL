@@ -1,5 +1,4 @@
 import bcrypt from "bcrypt";
-import logger from "../utils/logger";
 
 class PasswordService {
   /**

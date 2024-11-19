@@ -30,6 +30,11 @@ app.use(
 app.use(cookieParser());
 app.use(helmet());
 
+app.use((req, _, next) => {
+  req.context = new ReqContext();
+  next();
+});
+
 // Logger middleware
 app.use((req, _res, next) => {
   logger.info(`Requête reçue sur ${req.method} ${req.path}`);
@@ -49,6 +54,7 @@ app.use("/user", authenticateToken, userRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
+import { ReqContext } from "./providers/req-context";
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {

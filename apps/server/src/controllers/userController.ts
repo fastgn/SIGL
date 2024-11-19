@@ -14,7 +14,7 @@ const userController = {
       // Validate the input data
       try {
         form = UserSchema.create.parse(payload);
-      } catch (_err) {
+      } catch {
         return ControllerError.INVALID_PARAMS();
       }
 
@@ -161,7 +161,7 @@ const userController = {
         });
       }
       const passwordHash = bcrypt.hashSync(password, 10);
-      const user = await db.user.update({
+      await db.user.update({
         where: {
           id,
         },

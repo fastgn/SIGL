@@ -20,6 +20,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (_req, res) => {
   try {
+    console.log("GET /");
     const result = await userController.getAll();
     reply(res, result);
   } catch (error) {
