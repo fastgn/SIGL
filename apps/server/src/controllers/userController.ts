@@ -54,6 +54,9 @@ const userController = {
         [EnumUserRole.TEACHER]: {
           teacher: { create: {} },
         },
+        [EnumUserRole.ADMIN]: {
+          admin: { create: {} },
+        },
       };
 
       // Forcer l'heure de naissance à 00:00:00
