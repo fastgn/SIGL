@@ -12,6 +12,7 @@ const diaryController = {
       return ControllerError.INVALID_PARAMS({ message: "user_id doit être un nombre" });
     }
     const checkUserExist = await db.user.findFirst({
+      select: { id: true },
       where: {
         id: user_id,
       },
@@ -24,8 +25,6 @@ const diaryController = {
     const diary = await db.trainingDiary.create({
       data: {
         description: "Journal de formation",
-        event: [],
-        deliverable: [],
         apprenticeId: user_id,
       },
     });
@@ -57,6 +56,7 @@ const diaryController = {
     }
 
     const deleteDiary = await db.trainingDiary.delete({
+      select: { id: true },
       where: {
         apprenticeId: user_id,
       },
@@ -70,6 +70,39 @@ const diaryController = {
       message: "Journal supprimer avec succès",
       data: deleteDiary,
     });
+  },
+  getDiary: async (user_id: number) => {
+    //const { user_id } = req.body;
+
+    if (!user_id) {
+      return ControllerError.INVALID_PARAMS({ message: "user_id est requis" });
+    }
+
+    if (typeof user_id !== "number") {
+      return ControllerError.INVALID_PARAMS({ message: "user_id doit être un nombre" });
+    }
+
+    const checkUserExist = await db.user.findFirst({
+      where: {
+        id: user_id,
+      },
+    });
+
+    if (checkUserExist === null) {
+      return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
+    }
+
+    const diary = await db.trainingDiary.findFirst({
+      where: {
+        apprenticeId: user_id,
+      },
+    });
+
+    if (!diary) {
+      return ControllerError.INTERNAL({ message: "Le journal n'existe pas" });
+    }
+
+    return ControllerSuccess.SUCCESS({ message: "Journal trouvé avec succès", data: diary });
   },
 };
 

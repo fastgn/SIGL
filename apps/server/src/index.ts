@@ -45,10 +45,12 @@ app.use((req, _res, next) => {
 import authRoutes from "./routes/authRoutes";
 import diaryRoutes from "./routes/diaryRoutes";
 import userRoutes from "./routes/userRoutes";
+import eventRoutes from "./routes/eventRoutes";
 
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
 app.use("/user", userRoutes);
+app.use("/events", eventRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";

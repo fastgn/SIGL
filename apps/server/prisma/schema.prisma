@@ -149,11 +149,28 @@ model Speciality {
   compagny Compagny[]
 }
 
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  createdAt DateTime @default(now())
+  Event     Event?   @relation(fields: [eventId], references: [id])
+  eventId   Int?
+}
+
+model Event {
+  id              Int             @id @default(autoincrement())
+  type            String
+  description     String?
+  endDate         DateTime
+  trainingDiaries TrainingDiary[]
+  files           File[]
+}
+
 model TrainingDiary {
   id           Int        @id @default(autoincrement())
   description  String?
-  event        String[]
-  deliverable  String[]
   apprenticeId Int        @unique
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
+  events       Event[]
 }

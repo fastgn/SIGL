@@ -4,6 +4,9 @@ import { db } from "../../src/providers/db";
 async function main() {
   // Vider la base de données
   console.log("Suppression des données existantes...");
+  await db.trainingDiarysOnEvents.deleteMany({});
+  await db.trainingDiary.deleteMany({});
+  await db.event.deleteMany({});
   await db.apprentice.deleteMany({});
   await db.apprenticeMentor.deleteMany({});
   await db.admin.deleteMany({});
@@ -14,8 +17,9 @@ async function main() {
   await db.teacher.deleteMany({});
   await db.compagny.deleteMany({});
   await db.user.deleteMany({});
-  //console.log(db.trainingDiary.findMany());
-  await db.trainingDiary.deleteMany({});
+  await db.eventType.deleteMany({});
+  await db.eventState.deleteMany({});
+
   // Insertion d'utilisateurs
   const user1 = await db.user.create({
     data: {
@@ -23,7 +27,7 @@ async function main() {
       firstName: "John",
       birthDate: new Date("1990-01-01"),
       gender: "Male",
-      mail: "john.doe@example.com",
+      email: "john.doe@example.com",
       password: "securepassword",
       phone: "1234567890",
       active: true,
@@ -36,7 +40,7 @@ async function main() {
       firstName: "Jane",
       birthDate: new Date("1992-02-02"),
       gender: "Female",
-      mail: "jane.smith@example.com",
+      email: "jane.smith@example.com",
       password: "securepassword",
       phone: "0987654321",
       active: true,
@@ -50,7 +54,7 @@ async function main() {
       firstName: "Didon",
       birthDate: new Date("1993-02-02"),
       gender: "Male",
-      mail: "joe.bidon@exemple.com",
+      email: "joe.bidon@exemple.com",
       password: "securepassword",
       phone: "0987654321",
       active: true,
@@ -143,7 +147,7 @@ async function main() {
   });
 
   //const apprentice2 =
-  await db.apprentice.create({
+  const apprentice2 = await db.apprentice.create({
     data: {
       userId: user2.id,
       promotion: "2024",
@@ -157,10 +161,73 @@ async function main() {
   //const TrainingDiary1 =
   await db.trainingDiary.create({
     data: {
+      id: 1,
+      name: "Cahier de formation de John Doe",
       description: "Cahier de formation pour les événements de formation de l'apprenti",
-      event: ["Événement 1", "Événement 2", "Événement 3"],
       deliverable: ["Livrable 1", "Livrable 2", "Livrable 3"],
       apprenticeId: apprentice1.id,
+    },
+  });
+
+  await db.trainingDiary.create({
+    data: {
+      id: 2,
+      name: "bla bla",
+      description: "Bla bla bla",
+      deliverable: ["Livrable 1", "Livrable 2", "Livrable 3"],
+      apprenticeId: apprentice2.id,
+    },
+  });
+
+  await db.eventState.create({
+    data: {
+      id: 1,
+      name: "Non daté",
+    },
+  });
+
+  await db.eventType.create({
+    data: {
+      id: 1,
+      name: "Rapport",
+    },
+  });
+
+  await db.event.create({
+    data: {
+      id: 1,
+      endDate: new Date("2021-12-31"),
+      name: "Rapport",
+      typeId: 1,
+      stateId: 1,
+    },
+  });
+  await db.event.create({
+    data: {
+      id: 2,
+      endDate: new Date("2021-12-31"),
+      name: "Rapport 2",
+      typeId: 1,
+      stateId: 1,
+    },
+  });
+
+  await db.trainingDiarysOnEvents.create({
+    data: {
+      trainingDiaryId: 1,
+      eventId: 1,
+    },
+  });
+  await db.trainingDiarysOnEvents.create({
+    data: {
+      trainingDiaryId: 1,
+      eventId: 2,
+    },
+  });
+  await db.trainingDiarysOnEvents.create({
+    data: {
+      trainingDiaryId: 2,
+      eventId: 2,
     },
   });
 
@@ -185,7 +252,7 @@ async function main() {
       firstName: "Sebastien",
       birthDate: new Date("1973-02-02"),
       gender: "Male",
-      mail: "Menigot.Sebastien@exemple.com",
+      email: "Menigot.Sebastien@exemple.com",
       password: "securepassword",
       phone: "0987654321",
       active: true,
@@ -201,6 +268,8 @@ async function main() {
       dateFin: new Date("2025-12-31"),
     },
   });
+
+  // await db.eve
 
   console.log("Données insérées avec succès!");
   await db.$disconnect();
