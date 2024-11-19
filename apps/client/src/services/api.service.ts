@@ -26,6 +26,14 @@ class ApiService {
     );
   }
 
+  public setToken(token: string | null) {
+    if (!token) {
+      delete this.api.defaults.headers.common["Authorization"];
+      return;
+    }
+    this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+
   public post = this.api.post;
 
   public get = this.api.get;

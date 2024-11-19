@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
+import api from "@/services/api.service";
 
 export interface AuthContextType {
   token: string | null;
@@ -12,11 +13,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setTokenState] = useState<string | null>(null);
 
   const setToken = (token: string | null, persist: boolean = false) => {
+    api.setToken(token);
     setTokenState(token);
-    console.log(token);
+
     if (token) {
       if (persist) {
-        console.log("persisting token");
         localStorage.setItem("authToken", token);
       } else {
         sessionStorage.setItem("authToken", token);
@@ -30,8 +31,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     // Check for an existing token in either storage on load
     const existingToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-    console.log(existingToken);
     if (existingToken) {
+      api.setToken(existingToken);
       setTokenState(existingToken);
     }
   }, []);

@@ -50,7 +50,7 @@ import userRoutes from "./routes/userRoutes";
 
 app.use("/auth", authRoutes);
 app.use("/diary", authenticateToken, diaryRoutes);
-app.use("/user", authenticateToken, userRoutes);
+app.use("/user", userRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
