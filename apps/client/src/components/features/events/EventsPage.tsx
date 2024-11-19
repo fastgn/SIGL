@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { EnumEventType, EnumSortOption, EventSchema } from "@sigl/types";
 import api from "@/services/api.service.ts";
 import z from "zod";
+import { getErrorInformation } from "@/utilities/utils.ts";
+import { toast } from "sonner";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
@@ -23,14 +25,27 @@ export const EventsPage = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      try {
-        const res = await api.get("/events");
-        setEvents(res.data.data);
-      } catch (error) {
-        console.error("Échec de récupération des événements:", error);
-      }
+      api.get("/events").then(
+        (res) => {
+          switch (res.status) {
+            case 200:
+            case 201:
+              setEvents(res.data.data);
+              break;
+            default: {
+              const error = getErrorInformation(res.status);
+              toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+              break;
+            }
+          }
+        },
+        (err) => {
+          const error = getErrorInformation(err.status);
+          toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+        },
+      );
     };
-    fetchEvents();
+    fetchEvents().then();
   }, []);
 
   useEffect(() => {

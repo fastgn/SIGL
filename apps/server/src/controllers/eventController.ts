@@ -118,41 +118,40 @@ const eventController = {
     return ControllerSuccess.SUCCESS({ message: "Evènement supprimé avec succès" });
   },
 
-  // TODO : ajouter la possible d'associer un event à plus de diary
-  AssociateEventWithDiary: async (event_id: number, diary_id: number) => {
-    if (!event_id) {
-      return ControllerError.INVALID_PARAMS({ message: "event_id est requis" });
-    }
-
-    if (!diary_id) {
-      return ControllerError.INVALID_PARAMS({ message: "diary_id est requis" });
-    }
-    const updateRelation = db.trainingDiary.update({
-      where: {
-        id: diary_id,
-      },
-      data: {
-        events: {
-          connect: {
-            id: event_id,
-          },
-        },
-      },
-      include: {
-        events: true, // Inclut les events pour vérifier la mise à jour
-      },
-    });
-
-    if (!updateRelation) {
-      return ControllerError.INTERNAL({
-        message: "Erreur lors de l'association de l'évènement avec le journal",
-      });
-    }
-
-    return ControllerSuccess.SUCCESS({
-      message: "Evènement associé avec succès",
-      data: updateRelation,
-    });
-  },
+  // AssociateEventWithDiary: async (event_id: number, diary_id: number) => {
+  //   if (!event_id) {
+  //     return ControllerError.INVALID_PARAMS({ message: "event_id est requis" });
+  //   }
+  //
+  //   if (!diary_id) {
+  //     return ControllerError.INVALID_PARAMS({ message: "diary_id est requis" });
+  //   }
+  //   const updateRelation = db.trainingDiary.update({
+  //     where: {
+  //       id: diary_id,
+  //     },
+  //     data: {
+  //       events: {
+  //         connect: {
+  //           id: event_id,
+  //         },
+  //       },
+  //     },
+  //     include: {
+  //       events: true, // Inclut les events pour vérifier la mise à jour
+  //     },
+  //   });
+  //
+  //   if (!updateRelation) {
+  //     return ControllerError.INTERNAL({
+  //       message: "Erreur lors de l'association de l'évènement avec le journal",
+  //     });
+  //   }
+  //
+  //   return ControllerSuccess.SUCCESS({
+  //     message: "Evènement associé avec succès",
+  //     data: updateRelation,
+  //   });
+  // },
 };
 export default eventController;

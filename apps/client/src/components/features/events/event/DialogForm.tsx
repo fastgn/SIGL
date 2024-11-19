@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { EnumEventType, EnumPromo, EventSchema } from "@sigl/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
-import { cn } from "@/utilities/utils.ts";
+import { cn, getErrorInformation } from "@/utilities/utils.ts";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar.tsx";
@@ -38,6 +38,7 @@ const FormSchema = EventSchema.getData.omit({ files: true, id: true });
 export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType) => void }) => {
   const [submitting, setSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDatePickerOpen, setDatePickerOpen] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -48,6 +49,10 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
       endDate: undefined,
     },
   });
+
+  useEffect(() => {
+    form.reset();
+  }, [form, isOpen]);
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     setSubmitting(true);
@@ -63,18 +68,16 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
                 id: res.data.data.id,
                 files: [],
               };
-              console.log(res);
               onAddEvent(newEvent);
               setIsOpen(false);
-              form.reset();
             }
             break;
         }
         setSubmitting(false);
       },
-      (error) => {
-        const message = error.response?.data?.message || "Une erreur est survenue";
-        toast.error(message);
+      (err) => {
+        const error = getErrorInformation(err.status);
+        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
         setSubmitting(false);
       },
     );
@@ -85,14 +88,14 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
       <DialogTrigger asChild>
         <Button variant="add">
           <Plus className="mr-2 h-4 w-4" />
-          Nouveau livrable
+          Nouvel évènement
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ajouter un nouveau livrable</DialogTitle>
+          <DialogTitle>Ajouter un nouvel évènement</DialogTitle>
           <DialogDescription>
-            Remplissez le formulaire ci-dessous pour ajouter un nouveau livrable.
+            Remplissez le formulaire ci-dessous pour ajouter un nouvel évènement.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -131,7 +134,7 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Description</FormLabel>
                   <textarea
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded max-h-32 min-h-10"
                     {...field}
                     disabled={submitting}
                   />
@@ -144,7 +147,7 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Date de fin</FormLabel>
-                  <Popover>
+                  <Popover open={isDatePickerOpen} onOpenChange={setDatePickerOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
@@ -170,7 +173,10 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={field.onChange}
+                        onSelect={(date) => {
+                          field.onChange(date);
+                          setDatePickerOpen(false);
+                        }}
                         disabled={(date) => date < new Date() || date > new Date("2100-01-01")}
                         initialFocus
                       />
