@@ -8,7 +8,7 @@ class ApiService {
 
   constructor() {}
 
-  public init(url: string): void {
+  public init(url: string) {
     this.api.defaults.baseURL = url;
     this.api.defaults.withCredentials = true;
 

@@ -36,14 +36,7 @@ export type UserType = {
 };
 
 export const HomePage = () => {
-  const navigate = useNavigate();
   const { token } = useAuth();
-
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
-  }, [token]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([] as UserType[]);
@@ -53,7 +46,11 @@ export const HomePage = () => {
 
   const fetchUsers = async () => {
     api
-      .get("/user")
+      .get("/user", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const users = (response.data.data as UserTypeReq[]).map((user) => {
           const role: string[] = [];

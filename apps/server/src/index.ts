@@ -45,7 +45,7 @@ import userRoutes from "./routes/userRoutes";
 
 app.use("/auth", authRoutes);
 app.use("/diary", authenticateToken, diaryRoutes);
-app.use("/user", userRoutes);
+app.use("/user", authenticateToken, userRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
