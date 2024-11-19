@@ -17,7 +17,7 @@ api.init(env.get.API_URL);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Toaster />
+    <Toaster richColors />
     <BrowserRouter>
       <AuthProvider>
         <Routes>
