@@ -16,4 +16,7 @@ export enum EnumUserRole {
 
   // Responsable de formation
   APPRENTICE_COORDINATOR = "apprentice_coordinator",
+
+  // Administrateur
+  ADMIN = "admin",
 }
