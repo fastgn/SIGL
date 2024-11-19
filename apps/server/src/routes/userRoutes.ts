@@ -29,8 +29,8 @@ router.get("/", authMiddleware(), async (_req: Request, res: Response) => {
   try {
     const result = await userController.getAll();
     reply(res, result);
-  } catch (error: any) {
-    console.error(error);
+  } catch (error) {
+    logger.error(`Erreur serveur : ${error}`);
     reply(res, ControllerError.INTERNAL());
   }
 });
@@ -41,7 +41,7 @@ router.get("/:id", authMiddleware(), async (req: Request, res: Response) => {
     const result = await userController.get(id);
     reply(res, result);
   } catch (error) {
-    console.error(error);
+    logger.error(`Erreur serveur : ${error}`);
     reply(res, ControllerError.INTERNAL());
   }
 });
@@ -77,7 +77,7 @@ router.patch("/:id/password", authMiddleware(), async (req: CustomRequestUser, r
     );
     reply(res, result);
   } catch (error) {
-    console.error(error);
+    logger.error(`Erreur serveur : ${error}`);
     reply(res, ControllerError.INTERNAL());
   }
 });

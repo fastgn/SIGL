@@ -32,6 +32,7 @@ const authController = {
     } as any);
 
     if (!user || !user.password || !bcrypt.compareSync(form.password, user.password)) {
+      logger.error("Email ou mot de passe incorrect");
       return ControllerError.UNAUTHORIZED({ message: "Email ou mot de passe incorrect" });
     }
 
