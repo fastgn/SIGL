@@ -6,8 +6,6 @@ import api from "@/services/api.service";
 import { EnumUserRole } from "@sigl/types";
 import { getErrorInformation } from "@/utilities/utils.ts";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export type UserTypeReq = {
   id: number;
@@ -36,8 +34,6 @@ export type UserType = {
 };
 
 export const HomePage = () => {
-  const { token } = useAuth();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([] as UserType[]);
   const [listFilter, setListFilter] = useState<number>();
@@ -46,11 +42,7 @@ export const HomePage = () => {
 
   const fetchUsers = async () => {
     api
-      .get("/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get("/user")
       .then((response) => {
         const users = (response.data.data as UserTypeReq[]).map((user) => {
           const role: string[] = [];
