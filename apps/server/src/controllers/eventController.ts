@@ -1,5 +1,6 @@
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import { db } from "../providers/db";
+import logger from "../utils/logger";
 
 const eventController = {
   getEvents: async () => {
@@ -19,6 +20,7 @@ const eventController = {
     });
 
     if (!events) {
+      logger.error("Erreur lors de la récupération des évènements");
       return ControllerError.INTERNAL({ message: "Erreur lors de la récupération des évènements" });
     }
 
@@ -50,6 +52,7 @@ const eventController = {
       data: eventsWithPromotions,
     });
   },
+
   createEvent: async (description: string, endDate: Date, type: string) => {
     const event = await db.event.create({
       data: {
@@ -60,6 +63,7 @@ const eventController = {
     });
 
     if (!event) {
+      logger.error("Erreur lors de la création de l'évènement");
       return ControllerError.INTERNAL({ message: "Erreur lors de la création de l'évènement" });
     }
 
@@ -74,6 +78,7 @@ const eventController = {
     });
 
     if (!chefEventExist) {
+      logger.error("L'évènement n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'évènement n'existe pas" });
     }
 
@@ -89,6 +94,7 @@ const eventController = {
     });
 
     if (!event) {
+      logger.error("Erreur lors de la modification de l'évènement");
       return ControllerError.INTERNAL({ message: "Erreur lors de la modification de l'évènement" });
     }
 
@@ -102,6 +108,7 @@ const eventController = {
     });
 
     if (!eventExist) {
+      logger.error("L'évènement n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'évènement n'existe pas" });
     }
 
@@ -112,6 +119,7 @@ const eventController = {
     });
 
     if (!deleteEvent) {
+      logger.error("Erreur lors de la suppression de l'évènement");
       return ControllerError.INTERNAL({ message: "Erreur lors de la suppression de l'évènement" });
     }
 

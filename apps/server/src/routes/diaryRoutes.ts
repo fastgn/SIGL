@@ -15,10 +15,12 @@ router.post(
   async (req, res) => {
     try {
       const { userId } = req.params;
+      logger.info(`Création du journal de bord de l'utilisateur ${userId}`);
       const result = await diaryController.createDiary(parseInt(userId));
+      logger.info(`Journal de bord de l'utilisateur ${userId} créé`);
+
       reply(res, result);
     } catch (error: any) {
-      console.error(error);
       logger.error(`Erreur serveur : ${error.message}`);
       reply(res, ControllerError.INTERNAL());
     }
@@ -31,10 +33,13 @@ router.delete(
   async (req, res) => {
     try {
       const { userId } = req.params;
+      logger.info(`Suppression du journal de bord de l'utilisateur ${userId}`);
       const result = await diaryController.deleteDiary(parseInt(userId));
+      logger.info(`Journal de bord de l'utilisateur ${userId} supprimé`);
+
       reply(res, result);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
       reply(res, ControllerError.INTERNAL());
     }
   },
@@ -46,10 +51,13 @@ router.get(
   async (req, res) => {
     try {
       const { userId } = req.params;
+      logger.info(`Récupération du journal de bord de l'utilisateur ${userId}`);
       const result = await diaryController.getDiary(parseInt(userId));
+      logger.info(`Journal de bord de l'utilisateur ${userId} récupéré`);
+
       reply(res, result);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
       reply(res, ControllerError.INTERNAL());
     }
   },

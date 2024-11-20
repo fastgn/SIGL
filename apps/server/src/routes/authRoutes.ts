@@ -15,12 +15,11 @@ router.post("/login", async (req, res) => {
       email,
       password,
     });
-
     logger.info(`Connexion réussie de ${email}`);
 
     reply(res, result);
-  } catch (error) {
-    logger.error(`Erreur serveur : ${error}`);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
     return reply(res, ControllerError.INTERNAL());
   }
 });

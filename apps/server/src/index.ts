@@ -74,12 +74,12 @@ app.use((err: Error, _req: Request, res: Response) => {
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
   logger.info(`[*] ${req.method} ${req.originalUrl}`);
-  console.log(`[*] ${req.method} ${req.originalUrl}`);
   next();
 });
 
 app.listen(port, async () => {
   console.log(`[*] Server is running at http://localhost:${port}`);
+  logger.info(`[*] Server is running on port ${port}`);
   // initDB().then(async (db) => {
   //   try {
   //     await db.$connect();
