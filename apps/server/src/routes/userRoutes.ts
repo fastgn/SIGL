@@ -8,6 +8,7 @@ import { ControllerError } from "../utils/controller";
 import logger from "../utils/logger";
 import authMiddleware, { CustomRequestUser } from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
+import userService from "../services/user.service";
 
 router.post(
   "/",
@@ -72,22 +73,37 @@ router.patch("/:id/password", authMiddleware(), async (req: CustomRequestUser, r
   try {
     const id = parseInt(req.params.id);
     logger.info(`Modification du mot de passe de l'utilisateur ${id}`);
+    console.log(req.context.user);
 
-    if (req.user?.id !== id && !req.user?.role?.includes(EnumUserRole.ADMIN)) {
-      logger.error("Utilisateur non autorisé");
+    if (!req.context.user) {
       return reply(res, ControllerError.UNAUTHORIZED());
     }
+    const roles = userService.getRoles(req.context.user);
+    console.log(roles);
+    if (req.context.user?.admin?.userId !== id || !roles.includes(EnumUserRole.ADMIN)) {
+      return reply(res, ControllerError.UNAUTHORIZED());
+    }
+    console.log("test!!!!!!!!!!!!!!!!!!!!");
 
     const body = req.body;
-    const result = await userController.updatePasswordAdmin(
-      id,
-      body.password,
-      body.confirmPassword,
-    );
-    logger.info(`Mot de passe de l'utilisateur ${id} modifié`);
-    reply(res, result);
-  } catch (error: any) {
-    logger.error(`Erreur serveur : ${error.message}`);
+    if (roles.includes(EnumUserRole.ADMIN)) {
+      const result = await userController.updatePasswordAdmin(
+        id,
+        body.password,
+        body.confirmPassword,
+      );
+      return reply(res, result);
+    } else {
+      const result = await userController.updatePasswordUser(
+        id,
+        body.password,
+        body.confirmPassword,
+        body.currentPassword,
+      );
+      return reply(res, result);
+    }
+  } catch (error) {
+    console.error(error);
     reply(res, ControllerError.INTERNAL());
   }
 });

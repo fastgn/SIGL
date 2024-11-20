@@ -18,12 +18,14 @@ export type UserTypeReq = {
   active: boolean;
   creationDate: string;
   updateDate: string;
-  apprentice: boolean;
-  apprenticeCoordinator: boolean;
-  apprenticeMentor: boolean;
-  curriculumManager: boolean;
-  educationalTutor: boolean;
-  teacher: boolean;
+  roles: string[];
+  apprentice: object;
+  apprenticeCoordinator: object;
+  apprenticeMentor: object;
+  curriculumManager: object;
+  educationalTutor: object;
+  teacher: object;
+  admin: object;
 };
 
 export type UserType = {
@@ -45,18 +47,11 @@ export const UsersPage = () => {
       .get("/user")
       .then((response) => {
         const users = (response.data.data as UserTypeReq[]).map((user) => {
-          const roles: string[] = [];
-          if (user.apprentice) roles.push(EnumUserRole.APPRENTICE);
-          if (user.apprenticeCoordinator) roles.push(EnumUserRole.APPRENTICE_COORDINATOR);
-          if (user.apprenticeMentor) roles.push(EnumUserRole.APPRENTICE_MENTOR);
-          if (user.curriculumManager) roles.push(EnumUserRole.CURICULUM_MANAGER);
-          if (user.educationalTutor) roles.push(EnumUserRole.EDUCATIONAL_TUTOR);
-          if (user.teacher) roles.push(EnumUserRole.TEACHER);
           return {
             id: user.id,
             name: user.lastName + " " + user.firstName,
             email: user.email,
-            roles: roles,
+            roles: user.roles,
           };
         });
         setUsers(users);
@@ -155,7 +150,7 @@ export const UsersPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Banner isAdmin={true} />
+      <Banner />
       <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
         <h1 className="text-3xl font-bold">Gestion des utilisateurs</h1>
         <div className="w-full">

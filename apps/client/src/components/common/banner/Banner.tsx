@@ -13,9 +13,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User } from "lucide-react";
+import { useUser } from "@/contexts/UserContext.tsx";
 
-export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
+export const Banner = () => {
   const { setToken } = useAuth();
+  const { isAdmin, id } = useUser();
 
   const profileRef = useRef<SVGSVGElement>(null);
 
@@ -24,12 +26,23 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
 
   const navItems = [
     {
+      name: "Accueil",
+      link: "/home",
+    },
+    {
       name: "Gestion utilisateurs",
       link: "/users",
     },
     {
       name: "Évènements",
       link: "/events",
+    },
+  ];
+
+  const navItemsUser = [
+    {
+      name: "Accueil",
+      link: "/home",
     },
   ];
 
@@ -52,23 +65,25 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
           {isAdmin && <h6 className="text-xs leading-3">Admin</h6>}
         </Link>
         <div className="flex flex-row gap-6 items-center">
-          {navItems.map((item) => (
-            <Button
-              variant={
-                isAdmin
-                  ? isSelected(item.link)
-                    ? "admin"
-                    : "adminUnselected"
-                  : isSelected(item.link)
-                    ? "user"
-                    : "userUnselected"
-              }
-              key={item.name}
-              onClick={() => navigate(item.link)}
-            >
-              {item.name}
-            </Button>
-          ))}
+          {isAdmin
+            ? navItems.map((item) => (
+                <Button
+                  variant={isSelected(item.link) ? "admin" : "adminUnselected"}
+                  key={item.name}
+                  onClick={() => navigate(item.link)}
+                >
+                  {item.name}
+                </Button>
+              ))
+            : navItemsUser.map((item) => (
+                <Button
+                  variant={isSelected(item.link) ? "user" : "userUnselected"}
+                  key={item.name}
+                  onClick={() => navigate(item.link)}
+                >
+                  {item.name}
+                </Button>
+              ))}
         </div>
         <div className="flex flex-grow"></div>
         <DropdownMenu>
@@ -79,7 +94,7 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
             <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate(`/users/${id}`)}>
                 <User />
                 <span>Profile</span>
               </DropdownMenuItem>

@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button.tsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { UserSchema } from "@sigl/types";
+import { EnumUserRole, UserSchema } from "@sigl/types";
 import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { getErrorInformation } from "@/utilities/utils";
+import { UserTypeReq } from "@/components/features/users/UsersPage.tsx";
+import { useUser } from "@/contexts/UserContext.tsx";
 
 const FormSchema = UserSchema.login.extend({ remember: z.boolean() });
 
@@ -22,6 +24,7 @@ const LoginForm = () => {
   const [alertTitle, setAlertTitle] = useState<string | null>(null);
   const [alertDescription, setAlertDescription] = useState<string | null>(null);
   const [remember, setRemember] = useState(false);
+  const { setIsAdmin, setId } = useUser();
 
   useEffect(() => {
     if (token) {
@@ -41,9 +44,17 @@ const LoginForm = () => {
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     api.post("/auth/login", data).then(
       (res) => {
+        const user = res.data.data.user as UserTypeReq;
+        console.log(user);
         switch (res.status) {
           case 200:
             setToken(res.data.data.token, remember);
+            if (user.roles.includes(EnumUserRole.ADMIN)) {
+              setIsAdmin(true);
+            } else {
+              setIsAdmin(false);
+            }
+            setId(user.id);
             navigate("/");
             break;
           case 401:
