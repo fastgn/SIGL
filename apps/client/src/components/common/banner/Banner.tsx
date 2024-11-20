@@ -1,14 +1,22 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button.tsx";
-import { AvatarIcon, ExitIcon } from "@radix-ui/react-icons";
+import { AvatarIcon } from "@radix-ui/react-icons";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut, Settings, User } from "lucide-react";
 
 export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
   const { setToken } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const menuRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<SVGSVGElement>(null);
 
   const navigate = useNavigate();
@@ -26,24 +34,6 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
   ];
 
   const isSelected = (link: string) => location.pathname === link;
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node) &&
-        profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuRef]);
 
   const logout = () => {
     setToken(null);
@@ -81,22 +71,30 @@ export const Banner = ({ isAdmin }: { isAdmin: boolean }) => {
           ))}
         </div>
         <div className="flex flex-grow"></div>
-        <AvatarIcon
-          className="h-10 w-10 rounded-3xl bg-white shadow-1"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          ref={profileRef}
-        />
-        {isMenuOpen && (
-          <div
-            ref={menuRef}
-            className="absolute top-16 right-16 flex flex-col gap-4 bg-white shadow-1 rounded-lg p-4"
-          >
-            <Button variant="link" onClick={() => logout()} className="flex items-center gap-4">
-              <ExitIcon className="h-5 w-4 font-bold" />
-              Logout
-            </Button>
-          </div>
-        )}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="cursor-pointer">
+            <AvatarIcon className="h-10 w-10 rounded-3xl bg-white shadow-1" ref={profileRef} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <User />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings />
+                <span>Paramètres</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={logout}>
+              <LogOut />
+              <span>Deconnexion</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
