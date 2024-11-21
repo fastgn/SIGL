@@ -9,7 +9,7 @@ const getData = z.object({
   type: z.string(),
   description: z.string(),
   endDate: z.coerce.date(),
-  promotion: z.string(),
+  promotion: z.string().optional().nullable(),
   files: z.array(FileSchema.getData),
 });
 

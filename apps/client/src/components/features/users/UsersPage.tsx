@@ -6,6 +6,7 @@ import api from "@/services/api.service.ts";
 import { EnumSortOption, EnumUserRole } from "@sigl/types";
 import { getErrorInformation } from "@/utilities/utils.ts";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 
 export type UserTypeReq = {
   id: number;
@@ -149,29 +150,31 @@ export const UsersPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Banner />
-      <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
-        <h1 className="text-3xl font-bold">Gestion des utilisateurs</h1>
-        <div className="w-full">
-          <SearchBar
-            searchTerm={searchTerm || ""}
-            onSearchChange={setSearchTerm}
-            filters={filters}
-            setSelectedFilter={setFilter}
-            sortOptions={sortOptions}
-            setSelectedSortOption={setSortOptions}
-            clearSearch={clearSearch}
+    <div className="flex flex-col h-screen">
+      <Banner/>
+      <ScrollArea className="w-full overflow-x-auto ">
+        <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
+          <h1 className="text-3xl font-bold">Gestion des utilisateurs</h1>
+          <div className="w-full">
+            <SearchBar
+              searchTerm={searchTerm || ""}
+              onSearchChange={setSearchTerm}
+              filters={filters}
+              setSelectedFilter={setFilter}
+              sortOptions={sortOptions}
+              setSelectedSortOption={setSortOptions}
+              clearSearch={clearSearch}
+            />
+          </div>
+          <UsersList
+            users={filteredUsers}
+            onDeleteUser={handleDeleteUser}
+            onRequestRefresh={() => {
+              fetchUsers();
+            }}
           />
         </div>
-        <UsersList
-          users={filteredUsers}
-          onDeleteUser={handleDeleteUser}
-          onRequestRefresh={() => {
-            fetchUsers();
-          }}
-        />
-      </div>
+      </ScrollArea>
     </div>
   );
 };
