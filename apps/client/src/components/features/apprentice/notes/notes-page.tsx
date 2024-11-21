@@ -1,16 +1,17 @@
-import { Banner } from "@/components/common/banner/Banner.tsx";
+import { Banner } from "@/components/common/banner/Banner";
 import { Content } from "@tiptap/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/utilities/style";
 import ApprenticeNoteEditor, { ApprenticeNoteEditorRef } from "./editor";
-import { Button } from "@/components/ui/button";
 import api from "@/services/api.service";
 import { useAuth } from "@/contexts/AuthContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { NoteEditorSidebar, NoteEditorSidebarRef } from "./sidebar";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Check, X } from "lucide-react";
 
 export type Note = { id: number; title: string; content: string };
 
@@ -20,7 +21,6 @@ export const ApprenticeNotesPage = () => {
   const sidebarRef = useRef<NoteEditorSidebarRef>(null);
   const editorRef = useRef<ApprenticeNoteEditorRef>(null);
 
-  // const [editorRef, setEditorRef] = useState<Editor | null>(null);
   const [note, setNote] = useState<Note | null>(null);
   const [noteTitle, setNoteTitle] = useState<string>("");
   const [noteContent, setNoteContent] = useState<Content>(
@@ -29,6 +29,7 @@ export const ApprenticeNotesPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const loadNote = (note: Note) => {
+    console.log("Loading note", note);
     if (!editorRef) return;
     editorRef.current?.editor.commands.setContent(note.content);
     setNote(note);
@@ -63,7 +64,11 @@ export const ApprenticeNotesPage = () => {
 
   const saveNoteTitle = async () => {
     if (!note) return;
-    if (!noteTitle.trim()) return;
+    if (!noteTitle.trim()) {
+      toast.error("Le titre ne peut pas être vide");
+      return;
+    }
+
     setLoading(true);
     api
       .patch(
@@ -88,6 +93,11 @@ export const ApprenticeNotesPage = () => {
       );
   };
 
+  const cancelNoteTitle = () => {
+    if (!note) return;
+    setNoteTitle(note.title);
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div>
@@ -95,7 +105,7 @@ export const ApprenticeNotesPage = () => {
       </div>
       <div className="flex w-full flex-1 min-h-0">
         <SidebarProvider className="h-full min-h-0">
-          <NoteEditorSidebar onLoaded={loadNote} ref={sidebarRef} />
+          <NoteEditorSidebar onNoteLoad={loadNote} ref={sidebarRef} />
           <div className="flex flex-col w-full h-full min-h-0">
             {note ? (
               <>
@@ -104,9 +114,25 @@ export const ApprenticeNotesPage = () => {
                     <Spinner />
                   </div>
                 )}
-                {/* <Input onChange={(e) => setNoteTitle(e.target.value)} value={noteTitle} />
-              <Button onClick={saveNoteTitle}>Enregistrer nom</Button>
-              <Button onClick={saveNote}>Enregistrer</Button> */}
+                <div className="flex p-2 items-center gap-1">
+                  <Input
+                    className="max-w-72 text-xl h-10"
+                    value={noteTitle}
+                    onChange={(e) => setNoteTitle(e.target.value)}
+                  />
+                  {!!(note.title != noteTitle) && (
+                    <>
+                      <Button onClick={saveNoteTitle} variant="ghost" size="xs">
+                        <Check size={20} />
+                      </Button>
+                      <Button onClick={cancelNoteTitle} variant="ghost" size="xs">
+                        <X size={20} />
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                {/* <Button onClick={saveNote}>Enregistrer</Button> */}
                 <ApprenticeNoteEditor
                   value={noteContent}
                   onChange={setNoteContent}

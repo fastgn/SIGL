@@ -1,20 +1,20 @@
-import { Input } from "@/components/ui/input.tsx";
+import { Input } from "@/components/ui/input";
 import {
   SheetContent,
   SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select.tsx";
-import { PhoneInput } from "@/components/ui/phone-input.tsx";
+} from "@/components/ui/select";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { EnumUserRole, UserSchema } from "@sigl/types";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,7 @@ import { cn } from "@/utilities/style";
 import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import api from "@/services/api.service.ts";
+import api from "@/services/api.service";
 import { useState } from "react";
 
 const FormSchema = UserSchema.create;

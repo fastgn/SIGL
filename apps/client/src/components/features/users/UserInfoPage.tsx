@@ -12,13 +12,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Banner } from "@/components/common/banner/Banner.tsx";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
+import { Banner } from "@/components/common/banner/Banner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import api from "@/services/api.service";
-import { UserTypeReq } from "@/components/features/home/HomePage.tsx";
+import { UserTypeReq } from "./UsersPage";
 import { EnumUserRole } from "@sigl/types";
 import { toast } from "sonner";
-import { getErrorInformation } from "@/utilities/utils.ts";
+import { getErrorInformation } from "@/utilities/http";
 
 interface User {
   id: number;

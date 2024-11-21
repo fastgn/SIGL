@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
-import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { EventSchemaType } from "@/components/features/events/EventsPage";
 import { CheckCircle, Timer } from "lucide-react";
 import { DataTableRowActions } from "@/components/features/events/eventsTable/DataTableRowActions.tsx";
 import { GroupSchemaType } from "../../groups/GroupsPage";

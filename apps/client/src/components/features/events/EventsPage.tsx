@@ -5,9 +5,9 @@ import { EventForm } from "@/components/features/events/event/EventForm.tsx";
 import { SearchBar } from "@/components/common/searchBar/SearchBar.tsx";
 import { useCallback, useEffect, useState } from "react";
 import { EnumEventType, EnumSortOption, EventSchema } from "@sigl/types";
-import api from "@/services/api.service.ts";
+import api from "@/services/api.service";
 import z from "zod";
-import { getErrorInformation } from "@/utilities/utils.ts";
+import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 

@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet.tsx";
-import { AddUserSheet } from "@/components/features/users/user/AddUserSheet.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { AddUserSheet } from "@/components/features/users/user/AddUserSheet";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import {
   AlertDialog,
@@ -13,11 +13,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { UserType } from "@/components/features/users/UsersPage.tsx";
+import { UserType } from "@/components/features/users/UsersPage";
 
 interface UserCardListProps {
   users: UserType[];

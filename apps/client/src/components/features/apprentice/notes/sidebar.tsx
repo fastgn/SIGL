@@ -24,7 +24,7 @@ import { cn } from "@/utilities/style";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Props = {
-  onLoaded?: (note: Note) => void;
+  onNoteLoad?: (note: Note) => void;
 };
 
 export type NoteEditorSidebarRef = {
@@ -32,7 +32,7 @@ export type NoteEditorSidebarRef = {
 };
 
 export const NoteEditorSidebar = forwardRef<NoteEditorSidebarRef, Props>(
-  ({ onLoaded }: Props, ref) => {
+  ({ onNoteLoad }: Props, ref) => {
     const { token } = useAuth();
 
     const [savedNotes, setSavedNotes] = useState<Note[]>([]);
@@ -76,7 +76,7 @@ export const NoteEditorSidebar = forwardRef<NoteEditorSidebarRef, Props>(
     };
 
     const loadNote = (note: Note) => {
-      if (onLoaded) onLoaded(note);
+      if (onNoteLoad) onNoteLoad(note);
     };
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export const NoteEditorSidebar = forwardRef<NoteEditorSidebarRef, Props>(
               </SidebarGroupAction>
               <SidebarGroupContent>
                 {savedNotes.map((note) => (
-                  <NoteItem note={note} key={note.id} onClick={loadNote} />
+                  <NoteItem note={note} key={note.id} onClick={() => loadNote(note)} />
                 ))}
               </SidebarGroupContent>
             </SidebarGroup>
@@ -110,8 +110,6 @@ export const NoteEditorSidebar = forwardRef<NoteEditorSidebarRef, Props>(
 const NoteItem = ({
   note,
   onClick,
-  onRename,
-  onDelete,
 }: {
   note: Note;
   onClick: (e: any) => void;

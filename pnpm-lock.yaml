@@ -116,11 +116,9 @@ importers:
       '@sigl/types':
         specifier: workspace:*
         version: link:../../packages/types
-<<<<<<< HEAD
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-=======
       '@tiptap/extension-code-block-lowlight':
         specifier: ^2.9.1
         version: 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/extension-code-block@2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1))(@tiptap/pm@2.9.1)(highlight.js@11.9.0)(lowlight@3.1.0)
@@ -160,7 +158,6 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.9.1
         version: 2.9.1
->>>>>>> e1dd755 (Editeur et début des routes)
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -1827,7 +1824,6 @@ packages:
   '@swc/types@0.1.12':
     resolution: {integrity: sha512-wBJA+SdtkbFhHjTMYH+dEH1y4VpfGdAc2Kw/LK09i9bXd/K6j6PkDcFCEzb6iVfZMkPRrl/q0e3toqTAJdkIVA==}
 
-<<<<<<< HEAD
   '@tanstack/react-table@8.20.5':
     resolution: {integrity: sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==}
     engines: {node: '>=12'}
@@ -1838,7 +1834,7 @@ packages:
   '@tanstack/table-core@8.20.5':
     resolution: {integrity: sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==}
     engines: {node: '>=12'}
-=======
+
   '@tiptap/core@2.9.1':
     resolution: {integrity: sha512-tifnLL/ARzQ6/FGEJjVwj9UT3v+pENdWHdk9x6F3X0mB1y0SeCjV21wpFLYESzwNdBPAj8NMp8Behv7dBnhIfw==}
     peerDependencies:
@@ -2011,7 +2007,6 @@ packages:
 
   '@tiptap/starter-kit@2.9.1':
     resolution: {integrity: sha512-nsw6UF/7wDpPfHRhtGOwkj1ipIEiWZS1VGw+c14K61vM1CNj0uQ4jogbHwHZqN1dlL5Hh+FCqUHDPxG6ECbijg==}
->>>>>>> e1dd755 (Editeur et début des routes)
 
   '@types/bcrypt@5.0.2':
     resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
@@ -5763,7 +5758,6 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
-<<<<<<< HEAD
   '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/table-core': 8.20.5
@@ -5771,7 +5765,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@tanstack/table-core@8.20.5': {}
-=======
+
   '@tiptap/core@2.9.1(@tiptap/pm@2.9.1)':
     dependencies:
       '@tiptap/pm': 2.9.1
@@ -5961,7 +5955,6 @@ snapshots:
       '@tiptap/extension-text': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))
       '@tiptap/extension-text-style': 2.9.1(@tiptap/core@2.9.1(@tiptap/pm@2.9.1))
       '@tiptap/pm': 2.9.1
->>>>>>> e1dd755 (Editeur et début des routes)
 
   '@types/bcrypt@5.0.2':
     dependencies:

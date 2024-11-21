@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button";
 import { AvatarIcon } from "@radix-ui/react-icons";
 import { useAuth } from "@/contexts/AuthContext";
 import {
