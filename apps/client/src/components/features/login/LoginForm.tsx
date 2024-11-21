@@ -12,7 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { getErrorInformation } from "@/utilities/utils";
+import { getErrorInformation } from "@/utilities/http";
 import { UserTypeReq } from "@/components/features/users/UsersPage.tsx";
 import { useUser } from "@/contexts/UserContext.tsx";
 

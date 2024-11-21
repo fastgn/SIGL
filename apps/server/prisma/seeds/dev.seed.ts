@@ -3,6 +3,7 @@ import password from "../../src/services/password.service";
 
 async function main() {
   console.log("Initialisation de la base de données...");
+  // Administrateur
   await db.user.create({
     data: {
       lastName: "Doe",
@@ -45,6 +46,26 @@ async function main() {
       phone: "7777777777",
       teacher: {
         create: {},
+      },
+    },
+  });
+  // Apprenti avec un journal de formation
+  await db.user.create({
+    data: {
+      lastName: "Julie",
+      firstName: "Meulin",
+      birthDate: new Date("1998-05-23"),
+      active: true,
+      email: "julie.meulin@eseo.fr",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "1234567890",
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {},
+          },
+        },
       },
     },
   });

@@ -41,6 +41,10 @@ export const Banner = () => {
       name: "Évènements",
       link: "/events",
     },
+    {
+      name: "Notes",
+      link: "/notes",
+    },
   ];
 
   const navItemsUser = [
