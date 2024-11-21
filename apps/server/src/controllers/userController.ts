@@ -15,6 +15,7 @@ const userController = {
       try {
         form = UserSchema.create.parse(payload);
       } catch {
+        logger.error("Invalid params");
         return ControllerError.INVALID_PARAMS();
       }
 
@@ -25,6 +26,7 @@ const userController = {
         },
       });
       if (emailAlreadyUsed) {
+        logger.error("Adresse email déjà utilisée");
         return ControllerError.INVALID_PARAMS({
           message: "Adresse email déjà utilisée",
         });
@@ -80,7 +82,6 @@ const userController = {
       const userWithoutPassword = removePassword(user);
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
     } catch (error: any) {
-      console.error(error);
       logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
@@ -88,6 +89,7 @@ const userController = {
   get: async (id: number): Promise<ControllerResponse> => {
     try {
       if (!id || isNaN(id)) {
+        logger.error("Invalid params");
         return ControllerError.INVALID_PARAMS();
       }
       const user = await db.user.findFirst({
@@ -104,12 +106,13 @@ const userController = {
         },
       });
       if (!user) {
+        logger.error("User not found");
         return ControllerError.NOT_FOUND();
       }
       const userWithoutPassword = removePassword(user);
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
@@ -128,7 +131,7 @@ const userController = {
       const usersWithoutPassword = users.map(removePassword);
       return ControllerSuccess.SUCCESS({ data: usersWithoutPassword });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
@@ -141,14 +144,18 @@ const userController = {
         },
       });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
+
     if (!user) {
+      logger.error("User not found");
       return ControllerError.NOT_FOUND();
     }
+
     return ControllerSuccess.SUCCESS({ data: user });
   },
+
   updatePasswordAdmin: async (
     id: number,
     password: string,
@@ -156,6 +163,7 @@ const userController = {
   ): Promise<ControllerResponse> => {
     try {
       if (password !== confirmPassword) {
+        logger.error("Passwords do not match");
         return ControllerError.INVALID_PARAMS({
           message: "Passwords do not match",
         });
@@ -171,7 +179,7 @@ const userController = {
       });
       return ControllerSuccess.SUCCESS();
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
