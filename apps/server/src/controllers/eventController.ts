@@ -7,15 +7,7 @@ const eventController = {
     const events = await db.event.findMany({
       include: {
         files: true,
-        trainingDiaries: {
-          include: {
-            apprentice: {
-              select: {
-                promotion: true,
-              },
-            },
-          },
-        },
+        groups: true,
       },
     });
 
@@ -24,32 +16,32 @@ const eventController = {
       return ControllerError.INTERNAL({ message: "Erreur lors de la récupération des évènements" });
     }
 
-    const eventsWithPromotions = events.map((event) => {
-      const promotionCount: Record<string, number> = {};
-
-      event.trainingDiaries.forEach((diary) => {
-        const promotion = diary.apprentice.promotion;
-        if (promotion) {
-          promotionCount[promotion] = (promotionCount[promotion] || 0) + 1;
-        }
-      });
-
-      const mostFrequentPromotion = Object.keys(promotionCount).length
-        ? Object.keys(promotionCount).reduce((a, b) =>
-            promotionCount[a] > promotionCount[b] ? a : b,
-          )
-        : null;
-
-      return {
-        ...event,
-        promotion: mostFrequentPromotion,
-        trainingDiaries: undefined,
-      };
-    });
+    // const eventsWithPromotions = events.map((event) => {
+    //   const promotionCount: Record<string, number> = {};
+    //
+    //   event.trainingDiaries.forEach((diary) => {
+    //     const promotion = diary.apprentice.promotion;
+    //     if (promotion) {
+    //       promotionCount[promotion] = (promotionCount[promotion] || 0) + 1;
+    //     }
+    //   });
+    //
+    //   const mostFrequentPromotion = Object.keys(promotionCount).length
+    //     ? Object.keys(promotionCount).reduce((a, b) =>
+    //         promotionCount[a] > promotionCount[b] ? a : b,
+    //       )
+    //     : null;
+    //
+    //   return {
+    //     ...event,
+    //     promotion: mostFrequentPromotion,
+    //     trainingDiaries: undefined,
+    //   };
+    // });
 
     return ControllerSuccess.SUCCESS({
       message: "Evènements récupérés avec succès",
-      data: eventsWithPromotions,
+      data: events,
     });
   },
 

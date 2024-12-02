@@ -4,7 +4,6 @@ import { db } from "../../src/providers/db";
 async function main() {
   // Vider la base de données
   console.log("Suppression des données existantes...");
-  await db.trainingDiarysOnEvents.deleteMany({});
   await db.trainingDiary.deleteMany({});
   await db.event.deleteMany({});
   await db.apprentice.deleteMany({});
@@ -17,8 +16,6 @@ async function main() {
   await db.teacher.deleteMany({});
   await db.compagny.deleteMany({});
   await db.user.deleteMany({});
-  await db.eventType.deleteMany({});
-  await db.eventState.deleteMany({});
 
   // Insertion d'utilisateurs
   const user1 = await db.user.create({

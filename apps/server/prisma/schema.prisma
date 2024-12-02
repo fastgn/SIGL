@@ -38,6 +38,16 @@ model User {
   curriculumManager     CurriculumManager?
   apprenticeCoordinator ApprenticeCoordinator?
   admin                 Admin?
+  groups                Group[]
+}
+
+model Group {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  color       String
+  users       User[]
+  events      Event[]
 }
 
 model FormationCenter {
@@ -159,12 +169,12 @@ model File {
 }
 
 model Event {
-  id              Int             @id @default(autoincrement())
-  type            String
-  description     String?
-  endDate         DateTime
-  trainingDiaries TrainingDiary[]
-  files           File[]
+  id          Int      @id @default(autoincrement())
+  type        String
+  description String?
+  endDate     DateTime
+  groups      Group[]
+  files       File[]
 }
 
 model TrainingDiary {
@@ -172,5 +182,4 @@ model TrainingDiary {
   description  String?
   apprenticeId Int        @unique
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
-  events       Event[]
 }

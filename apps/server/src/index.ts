@@ -50,11 +50,13 @@ import eventRoutes from "./routes/eventRoutes";
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
 app.use("/user", userRoutes);
+app.use("/groups", groupRoutes);
 app.use("/events", eventRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
 import { ReqContext } from "./providers/req-context";
+import groupRoutes from "./routes/groupRoutes";
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {
