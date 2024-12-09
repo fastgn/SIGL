@@ -36,7 +36,7 @@ const authMiddleware = (authorisedRoles: EnumUserRole[] = []) => {
       try {
         const payload = decoded as JwtPayload;
         const user = await db.user.findUnique({
-          select: {
+          include: {
             admin: true,
             apprentice: true,
             apprenticeCoordinator: true,
@@ -58,6 +58,10 @@ const authMiddleware = (authorisedRoles: EnumUserRole[] = []) => {
               message: "You are not authorised to perform this action",
             }),
           );
+        }
+
+        if (user.password) {
+          const { password, ...userWithoutPassword } = user;
         }
 
         const roles: EnumUserRole[] = [];
