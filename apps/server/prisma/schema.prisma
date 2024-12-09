@@ -38,6 +38,7 @@ model User {
   curriculumManager     CurriculumManager?
   apprenticeCoordinator ApprenticeCoordinator?
   admin                 Admin?
+  compagnyAccount       CompagnyAccount?
   groups                Group[]
 }
 
@@ -149,6 +150,7 @@ model Company {
   apprentice       Apprentice[]
   apprenticeMentor ApprenticeMentor[]
   speciality       Speciality[]
+  compagnyAccount  CompagnyAccount[]
 
   @@map("Company")
 }
@@ -187,6 +189,14 @@ model TrainingDiary {
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
   notes        Note[]
   Delivrable Deliverable[]
+}
+
+model CompagnyAccount {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  compagnyId Int     @unique
+  compagny  Compagny @relation(fields: [compagnyId], references: [id])
 }
 
 model Note {
