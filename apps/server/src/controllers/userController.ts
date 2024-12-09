@@ -6,6 +6,7 @@ import { ControllerResponse } from "../types/controller";
 import { db } from "../providers/db";
 import logger from "../utils/logger";
 import { removePassword } from "../utils/user";
+import userService, { UserWithRoles } from "../services/user.service";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -92,10 +93,7 @@ const userController = {
         logger.error("Invalid params");
         return ControllerError.INVALID_PARAMS();
       }
-      const user = await db.user.findFirst({
-        where: {
-          id,
-        },
+      const user: UserWithRoles | null = await db.user.findUnique({
         include: {
           apprentice: true,
           apprenticeCoordinator: true,
@@ -103,14 +101,23 @@ const userController = {
           curriculumManager: true,
           educationalTutor: true,
           teacher: true,
+          admin: true,
+        },
+        where: {
+          id,
         },
       });
+
       if (!user) {
         logger.error("User not found");
         return ControllerError.NOT_FOUND();
       }
+
       const userWithoutPassword = removePassword(user);
-      return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
+      const finalUser: any = userWithoutPassword;
+      finalUser.roles = userService.getRoles(user);
+
+      return ControllerSuccess.SUCCESS({ data: finalUser });
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
@@ -180,6 +187,52 @@ const userController = {
       return ControllerSuccess.SUCCESS();
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  updatePasswordUser: async (
+    id: number,
+    password: string,
+    confirmPassword: string,
+    currentPassword: string,
+  ): Promise<ControllerResponse> => {
+    try {
+      const user = await db.user.findUnique({
+        select: {
+          password: true,
+        },
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      if (!bcrypt.compareSync(currentPassword, user.password)) {
+        return ControllerError.UNAUTHORIZED({
+          message: "Current password is incorrect",
+        });
+      }
+
+      if (password !== confirmPassword) {
+        return ControllerError.INVALID_PARAMS({
+          message: "Passwords do not match",
+        });
+      }
+      const passwordHash = bcrypt.hashSync(password, 10);
+      await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          password: passwordHash,
+        },
+      });
+      return ControllerSuccess.SUCCESS();
+    } catch (error: any) {
+      console.error(error);
       return ControllerError.INTERNAL();
     }
   },

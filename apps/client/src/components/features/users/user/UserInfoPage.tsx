@@ -3,25 +3,17 @@ import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { ArrowLeft, Edit, Key } from "lucide-react";
+import { ArrowLeft, Edit } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog.tsx";
 import { Banner } from "@/components/common/banner/Banner.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
 import api from "@/services/api.service.ts";
 import { UserTypeReq } from "@/components/features/users/UsersPage.tsx";
-import { EnumUserRole } from "@sigl/types";
-import { toast } from "sonner";
-import { getErrorInformation } from "@/utilities/utils.ts";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { useUser } from "@/contexts/UserContext.tsx";
+import { FormChangePassword } from "@/components/features/users/user/FormChangePassword.tsx";
 
-interface User {
+export interface User {
   id: number;
   lastName: string;
   firstName: string;
@@ -38,8 +30,7 @@ export const UserDetailsPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<User | null>(null);
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { isAdmin } = useUser();
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -50,13 +41,6 @@ export const UserDetailsPage = () => {
     }
     api.get(`/user/${id}`).then((res) => {
       const userReq = res.data.data as UserTypeReq;
-      const role: string[] = [];
-      if (userReq.apprentice) role.push(EnumUserRole.APPRENTICE);
-      if (userReq.apprenticeCoordinator) role.push(EnumUserRole.APPRENTICE_COORDINATOR);
-      if (userReq.apprenticeMentor) role.push(EnumUserRole.APPRENTICE_MENTOR);
-      if (userReq.curriculumManager) role.push(EnumUserRole.CURICULUM_MANAGER);
-      if (userReq.educationalTutor) role.push(EnumUserRole.EDUCATIONAL_TUTOR);
-      if (userReq.teacher) role.push(EnumUserRole.TEACHER);
       const user: User = {
         id: userReq.id,
         lastName: userReq.lastName,
@@ -64,7 +48,7 @@ export const UserDetailsPage = () => {
         name: userReq.lastName + " " + userReq.firstName,
         email: userReq.email,
         password: "*******",
-        role: role,
+        role: userReq.roles,
         birthDate: userReq.birthDate,
         phone: userReq.phone,
         profileImage: "",
@@ -94,41 +78,9 @@ export const UserDetailsPage = () => {
     setEditedUser((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
-  const handlePasswordChange = () => {
-    if (user && newPassword === confirmPassword) {
-      api
-        .patch(`/user/${user.id}/password`, {
-          password: newPassword,
-          confirmPassword: confirmPassword,
-        })
-        .then(
-          (res) => {
-            console.log("pp");
-            switch (res.status) {
-              case 200:
-              case 201:
-                toast.success("Mot de passe modifié avec succès");
-                break;
-              default:
-                console.log("here");
-                toast.error(getErrorInformation(res.status).name);
-            }
-          },
-          (error) => {
-            switch (error.status) {
-              default:
-                toast.error(getErrorInformation(error.status).name);
-            }
-          },
-        );
-    } else {
-      toast.error("Les mots de passe ne correspondent pas");
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
-      <Banner isAdmin={true} />
+      <Banner />
       <div className="flex flex-col gap-5 px-16 py-12">
         <div className="flex justify-between items-center gap-3">
           <h1 className="text-3xl font-bold">Edition d'utilisateur</h1>
@@ -216,42 +168,7 @@ export const UserDetailsPage = () => {
                         type="password"
                         readOnly
                       />
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline">
-                            <Key className="mr-2 h-4 w-4" />
-                            Change
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Modification de mot de passe</DialogTitle>
-                          </DialogHeader>
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="newPassword">Nouveau mot de passe</Label>
-                              <Input
-                                id="newPassword"
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="ConfirmPassword">Confirmation de mot de passe</Label>
-                              <Input
-                                id="ConfirmPassword"
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                              />
-                            </div>
-                            <Button onClick={handlePasswordChange}>
-                              Mettre à jour le mot de passe
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                      <FormChangePassword user={editedUser} isAdmin={isAdmin} />
                     </div>
                   </div>
                   <div className="space-y-2">
