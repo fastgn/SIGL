@@ -209,7 +209,8 @@ const userController = {
       if (!user) {
         return ControllerError.NOT_FOUND();
       }
-      if (bcrypt.compareSync(currentPassword, user.password)) {
+
+      if (!bcrypt.compareSync(currentPassword, user.password)) {
         return ControllerError.UNAUTHORIZED({
           message: "Current password is incorrect",
         });

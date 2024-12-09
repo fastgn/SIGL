@@ -73,17 +73,15 @@ router.patch("/:id/password", authMiddleware(), async (req: CustomRequestUser, r
   try {
     const id = parseInt(req.params.id);
     logger.info(`Modification du mot de passe de l'utilisateur ${id}`);
-    console.log(req.context.user);
 
     if (!req.context.user) {
       return reply(res, ControllerError.UNAUTHORIZED());
     }
     const roles = userService.getRoles(req.context.user);
-    console.log(roles);
-    if (req.context.user?.admin?.userId !== id || !roles.includes(EnumUserRole.ADMIN)) {
+
+    if (req.context.user?.id !== id && !roles.includes(EnumUserRole.ADMIN)) {
       return reply(res, ControllerError.UNAUTHORIZED());
     }
-    console.log("test!!!!!!!!!!!!!!!!!!!!");
 
     const body = req.body;
     if (roles.includes(EnumUserRole.ADMIN)) {
