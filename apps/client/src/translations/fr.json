@@ -1,0 +1,70 @@
+{
+  "globals": {
+    "cancel": "Annuler",
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "noData": "Aucun résultat",
+    "id": "Id",
+    "errors": {
+      "common": "Une erreur est survenue.",
+      "connection": "Une erreur s'est produite lors de la connexion."
+    }
+  },
+  "home": {},
+  "login": {},
+  "users": {},
+  "events": {
+    "title": "Evènements",
+    "form": {
+      "newEvent": "Nouvel évènement",
+      "title": {
+        "update": "Modifier un événement",
+        "create": "Ajouter un nouvel évènement"
+      },
+      "info": "Remplissez le formulaire ci-dessous pour {{action}} un {{newEvent}} évènement.",
+      "type": {
+        "title": "Type",
+        "placeholder": "Choisir le type"
+      },
+      "description": {
+        "title": "Description",
+        "placeholder": "Remplissez la description"
+      },
+      "endDate": {
+        "title": "Date de fin",
+        "placeholder": "Choisir la date de fin"
+      },
+      "groups": {
+        "title": "Groupes",
+        "placeholder": "Choisir les groupes"
+      }
+    },
+    "table": {
+      "type": "Type",
+      "files": "Fichiers ressources",
+      "noFiles": "Aucun fichier",
+      "status": {
+        "title": "Statut",
+        "inProgress": "En cours",
+        "terminated": "Terminé"
+      },
+      "endDate": "Date de fin"
+    },
+    "eventTypes": {
+      "s5_report": "Rapport S5",
+      "s6_report": "Rapport S6",
+      "s7_report": "Rapport S7",
+      "s8_report": "Rapport S8",
+      "ping_pre_report": "Rapport pré PING",
+      "ping_mi_report": "Rapport avancement PING",
+      "ping_report": "Rapport PING"
+    },
+    "success": {
+      "create": "L'évènement a été créé avec succès.",
+      "update": "Évènement modifié avec succès",
+      "delete": "Évènement supprimé avec succès"
+    }
+  },
+  "groups": {}
+}

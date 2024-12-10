@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CSSProperties } from "react";
+import { useTranslation } from "react-i18next";
 
 const DEFAULT_REACT_TABLE_COLUMN_WIDTH = 150;
 
@@ -23,6 +24,8 @@ export function EventsTable<TData, TValue>({ columns, data }: DataTableProps<TDa
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const { t } = useTranslation();
 
   return (
     <div className="rounded-[18px] bg-white shadow-0">
@@ -60,7 +63,7 @@ export function EventsTable<TData, TValue>({ columns, data }: DataTableProps<TDa
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {t("globals.noData")}
               </TableCell>
             </TableRow>
           )}
