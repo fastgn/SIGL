@@ -3,8 +3,16 @@ import { Badge } from "@/components/ui/badge.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
 import { CheckCircle, Timer } from "lucide-react";
+import { DataTableRowActions } from "@/components/features/events/eventsTable/DataTableRowActions.tsx";
+import { GroupSchemaType } from "../../groups/GroupsPage";
+import { GroupColor } from "@sigl/types";
 
-export const columns: ColumnDef<EventSchemaType>[] = [
+interface ColumnsProps {
+  onDelete: (event: EventSchemaType) => void;
+  onEdit: (event: EventSchemaType) => void;
+}
+
+export const getColumns = ({ onDelete, onEdit }: ColumnsProps): ColumnDef<EventSchemaType>[] => [
   {
     accessorKey: "id",
     header: ({ table }) => (
@@ -30,18 +38,27 @@ export const columns: ColumnDef<EventSchemaType>[] = [
         <h1>{row.original.id}</h1>
       </div>
     ),
-    size: 300,
+    size: 50,
   },
   {
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => {
-      const promo: string = row.original.promotion;
+      const groups: GroupSchemaType[] = row.original.groups ?? [];
       const type: string = row.original.type;
       const description: string = row.original.description;
       return (
         <div className="flex flex-row gap-2 items-center w-8/9">
-          {promo && <Badge variant="outline">{promo}</Badge>}
+          {groups.map((group) => {
+            {
+              const color = GroupColor[group.color as keyof typeof GroupColor];
+              return (
+                <Badge key={group.id} variant="outline" className={`border-${color} text-${color}`}>
+                  {group.name}
+                </Badge>
+              );
+            }
+          })}
           <h1 className="font-bold">{type}</h1>
           <p className="text-gray-500 truncate">{description}</p>
         </div>
@@ -72,6 +89,7 @@ export const columns: ColumnDef<EventSchemaType>[] = [
         </div>
       );
     },
+    size: 500,
   },
   {
     accessorKey: "status",
@@ -101,6 +119,7 @@ export const columns: ColumnDef<EventSchemaType>[] = [
         </div>
       );
     },
+    size: 140,
   },
   {
     accessorKey: "dateFin",
@@ -109,12 +128,17 @@ export const columns: ColumnDef<EventSchemaType>[] = [
       const date: Date = new Date(row.original.endDate);
       return <h1>{date.toLocaleDateString("fr-FR")}</h1>;
     },
+    size: 100,
   },
   {
-    accessorKey: "actions",
-    header: "Actions",
+    id: "actions",
     cell: ({ row }) => {
-      return <h1>{row.id}</h1>;
+      return (
+        <div className="p-1 rounded-3xl hover:bg-gray-200">
+          <DataTableRowActions row={row} onDelete={onDelete} onEdit={onEdit} />
+        </div>
+      );
     },
+    size: 50,
   },
 ];

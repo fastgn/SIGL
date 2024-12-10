@@ -7,15 +7,7 @@ const eventController = {
     const events = await db.event.findMany({
       include: {
         files: true,
-        trainingDiaries: {
-          include: {
-            apprentice: {
-              select: {
-                promotion: true,
-              },
-            },
-          },
-        },
+        groups: true,
       },
     });
 
@@ -24,32 +16,32 @@ const eventController = {
       return ControllerError.INTERNAL({ message: "Erreur lors de la récupération des évènements" });
     }
 
-    const eventsWithPromotions = events.map((event) => {
-      const promotionCount: Record<string, number> = {};
-
-      event.trainingDiaries.forEach((diary) => {
-        const promotion = diary.apprentice.promotion;
-        if (promotion) {
-          promotionCount[promotion] = (promotionCount[promotion] || 0) + 1;
-        }
-      });
-
-      const mostFrequentPromotion = Object.keys(promotionCount).length
-        ? Object.keys(promotionCount).reduce((a, b) =>
-            promotionCount[a] > promotionCount[b] ? a : b,
-          )
-        : null;
-
-      return {
-        ...event,
-        promotion: mostFrequentPromotion,
-        trainingDiaries: undefined,
-      };
-    });
+    // const eventsWithPromotions = events.map((event) => {
+    //   const promotionCount: Record<string, number> = {};
+    //
+    //   event.trainingDiaries.forEach((diary) => {
+    //     const promotion = diary.apprentice.promotion;
+    //     if (promotion) {
+    //       promotionCount[promotion] = (promotionCount[promotion] || 0) + 1;
+    //     }
+    //   });
+    //
+    //   const mostFrequentPromotion = Object.keys(promotionCount).length
+    //     ? Object.keys(promotionCount).reduce((a, b) =>
+    //         promotionCount[a] > promotionCount[b] ? a : b,
+    //       )
+    //     : null;
+    //
+    //   return {
+    //     ...event,
+    //     promotion: mostFrequentPromotion,
+    //     trainingDiaries: undefined,
+    //   };
+    // });
 
     return ControllerSuccess.SUCCESS({
       message: "Evènements récupérés avec succès",
-      data: eventsWithPromotions,
+      data: events,
     });
   },
 
@@ -126,40 +118,37 @@ const eventController = {
     return ControllerSuccess.SUCCESS({ message: "Evènement supprimé avec succès" });
   },
 
-  // AssociateEventWithDiary: async (event_id: number, diary_id: number) => {
-  //   if (!event_id) {
-  //     return ControllerError.INVALID_PARAMS({ message: "event_id est requis" });
-  //   }
-  //
-  //   if (!diary_id) {
-  //     return ControllerError.INVALID_PARAMS({ message: "diary_id est requis" });
-  //   }
-  //   const updateRelation = db.trainingDiary.update({
-  //     where: {
-  //       id: diary_id,
-  //     },
-  //     data: {
-  //       events: {
-  //         connect: {
-  //           id: event_id,
-  //         },
-  //       },
-  //     },
-  //     include: {
-  //       events: true, // Inclut les events pour vérifier la mise à jour
-  //     },
-  //   });
-  //
-  //   if (!updateRelation) {
-  //     return ControllerError.INTERNAL({
-  //       message: "Erreur lors de l'association de l'évènement avec le journal",
-  //     });
-  //   }
-  //
-  //   return ControllerSuccess.SUCCESS({
-  //     message: "Evènement associé avec succès",
-  //     data: updateRelation,
-  //   });
-  // },
+  associateEventWithGroups: async (event_id: number, groups_id: Array<number>) => {
+    if (!event_id) {
+      return ControllerError.INVALID_PARAMS({ message: "event_id est requis" });
+    }
+
+    if (!groups_id) {
+      return ControllerError.INVALID_PARAMS({ message: "group_id est requis" });
+    }
+
+    const promises = groups_id.map((group_id) =>
+      db.event.update({
+        where: {
+          id: event_id,
+        },
+        data: {
+          groups: {
+            connect: {
+              id: group_id,
+            },
+          },
+        },
+      }),
+    );
+
+    try {
+      await Promise.all(promises);
+    } catch (error) {
+      return ControllerError.INTERNAL({
+        message: "Erreur lors de l'association de l'évènement avec le groupe : " + error,
+      });
+    }
+  },
 };
 export default eventController;

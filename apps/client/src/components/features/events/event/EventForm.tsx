@@ -1,3 +1,6 @@
+import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Calendar } from "@/components/ui/calendar.tsx";
 import {
   Dialog,
   DialogClose,
@@ -7,8 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Plus } from "lucide-react";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+import MultiSelect from "@/components/ui/multi-select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import {
   Select,
   SelectContent,
@@ -17,42 +21,84 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { EnumEventType, EnumPromo, EventSchema } from "@sigl/types";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/services/api.service.ts";
-import { toast } from "sonner";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
-import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { cn, getErrorInformation } from "@/utilities/utils.ts";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { EnumEventType, EventSchema, GroupSchema } from "@sigl/types";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar.tsx";
-import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+interface EventFormProps {
+  onAddEvent: (event: EventSchemaType) => void;
+  onUpdateEvent: (event: EventSchemaType) => void;
+  isOpen: boolean;
+  onOpenChange: (value: boolean) => void;
+  eventObject: EventSchemaType | null;
+}
 
 const FormSchema = EventSchema.getData.omit({ files: true, id: true });
+export type GroupsSchemaType = z.infer<typeof GroupSchema.getData>;
 
-export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType) => void }) => {
+const defaultValues = {
+  type: "",
+  description: "",
+  groups: [],
+  endDate: undefined,
+};
+
+export const EventForm = ({
+  onAddEvent,
+  onUpdateEvent,
+  isOpen,
+  onOpenChange,
+  eventObject,
+}: EventFormProps) => {
   const [submitting, setSubmitting] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
+  const [groups, setGroups] = useState<GroupsSchemaType[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      type: "",
-      description: "",
-      promotion: "",
-      endDate: undefined,
-    },
+    defaultValues: defaultValues,
   });
 
   useEffect(() => {
-    form.reset();
-  }, [form, isOpen]);
+    api.get("/groups").then(
+      (res) => {
+        switch (res.status) {
+          case 200:
+            setGroups(res.data.data);
+            break;
+        }
+      },
+      (err) => {
+        const error = getErrorInformation(err.status);
+        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+      },
+    );
+  }, []);
+
+  useEffect(() => {
+    if (eventObject) {
+      form.reset({
+        type: eventObject.type,
+        description: eventObject.description,
+        groups: eventObject.groups,
+        endDate: eventObject.endDate,
+      });
+      setSelectedItems(eventObject.groups.map((group) => group.id.toString()));
+    } else {
+      form.reset(defaultValues);
+      setSelectedItems([]);
+    }
+  }, [isOpen, eventObject, form]);
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     setSubmitting(true);
@@ -62,14 +108,14 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
           case 201:
           case 200:
             {
-              toast.success("Évènement ajouté avec succès");
+              toast.success(`Évènement ajouté avec succès`);
               const newEvent: EventSchemaType = {
                 ...data,
                 id: res.data.data.id,
                 files: [],
               };
               onAddEvent(newEvent);
-              setIsOpen(false);
+              onOpenChange(false);
             }
             break;
         }
@@ -83,8 +129,42 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
     );
   };
 
+  const onUpdate = (data: z.infer<typeof FormSchema>) => {
+    setSubmitting(true);
+    api.put(`/events/${eventObject?.id}`, data).then(
+      (res) => {
+        switch (res.status) {
+          case 201:
+          case 200:
+            {
+              toast.success(`Évènement modifié avec succès`);
+              const event: EventSchemaType = {
+                ...data,
+                id: res.data.data.id,
+                files: [],
+              };
+              onUpdateEvent(event);
+              onOpenChange(false);
+            }
+            break;
+        }
+        setSubmitting(false);
+      },
+      (err) => {
+        const error = getErrorInformation(err.status);
+        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+        setSubmitting(false);
+      },
+    );
+  };
+
+  useEffect(() => {
+    const selectedGroups = groups.filter((group) => selectedItems.includes(group.id.toString()));
+    form.setValue("groups", selectedGroups);
+  }, [selectedItems, groups, form]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="add">
           <Plus className="mr-2 h-4 w-4" />
@@ -93,13 +173,18 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ajouter un nouvel évènement</DialogTitle>
+          <DialogTitle>
+            {eventObject ? "Modifier un évènement" : "Ajouter un nouvel évènement"}
+          </DialogTitle>
           <DialogDescription>
-            Remplissez le formulaire ci-dessous pour ajouter un nouvel évènement.
+            {`Remplissez le formulaire ci-dessous pour ${eventObject ? "modifier" : "ajouter"} un ${eventObject ? "" : "nouvel"} évènement.`}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="relative grid gap-6 py-4">
+          <form
+            onSubmit={form.handleSubmit(eventObject ? onUpdate : onSubmit)}
+            className="relative grid gap-6 py-4"
+          >
             <FormField
               control={form.control}
               name="type"
@@ -134,7 +219,7 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Description</FormLabel>
                   <textarea
-                    className="w-full p-2 border rounded max-h-32 min-h-10"
+                    className="w-full p-2 border rounded max-h-32 min-h-10 text-sm font-normal"
                     {...field}
                     disabled={submitting}
                   />
@@ -153,7 +238,7 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "pl-3 text-left font-normal shadow-none",
+                            "px-3 text-left font-normal shadow-none",
                             !field.value && "text-muted-foreground",
                           )}
                           disabled={submitting}
@@ -187,28 +272,23 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
             />
             <FormField
               control={form.control}
-              name="promotion"
+              name="groups"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Promotion</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={submitting}
-                  >
-                    <SelectTrigger className="bg-white rounded-[6px] border">
-                      <SelectValue placeholder="Promotion" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {Object.values(EnumPromo).map((promo) => (
-                          <SelectItem key={promo} value={promo}>
-                            {promo}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                <FormItem className="w-full">
+                  <FormLabel className="text-sm font-medium">Groupes</FormLabel>
+                  <MultiSelect
+                    placeholder={
+                      field.value.length
+                        ? field.value.map((group) => group.name).join(", ")
+                        : "Groupes"
+                    }
+                    options={groups.map((group) => ({
+                      label: group.name,
+                      value: group.id.toString(),
+                    }))}
+                    selectedOptions={selectedItems}
+                    setSelectedOptions={setSelectedItems}
+                  />
                 </FormItem>
               )}
             />
@@ -220,7 +300,13 @@ export const DialogForm = ({ onAddEvent }: { onAddEvent: (event: EventSchemaType
                 </Button>
               </DialogClose>
               <Button type="submit" variant="add" disabled={submitting} className="shadow-1">
-                {submitting ? <UpdateIcon className="h-4 w-4 animate-spin" /> : "Ajouter"}
+                {submitting ? (
+                  <UpdateIcon className="h-4 w-4 animate-spin" />
+                ) : eventObject ? (
+                  "Modifier"
+                ) : (
+                  "Ajouter"
+                )}
               </Button>
             </div>
           </form>

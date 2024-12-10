@@ -30,8 +30,12 @@ export const Banner = () => {
       link: "/home",
     },
     {
-      name: "Gestion utilisateurs",
+      name: "Utilisateurs",
       link: "/users",
+    },
+    {
+      name: "Groupes",
+      link: "/groups",
     },
     {
       name: "Évènements",

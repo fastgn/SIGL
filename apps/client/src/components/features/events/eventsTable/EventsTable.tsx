@@ -8,23 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table.tsx";
+import { CSSProperties } from "react";
+
+const DEFAULT_REACT_TABLE_COLUMN_WIDTH = 150;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  onDelete?: (id: number) => void;
 }
 
-export function EventsTable<TData, TValue>({
-  columns,
-  data,
-  onDelete,
-}: DataTableProps<TData, TValue>) {
+export function EventsTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const table = useReactTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    meta: { onDelete },
   });
 
   return (
@@ -33,13 +30,19 @@ export function EventsTable<TData, TValue>({
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-                </TableHead>
-              ))}
+              {headerGroup.headers.map((header) => {
+                const style: CSSProperties =
+                  header.getSize() !== DEFAULT_REACT_TABLE_COLUMN_WIDTH
+                    ? { width: `${header.getSize()}px` }
+                    : {};
+                return (
+                  <TableHead key={header.id} style={style}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                );
+              })}
             </TableRow>
           ))}
         </TableHeader>
