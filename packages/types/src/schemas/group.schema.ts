@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { EventSchema } from "./event.schema";
 import { UserSchema } from "./user.schema";
 
 /**
@@ -11,7 +10,6 @@ const getData = z.object({
   description: z.string(),
   color: z.string(),
   users: z.array(UserSchema.getData).optional().nullable(),
-  events: z.array(EventSchema.getData).optional().nullable(),
 });
 
 const GroupSchema = {
@@ -19,3 +17,4 @@ const GroupSchema = {
 };
 
 export { GroupSchema };
+

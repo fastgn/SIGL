@@ -1,3 +1,6 @@
+import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Calendar } from "@/components/ui/calendar.tsx";
 import {
   Dialog,
   DialogClose,
@@ -7,8 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Plus } from "lucide-react";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+import MultiSelect from "@/components/ui/multi-select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import {
   Select,
   SelectContent,
@@ -17,21 +21,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { EnumEventType, EnumPromo, EventSchema } from "@sigl/types";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/services/api.service.ts";
-import { toast } from "sonner";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
-import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { cn, getErrorInformation } from "@/utilities/utils.ts";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { EnumEventType, EventSchema, GroupSchema } from "@sigl/types";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar } from "@/components/ui/calendar.tsx";
-import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
+import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 interface EventFormProps {
   onAddEvent: (event: EventSchemaType) => void;
@@ -42,11 +43,12 @@ interface EventFormProps {
 }
 
 const FormSchema = EventSchema.getData.omit({ files: true, id: true });
+export type GroupsSchemaType = z.infer<typeof GroupSchema.getData>;
 
 const defaultValues = {
   type: "",
   description: "",
-  promotion: undefined,
+  groups: [],
   endDate: undefined,
 };
 
@@ -59,6 +61,8 @@ export const EventForm = ({
 }: EventFormProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
+  const [groups, setGroups] = useState<GroupsSchemaType[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -66,15 +70,33 @@ export const EventForm = ({
   });
 
   useEffect(() => {
+    api.get("/groups").then(
+      (res) => {
+        switch (res.status) {
+          case 200:
+            setGroups(res.data.data);
+            break;
+        }
+      },
+      (err) => {
+        const error = getErrorInformation(err.status);
+        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+      },
+    );
+  }, []);
+
+  useEffect(() => {
     if (eventObject) {
       form.reset({
         type: eventObject.type,
         description: eventObject.description,
-        promotion: eventObject.promotion,
+        groups: eventObject.groups,
         endDate: eventObject.endDate,
       });
+      setSelectedItems(eventObject.groups.map((group) => group.id.toString()));
     } else {
       form.reset(defaultValues);
+      setSelectedItems([]);
     }
   }, [isOpen, eventObject, form]);
 
@@ -135,6 +157,11 @@ export const EventForm = ({
       },
     );
   };
+
+  useEffect(() => {
+    const selectedGroups = groups.filter((group) => selectedItems.includes(group.id.toString()));
+    form.setValue("groups", selectedGroups);
+  }, [selectedItems, groups, form]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -211,7 +238,7 @@ export const EventForm = ({
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "pl-3 text-left font-normal shadow-none",
+                            "px-3 text-left font-normal shadow-none",
                             !field.value && "text-muted-foreground",
                           )}
                           disabled={submitting}
@@ -245,28 +272,23 @@ export const EventForm = ({
             />
             <FormField
               control={form.control}
-              name="promotion"
+              name="groups"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Promotion</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value ?? ""}
-                    disabled={submitting}
-                  >
-                    <SelectTrigger className="bg-white rounded-[6px] border">
-                      <SelectValue placeholder="Promotion" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {Object.values(EnumPromo).map((promo) => (
-                          <SelectItem key={promo} value={promo}>
-                            {promo}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                <FormItem className="w-full">
+                  <FormLabel className="text-sm font-medium">Groupes</FormLabel>
+                  <MultiSelect
+                    placeholder={
+                      field.value.length
+                        ? field.value.map((group) => group.name).join(", ")
+                        : "Groupes"
+                    }
+                    options={groups.map((group) => ({
+                      label: group.name,
+                      value: group.id.toString(),
+                    }))}
+                    selectedOptions={selectedItems}
+                    setSelectedOptions={setSelectedItems}
+                  />
                 </FormItem>
               )}
             />

@@ -151,7 +151,7 @@ export const UsersPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Banner/>
+      <Banner />
       <ScrollArea className="w-full overflow-x-auto ">
         <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
           <h1 className="text-3xl font-bold">Utilisateurs</h1>

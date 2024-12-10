@@ -19,7 +19,14 @@ import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { getErrorInformation } from "@/utilities/utils.ts";
 import { GroupSchemaType } from "@/components/features/groups/GroupsPage.tsx";
-import { GroupSchema } from "@sigl/types";
+import { GroupColor, GroupSchema } from "@sigl/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface GroupFormProps {
   onAddGroup: (event: GroupSchemaType) => void;
@@ -27,7 +34,7 @@ interface GroupFormProps {
   onOpenChange: (value: boolean) => void;
 }
 
-const FormSchema = GroupSchema.getData.omit({ id: true, users: true, events: true });
+const FormSchema = GroupSchema.getData.omit({ id: true, users: true });
 
 const defaultValues = {
   name: "",
@@ -126,11 +133,18 @@ export const GroupForm = ({ onAddGroup, isOpen, onOpenChange }: GroupFormProps) 
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Couleur</FormLabel>
-                  <input
-                    className="w-full p-2 border rounded text-sm font-normal"
-                    {...field}
-                    disabled={submitting}
-                  />
+                  <Select onValueChange={field.onChange} value={field.value} disabled={submitting}>
+                    <SelectTrigger className="w-full bg-white rounded-[6px] border">
+                      <SelectValue placeholder="Choisir une couleur" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(GroupColor).map((color) => (
+                        <SelectItem key={color} value={color}>
+                          {color}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />

@@ -25,9 +25,15 @@ router.post(
   authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
   async (req, res) => {
     try {
-      const { description, endDate, type } = req.body;
+      const { description, endDate, type, groups } = req.body;
       logger.info(`Création de l'événement "${description}"`);
       const result = await eventController.createEvent(description, new Date(endDate), type);
+      if (groups) {
+        await eventController.associateEventWithGroups(
+          result.data.id,
+          groups.map((group: any) => group.id),
+        );
+      }
       logger.info(`Evénement "${description}" créé`);
       reply(res, result);
     } catch (error: any) {
@@ -44,13 +50,19 @@ router.put(
     try {
       const { id } = req.params;
       logger.info(`Modification de l'événement ${id}`);
-      const { description, endDate, type } = req.body;
+      const { description, endDate, type, groups } = req.body;
       const result = await eventController.modifyEvent(
         parseInt(id),
         description,
         new Date(endDate),
         type,
       );
+      if (groups) {
+        await eventController.associateEventWithGroups(
+          result.data.id,
+          groups.map((group: any) => group.id),
+        );
+      }
       logger.info(`Evénement ${id} modifié`);
       reply(res, result);
     } catch (error: any) {

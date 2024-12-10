@@ -4,6 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
 import { CheckCircle, Timer } from "lucide-react";
 import { DataTableRowActions } from "@/components/features/events/eventsTable/DataTableRowActions.tsx";
+import { GroupSchemaType } from "../../groups/GroupsPage";
+import { GroupColor } from "@sigl/types";
 
 interface ColumnsProps {
   onDelete: (event: EventSchemaType) => void;
@@ -42,12 +44,21 @@ export const getColumns = ({ onDelete, onEdit }: ColumnsProps): ColumnDef<EventS
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => {
-      const promo: string = row.original.promotion ?? "";
+      const groups: GroupSchemaType[] = row.original.groups ?? [];
       const type: string = row.original.type;
       const description: string = row.original.description;
       return (
         <div className="flex flex-row gap-2 items-center w-8/9">
-          {promo && <Badge variant="outline">{promo}</Badge>}
+          {groups.map((group) => {
+            {
+              const color = GroupColor[group.color as keyof typeof GroupColor];
+              return (
+                <Badge key={group.id} variant="outline" className={`border-${color} text-${color}`}>
+                  {group.name}
+                </Badge>
+              );
+            }
+          })}
           <h1 className="font-bold">{type}</h1>
           <p className="text-gray-500 truncate">{description}</p>
         </div>
