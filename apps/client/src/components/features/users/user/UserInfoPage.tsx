@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Label } from "@/components/ui/label.tsx";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ArrowLeft, Edit } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Banner } from "@/components/common/banner/Banner.tsx";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
-import api from "@/services/api.service.ts";
-import { UserTypeReq } from "@/components/features/users/UsersPage.tsx";
+import { Banner } from "@/components/common/banner/Banner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import api from "@/services/api.service";
+import { UserTypeReq } from "@/components/features/users/UsersPage";
 import { UpdateIcon } from "@radix-ui/react-icons";
-import { useUser } from "@/contexts/UserContext.tsx";
-import { FormChangePassword } from "@/components/features/users/user/FormChangePassword.tsx";
+import { useUser } from "@/contexts/UserContext";
+import { FormChangePassword } from "@/components/features/users/user/FormChangePassword";
 
 export interface User {
   id: number;

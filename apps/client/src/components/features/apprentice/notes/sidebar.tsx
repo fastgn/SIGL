@@ -5,19 +5,12 @@ import {
   SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Note } from "./notes-page";
-import { MoreHorizontal, Plus } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Plus } from "lucide-react";
 import { cn } from "@/utilities/style";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNote } from "./note-context";
@@ -130,21 +123,6 @@ const NoteItem = ({
           <span>{note.title}</span>
         </a>
       </SidebarMenuButton>
-      {/* <DropdownMenu>
-        <DropdownMenuTrigger asChild onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-          <SidebarMenuAction className={cn(isHovered ? "opacity-100" : "opacity-0")}>
-            <MoreHorizontal className="" />
-          </SidebarMenuAction>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="right" align="start">
-          <DropdownMenuItem>
-            <button onClick={() => onRename && onRename(note)}>Renommer</button>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <button onClick={() => onDelete && onDelete(note)}>Supprimer</button>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu> */}
     </SidebarMenuItem>
   );
 };

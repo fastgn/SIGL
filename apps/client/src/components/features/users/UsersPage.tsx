@@ -6,7 +6,7 @@ import api from "@/services/api.service";
 import { EnumSortOption, EnumUserRole } from "@sigl/types";
 import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type UserTypeReq = {
   id: number;

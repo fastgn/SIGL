@@ -4,16 +4,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Key } from "lucide-react";
-import { Label } from "@/components/ui/label.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import api from "@/services/api.service.ts";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import api from "@/services/api.service";
 import { toast } from "sonner";
-import { getErrorInformation } from "@/utilities/utils.ts";
+import { getErrorInformation } from "@/utilities/http";
 import { useState } from "react";
-import { User } from "@/components/features/users/user/UserInfoPage.tsx";
+import { User } from "@/components/features/users/user/UserInfoPage";
 
 interface PropsFormChangePassword {
   user: User | null;

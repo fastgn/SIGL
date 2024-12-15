@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table.tsx";
+} from "@/components/ui/table";
 import { CSSProperties } from "react";
 
 const DEFAULT_REACT_TABLE_COLUMN_WIDTH = 150;

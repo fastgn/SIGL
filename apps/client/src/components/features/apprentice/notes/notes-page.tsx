@@ -1,5 +1,5 @@
 import { Banner } from "@/components/common/banner/Banner";
-import { Content, Editor } from "@tiptap/react";
+import { Content } from "@tiptap/react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/utilities/style";
 import ApprenticeNoteEditor, { ApprenticeNoteEditorRef } from "./editor";
@@ -129,7 +129,7 @@ const PageContent = () => {
     <NoteProvider>
       <div className="flex flex-col h-full">
         <div>
-          <Banner isAdmin={true} />
+          <Banner />
         </div>
         <div className="flex w-full flex-1 min-h-0">
           <SidebarProvider className="h-full min-h-0">

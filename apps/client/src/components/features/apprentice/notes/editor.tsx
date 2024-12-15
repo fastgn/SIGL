@@ -70,7 +70,7 @@ export interface ApprenticeNoteEditorRef {
 }
 
 export const ApprenticeNoteEditor = React.forwardRef<ApprenticeNoteEditorRef, MinimalTiptapProps>(
-  ({ value, onChange, className, editorContentClassName, getEditor, ...props }, ref) => {
+  ({ value, onChange, className, editorContentClassName, ...props }, ref) => {
     const editor = useMinimalTiptapEditor({
       value,
       onUpdate: onChange,

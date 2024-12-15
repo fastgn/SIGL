@@ -1,15 +1,15 @@
-import { Banner } from "@/components/common/banner/Banner.tsx";
-import { EventsTable } from "@/components/features/events/eventsTable/EventsTable.tsx";
-import { getColumns } from "@/components/features/events/eventsTable/getColumns.tsx";
-import { EventForm } from "@/components/features/events/event/EventForm.tsx";
-import { SearchBar } from "@/components/common/searchBar/SearchBar.tsx";
+import { Banner } from "@/components/common/banner/Banner";
+import { EventsTable } from "@/components/features/events/eventsTable/EventsTable";
+import { getColumns } from "@/components/features/events/eventsTable/getColumns";
+import { EventForm } from "@/components/features/events/event/EventForm";
+import { SearchBar } from "@/components/common/searchBar/SearchBar";
 import { useCallback, useEffect, useState } from "react";
 import { EnumEventType, EnumSortOption, EventSchema } from "@sigl/types";
 import api from "@/services/api.service";
 import z from "zod";
 import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
@@ -126,7 +126,7 @@ export const EventsPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Banner isAdmin={true} />
+      <Banner />
       <ScrollArea className="w-full overflow-x-auto ">
         <div className="flex flex-col gap-5 px-16 py-12">
           <div className="flex flex-row justify-between">

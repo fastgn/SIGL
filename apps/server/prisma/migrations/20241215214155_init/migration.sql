@@ -16,6 +16,16 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
+CREATE TABLE "Group" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "color" TEXT NOT NULL,
+
+    CONSTRAINT "Group_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "FormationCenter" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -166,6 +176,12 @@ CREATE TABLE "Note" (
 );
 
 -- CreateTable
+CREATE TABLE "_GroupToUser" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "_CompanyToSpeciality" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -178,7 +194,7 @@ CREATE TABLE "_SpecialityToTeacher" (
 );
 
 -- CreateTable
-CREATE TABLE "_EventToTrainingDiary" (
+CREATE TABLE "_EventToGroup" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -211,6 +227,12 @@ CREATE UNIQUE INDEX "Admin_userId_key" ON "Admin"("userId");
 CREATE UNIQUE INDEX "TrainingDiary_apprenticeId_key" ON "TrainingDiary"("apprenticeId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "_GroupToUser_AB_unique" ON "_GroupToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_GroupToUser_B_index" ON "_GroupToUser"("B");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_CompanyToSpeciality_AB_unique" ON "_CompanyToSpeciality"("A", "B");
 
 -- CreateIndex
@@ -223,10 +245,10 @@ CREATE UNIQUE INDEX "_SpecialityToTeacher_AB_unique" ON "_SpecialityToTeacher"("
 CREATE INDEX "_SpecialityToTeacher_B_index" ON "_SpecialityToTeacher"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_EventToTrainingDiary_AB_unique" ON "_EventToTrainingDiary"("A", "B");
+CREATE UNIQUE INDEX "_EventToGroup_AB_unique" ON "_EventToGroup"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_EventToTrainingDiary_B_index" ON "_EventToTrainingDiary"("B");
+CREATE INDEX "_EventToGroup_B_index" ON "_EventToGroup"("B");
 
 -- AddForeignKey
 ALTER TABLE "EducationalTutor" ADD CONSTRAINT "EducationalTutor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -277,6 +299,12 @@ ALTER TABLE "TrainingDiary" ADD CONSTRAINT "TrainingDiary_apprenticeId_fkey" FOR
 ALTER TABLE "Note" ADD CONSTRAINT "Note_trainingDiaryId_fkey" FOREIGN KEY ("trainingDiaryId") REFERENCES "TrainingDiary"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "_GroupToUser" ADD CONSTRAINT "_GroupToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Group"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GroupToUser" ADD CONSTRAINT "_GroupToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_CompanyToSpeciality" ADD CONSTRAINT "_CompanyToSpeciality_A_fkey" FOREIGN KEY ("A") REFERENCES "Company"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -289,7 +317,7 @@ ALTER TABLE "_SpecialityToTeacher" ADD CONSTRAINT "_SpecialityToTeacher_A_fkey" 
 ALTER TABLE "_SpecialityToTeacher" ADD CONSTRAINT "_SpecialityToTeacher_B_fkey" FOREIGN KEY ("B") REFERENCES "Teacher"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_EventToTrainingDiary" ADD CONSTRAINT "_EventToTrainingDiary_A_fkey" FOREIGN KEY ("A") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_EventToGroup" ADD CONSTRAINT "_EventToGroup_A_fkey" FOREIGN KEY ("A") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_EventToTrainingDiary" ADD CONSTRAINT "_EventToTrainingDiary_B_fkey" FOREIGN KEY ("B") REFERENCES "TrainingDiary"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_EventToGroup" ADD CONSTRAINT "_EventToGroup_B_fkey" FOREIGN KEY ("B") REFERENCES "Group"("id") ON DELETE CASCADE ON UPDATE CASCADE;

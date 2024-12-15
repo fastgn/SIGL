@@ -184,7 +184,6 @@ model TrainingDiary {
   description  String?
   apprenticeId Int        @unique
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
-  events       Event[]
   notes        Note[]
 }
 

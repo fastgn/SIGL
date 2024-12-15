@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User } from "lucide-react";
-import { useUser } from "@/contexts/UserContext.tsx";
+import { useUser } from "@/contexts/UserContext";
 
 export const Banner = () => {
   const { setToken } = useAuth();

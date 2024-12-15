@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EventSchemaType } from "@/components/features/events/EventsPage";
 import { CheckCircle, Timer } from "lucide-react";
-import { DataTableRowActions } from "@/components/features/events/eventsTable/DataTableRowActions.tsx";
+import { DataTableRowActions } from "@/components/features/events/eventsTable/DataTableRowActions";
 import { GroupSchemaType } from "../../groups/GroupsPage";
 import { GroupColor } from "@sigl/types";
 

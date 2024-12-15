@@ -1,9 +1,9 @@
-import { Banner } from "@/components/common/banner/Banner.tsx";
+import { Banner } from "@/components/common/banner/Banner";
 import { SearchBar } from "@/components/common/searchBar/SearchBar";
-import { GroupForm } from "@/components/features/groups/group/GroupForm.tsx";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
-import api from "@/services/api.service.ts";
-import { getErrorInformation } from "@/utilities/utils.ts";
+import { GroupForm } from "@/components/features/groups/group/GroupForm";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import api from "@/services/api.service";
+import { getErrorInformation } from "@/utilities/http";
 import { GroupSchema } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -89,7 +89,7 @@ export const GroupsPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Banner isAdmin={true} />
+      <Banner />
       <ScrollArea className="w-full overflow-x-auto ">
         <div className="flex flex-col gap-5 px-16 py-12">
           <div className="flex flex-row justify-between">
