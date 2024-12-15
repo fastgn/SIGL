@@ -15,6 +15,7 @@ import { LinkBubbleMenu } from "@/components/ui/minimal-tiptap/components/bubble
 import { useMinimalTiptapEditor } from "@/components/ui/minimal-tiptap/hooks/use-minimal-tiptap";
 import { MeasuredContainer } from "@/components/ui/minimal-tiptap/components/measured-container";
 import { useImperativeHandle } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface MinimalTiptapProps extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
   value?: Content;
@@ -76,11 +77,11 @@ export const ApprenticeNoteEditor = React.forwardRef<ApprenticeNoteEditorRef, Mi
       ...props,
     });
 
-    if (!editor) return null;
-
     useImperativeHandle(ref, () => ({
-      editor,
+      editor: editor!,
     }));
+
+    if (!editor) return null;
 
     return (
       <MeasuredContainer
@@ -92,10 +93,13 @@ export const ApprenticeNoteEditor = React.forwardRef<ApprenticeNoteEditorRef, Mi
         )}
       >
         <Toolbar editor={editor} />
-        <EditorContent
-          editor={editor}
-          className={cn("minimal-tiptap-editor", editorContentClassName)}
-        />
+        <ScrollArea className="h-full">
+          <EditorContent
+            editor={editor}
+            className={cn("minimal-tiptap-editor", editorContentClassName)}
+          />
+        </ScrollArea>
+
         <LinkBubbleMenu editor={editor} />
       </MeasuredContainer>
     );

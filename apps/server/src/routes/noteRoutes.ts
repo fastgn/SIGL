@@ -44,4 +44,16 @@ router.patch("/:noteId", authMiddleware(), async (req, res) => {
   }
 });
 
+router.delete("/:noteId", authMiddleware(), async (req, res) => {
+  try {
+    const { noteId } = req.params;
+    const user = req.context.user!;
+    const result = await noteController.delete(user, parseInt(noteId));
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
 export default router;

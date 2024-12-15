@@ -130,6 +130,42 @@ const noteController = {
       return ControllerError.INTERNAL();
     }
   },
+  delete: async (user: UserWithRoles, noteId: number): Promise<ControllerResponse> => {
+    try {
+      // Récupérer le propriétaire de la note
+      const note = await db.note.findFirst({
+        include: {
+          trainingDiary: {
+            include: {
+              apprentice: true,
+            },
+          },
+        },
+        where: {
+          id: noteId,
+        },
+      });
+      if (!note) return ControllerError.NOT_FOUND();
+      if (!note.trainingDiary) return ControllerError.INTERNAL();
+      if (!note.trainingDiary.apprentice) return ControllerError.INTERNAL();
+
+      // L'utilisateur doit être l'apprenti ou un admin
+      if (note.trainingDiary.apprentice.id !== user.apprentice?.id && !user.admin) {
+        return ControllerError.UNAUTHORIZED();
+      }
+
+      await db.note.delete({
+        where: {
+          id: noteId,
+        },
+      });
+
+      return ControllerSuccess.SUCCESS();
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
 };
 
 export default noteController;

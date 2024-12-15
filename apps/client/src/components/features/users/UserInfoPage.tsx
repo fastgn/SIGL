@@ -103,14 +103,12 @@ export const UserDetailsPage = () => {
         })
         .then(
           (res) => {
-            console.log("pp");
             switch (res.status) {
               case 200:
               case 201:
                 toast.success("Mot de passe modifié avec succès");
                 break;
               default:
-                console.log("here");
                 toast.error(getErrorInformation(res.status).name);
             }
           },
