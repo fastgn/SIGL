@@ -26,7 +26,7 @@ const PageContent = () => {
   const notes = useNote();
   const editorRef = useRef<ApprenticeNoteEditorRef>(null);
 
-  const [isNoteChanged, setIsNoteChanged] = useState<boolean>(false);
+  const [hasPendingModifications, setHasPendingModifications] = useState<boolean>(false);
   const [note, setNote] = useState<Note | null>(null);
   const [noteTitle, setNoteTitle] = useState<string>("");
   const [noteContent, setNoteContent] = useState<Content>(
@@ -45,12 +45,19 @@ const PageContent = () => {
     });
   }, []);
 
-  const loadNote = (note: Note) => {
+  const loadNote = async (note: Note) => {
+    if (hasPendingModifications) {
+      if (confirm("Des modifications ont été apportées. Voulez-vous les sauvegarder ?")) {
+        await saveNoteContent();
+      }
+    }
+
     if (!editorRef) return;
     editorRef.current?.editor.commands.setContent(note.content);
     setNote(note);
     setNoteTitle(note.title);
     setNoteContent((note.content as Content) || "");
+    setHasPendingModifications(false);
   };
 
   const saveNoteContent = async () => {
@@ -60,7 +67,7 @@ const PageContent = () => {
     try {
       const updatedNote = await notes.updateContent(note, noteContent as string);
       setNote(updatedNote);
-      setIsNoteChanged(false);
+      setHasPendingModifications(false);
       const remoteNotes = await notes.fetch();
       setRemoteNotes(remoteNotes);
       toast.success("Note sauvegardée avec succès", {
@@ -98,7 +105,7 @@ const PageContent = () => {
   const noteChanged = (newContent: Content) => {
     if (!note) return;
     setNoteContent(newContent);
-    setIsNoteChanged(note.content != newContent);
+    setHasPendingModifications(note.content != newContent);
   };
 
   const cancelNoteTitle = () => {
@@ -130,7 +137,7 @@ const PageContent = () => {
               onCreateNew={createNewNote}
               remoteNotes={remoteNotes}
               selectedNoteId={note?.id}
-              editingNoteId={isNoteChanged ? note?.id : undefined}
+              editingNoteId={hasPendingModifications ? note?.id : undefined}
               onNoteLoad={loadNote}
             />
             <div className="flex flex-col w-full h-full min-h-0">
@@ -182,7 +189,7 @@ const PageContent = () => {
                       className={cn(
                         "relative overflow-hidden h-0 gap-4 border-t-2 transition-all",
                         {
-                          "h-14": isNoteChanged,
+                          "h-14": hasPendingModifications,
                         },
                       )}
                     >

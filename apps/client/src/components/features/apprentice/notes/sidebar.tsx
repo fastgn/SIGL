@@ -130,7 +130,7 @@ const NoteItem = ({
           <span>{note.title}</span>
         </a>
       </SidebarMenuButton>
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
           <SidebarMenuAction className={cn(isHovered ? "opacity-100" : "opacity-0")}>
             <MoreHorizontal className="" />
@@ -138,13 +138,13 @@ const NoteItem = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent side="right" align="start">
           <DropdownMenuItem>
-            <button onClick={() => onRename && onRename(note)}>Renomer</button>
+            <button onClick={() => onRename && onRename(note)}>Renommer</button>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <button onClick={() => onDelete && onDelete(note)}>Supprimer</button>
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </SidebarMenuItem>
   );
 };
