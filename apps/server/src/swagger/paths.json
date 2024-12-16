@@ -56,14 +56,89 @@
       }
     }
   },
-  "/diary/{userId}": {
+  "/user/count": {
+    "get": {
+      "summary": "Récupération du nombre total d'utilisateurs",
+      "tags": ["User"],
+      "description": "Permet à un admin de récupérer le nombre total d'utilisateurs",
+      "responses": {
+        "200": {
+          "description": "Récupération du nombre total d'utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "integer", "description": "Status du succes de la requete" },
+                  "message": { "type": "string", "description": "Message de la requete" },
+                  "data": {
+                    "type": "integer",
+                    "description": "Nombre total d'utilisateurs"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/user/count/role": {
+    "get": {
+      "summary": "Récupération du nombre total d'utilisateurs par role",
+      "tags": ["User"],
+      "description": "Permet à un admin de récupérer le nombre total d'utilisateurs par role",
+      "responses": {
+        "200": {
+          "description": "Récupération du nombre total d'utilisateurs par role",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "integer", "description": "Status du succes de la requete" },
+                  "message": { "type": "string", "description": "Message de la requete" },
+                  "data": {
+                    "type": "object",
+                    "description": "Nombre total d'utilisateurs par role",
+                    "properties": {
+                      "apprentice": { "type": "integer", "description": "Nombre d'apprenti" },
+                      "apprentice_coordinator": {
+                        "type": "integer",
+                        "description": "Nombre de coordinateur d'apprenti"
+                      },
+                      "apprentice_mentor": {
+                        "type": "integer",
+                        "description": "Nombre de mentor d'apprenti"
+                      },
+                      "curiculum_manager": {
+                        "type": "integer",
+                        "description": "Nombre de gestionnaire de cursus"
+                      },
+                      "educational_tutor": {
+                        "type": "integer",
+                        "description": "Nombre de tuteur pédagogique"
+                      },
+                      "teacher": { "type": "integer", "description": "Nombre de professeur" },
+                      "admin": { "type": "integer", "description": "Nombre d'admin" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/diary/user/{id}": {
     "post": {
       "summary": "Création d'un journal de formation",
       "tags": ["Diary"],
       "description": "Permet à un admin de créer un journal de formation",
       "parameters": [
         {
-          "name": "userId",
+          "name": "id",
           "in": "path",
           "required": true,
           "schema": {
@@ -107,7 +182,7 @@
       "description": "Permet à un admin de supprimer un journal de formation",
       "parameters": [
         {
-          "name": "userId",
+          "name": "id",
           "in": "path",
           "required": true,
           "schema": {
@@ -151,7 +226,7 @@
       "description": "Permet à un utilisateur de récupérer la liste des journaux de formation",
       "parameters": [
         {
-          "name": "userId",
+          "name": "id",
           "in": "path",
           "required": true,
           "schema": {

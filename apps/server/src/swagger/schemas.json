@@ -84,5 +84,29 @@
     "state": {
       "type": "string"
     }
+  },
+
+  "Group": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "int"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "color": {
+        "type": "string"
+      },
+      "users": {
+        "type": "array",
+        "items": {
+          "$ref": "#/User"
+        }
+      }
+    }
   }
 }

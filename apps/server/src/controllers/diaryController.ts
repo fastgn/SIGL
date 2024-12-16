@@ -14,22 +14,33 @@ const diaryController = {
       logger.error("user_id doit être un nombre");
       return ControllerError.INVALID_PARAMS({ message: "user_id doit être un nombre" });
     }
-    const checkUserExist = await db.user.findFirst({
-      select: { id: true },
+    const user = await db.user.findFirst({
+      include: {
+        apprentice: true,
+      },
       where: {
         id: user_id,
       },
     });
 
-    if (checkUserExist === null) {
+    if (user === null) {
       logger.error("L'utilisateur n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
+    }
+
+    if (user.apprentice === null) {
+      logger.error("L'apprenti n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "L'apprenti n'existe pas" });
     }
 
     const diary = await db.trainingDiary.create({
       data: {
         description: "Journal de formation",
-        apprenticeId: user_id,
+        apprentice: {
+          connect: {
+            id: user.apprentice?.id,
+          },
+        },
       },
     });
 
@@ -52,13 +63,16 @@ const diaryController = {
       return ControllerError.INVALID_PARAMS({ message: "user_id doit être un nombre" });
     }
 
-    const checkUserExist = await db.user.findFirst({
+    const user = await db.user.findFirst({
+      include: {
+        apprentice: true,
+      },
       where: {
         id: user_id,
       },
     });
 
-    if (checkUserExist === null) {
+    if (user === null) {
       logger.error("L'utilisateur n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
     }
@@ -66,7 +80,7 @@ const diaryController = {
     const deleteDiary = await db.trainingDiary.delete({
       select: { id: true },
       where: {
-        apprenticeId: user_id,
+        apprenticeId: user.apprentice?.id,
       },
     });
 
@@ -94,22 +108,25 @@ const diaryController = {
       return ControllerError.INVALID_PARAMS({ message: "user_id doit être un nombre" });
     }
 
-    const checkUserExist = await db.user.findFirst({
+    const user = await db.user.findFirst({
+      include: {
+        apprentice: {
+          include: {
+            trainingDiary: true,
+          },
+        },
+      },
       where: {
         id: user_id,
       },
     });
 
-    if (checkUserExist === null) {
+    if (user === null) {
       logger.error("L'utilisateur n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
     }
 
-    const diary = await db.trainingDiary.findFirst({
-      where: {
-        apprenticeId: user_id,
-      },
-    });
+    const diary = user.apprentice?.trainingDiary;
 
     if (!diary) {
       logger.error("Le journal n'existe pas");
