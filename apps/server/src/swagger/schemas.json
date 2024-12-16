@@ -40,7 +40,6 @@
       }
     }
   },
-
   "trainingDiary": {
     "type": "object",
     "properties": {
@@ -64,7 +63,6 @@
       }
     }
   },
-
   "Event": {
     "id": {
       "type": "int"
@@ -107,6 +105,26 @@
           "$ref": "#/User"
         }
       }
+    }
+  },
+  "Note": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "id": {
+      "type": "int"
+    },
+    "creationDate": {
+      "type": "string"
+    },
+    "updateDate": {
+      "type": "string"
+    },
+    "trainingDiaryId": {
+      "type": "int"
     }
   }
 }

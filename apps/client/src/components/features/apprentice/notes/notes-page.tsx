@@ -9,8 +9,22 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Check, MoreVertical, X } from "lucide-react";
 import { NoteProvider, useNote } from "./note-context";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type Note = { id: number; title: string; content: string };
 
@@ -38,7 +52,7 @@ const PageContent = () => {
   useEffect(() => {
     notes.fetch().then((notes) => {
       setRemoteNotes(notes);
-      if (remoteNotes.length) loadNote(remoteNotes[0]);
+      if (notes.length) loadNote(remoteNotes[0]);
       setTimeout(() => {
         setLoading(false);
       }, 1000);
@@ -63,6 +77,8 @@ const PageContent = () => {
   const saveNoteContent = async () => {
     if (!note) return;
     setLoading(true);
+
+    console.log("note", noteContent);
 
     try {
       const updatedNote = await notes.updateContent(note, noteContent as string);
@@ -121,8 +137,24 @@ const PageContent = () => {
     return newNote;
   };
 
-  const onNoteDelete = (note: Note) => {
-    console.log("delete note", note);
+  const deleteNote = async () => {
+    if (!note) return;
+
+    if (!confirm("Voulez-vous vraiment supprimer cette note ?")) return;
+
+    setLoading(true);
+
+    try {
+      await notes.remove(note);
+      const remoteNotes = await notes.fetch();
+      if (remoteNotes.length) loadNote(remoteNotes[0]);
+      setRemoteNotes(remoteNotes);
+      toast.success("Note supprimée avec succès");
+    } catch {
+      toast.error("Erreur lors de la suppression de la note");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -156,22 +188,37 @@ const PageContent = () => {
               ) : (
                 !!note && (
                   <>
-                    <div className="flex p-2 items-center gap-1">
-                      <Input
-                        className="max-w-72 text-xl h-10"
-                        value={noteTitle}
-                        onChange={(e) => setNoteTitle(e.target.value)}
-                      />
-                      {!!(note.title.trim() != noteTitle.trim()) && (
-                        <>
-                          <Button onClick={saveNoteTitle} variant="ghost" size="xs">
-                            <Check size={20} />
+                    <div className="flex items-center justify-between">
+                      <div className="flex p-2 items-center gap-1">
+                        <Input
+                          className="max-w-72 text-xl h-10"
+                          value={noteTitle}
+                          onChange={(e) => setNoteTitle(e.target.value)}
+                        />
+                        {!!(note.title.trim() != noteTitle.trim()) && (
+                          <>
+                            <Button onClick={saveNoteTitle} variant="ghost" size="xs">
+                              <Check size={20} />
+                            </Button>
+                            <Button onClick={cancelNoteTitle} variant="ghost" size="xs">
+                              <X size={20} />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost">
+                            <MoreVertical size={20} />
                           </Button>
-                          <Button onClick={cancelNoteTitle} variant="ghost" size="xs">
-                            <X size={20} />
-                          </Button>
-                        </>
-                      )}
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem onClick={deleteNote}>Supprimer</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                     <ApprenticeNoteEditor
                       value={noteContent}

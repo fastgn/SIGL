@@ -15,8 +15,6 @@ const noteController = {
       const { success, data: form } = NoteSchema.create.safeParse(payload);
       if (!success) return ControllerError.INVALID_PARAMS();
 
-      console.log("noteController -> form", form);
-
       // Seuls les apprentis peuvent créer des notes
       // TODO : Retirer admin
       if (!user.apprentice)
