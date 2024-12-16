@@ -40,10 +40,10 @@ const noteController = {
           trainingDiaryId: trainingDiary.id,
         },
       });
+      logger.info(`Note créée : ${note.id}`);
 
       return ControllerSuccess.SUCCESS({ data: note });
     } catch (error: any) {
-      console.error(error);
       logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
@@ -72,7 +72,7 @@ const noteController = {
 
       return ControllerSuccess.SUCCESS({ data: notes });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
@@ -114,17 +114,17 @@ const noteController = {
         ...(form.title && { title: form.title }),
         ...(form.content && { content: form.content }),
       };
-      console.log("noteController -> data", data);
       const note = await db.note.update({
         where: {
           id: form.noteId,
         },
         data,
       });
+      logger.info(`Note modifiée : ${note.id}`);
 
       return ControllerSuccess.SUCCESS({ data: note });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
@@ -157,10 +157,11 @@ const noteController = {
           id: noteId,
         },
       });
+      logger.info(`Note supprimée : ${noteId}`);
 
       return ControllerSuccess.SUCCESS();
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },

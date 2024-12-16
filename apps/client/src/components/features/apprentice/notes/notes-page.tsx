@@ -78,8 +78,6 @@ const PageContent = () => {
     if (!note) return;
     setLoading(true);
 
-    console.log("note", noteContent);
-
     try {
       const updatedNote = await notes.updateContent(note, noteContent as string);
       setNote(updatedNote);
