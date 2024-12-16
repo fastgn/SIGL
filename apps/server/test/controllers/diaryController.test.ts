@@ -1,10 +1,15 @@
 import { test, expect, vi, describe } from "vitest";
 import diaryController from "../../src/controllers/diaryController";
 import { db } from "../../src/providers/__mocks__/db";
+import { beforeEach } from "node:test";
 
 vi.mock("../../src/providers/db");
 
 describe("Créer un journal de formation", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   test("Créer un journal de formation pour un utilisateur existant", async () => {
     db.user.findFirst.mockResolvedValue({
       id: 1,
@@ -56,7 +61,7 @@ describe("Créer un journal de formation", () => {
     expect(res.status).toBe(200);
   });
   test("Récupérer le journal de formation d'un apprenti", async () => {
-    db.user.findFirst.mockResolvedValue({
+    const userWithApprentice = {
       id: 1,
       firstName: "John",
       lastName: "Doe",
@@ -68,15 +73,29 @@ describe("Créer un journal de formation", () => {
       password: "securepassword",
       creationDate: new Date(),
       updateDate: new Date(),
-    });
-    db.trainingDiary.findFirst.mockResolvedValue({
-      id: 1,
-      description: "Journal de formation",
-      apprenticeId: 1,
-    });
+      apprentice: {
+        id: 1,
+        trainingDiary: [
+          {
+            id: 1,
+            description: "Journal de formation",
+            apprenticeId: 1,
+          },
+        ],
+      },
+    };
+
+    db.user.findFirst.mockResolvedValue(userWithApprentice);
+
     const res = await diaryController.getDiary(1);
-    console.log(res);
-    //console.log("response test createDiary: \n", res);
+
     expect(res.status).toBe(200);
+    expect(res.data).toEqual([
+      {
+        id: 1,
+        description: "Journal de formation",
+        apprenticeId: 1,
+      },
+    ]);
   });
 });
