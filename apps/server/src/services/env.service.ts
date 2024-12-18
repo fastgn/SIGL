@@ -103,7 +103,6 @@ try {
   env.init();
 } catch (error) {
   logger.error("Error loading environment variables, env file may be missing or invalid");
-  console.error(error);
   process.exit(1);
 }
 

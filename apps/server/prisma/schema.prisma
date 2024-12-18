@@ -38,6 +38,16 @@ model User {
   curriculumManager     CurriculumManager?
   apprenticeCoordinator ApprenticeCoordinator?
   admin                 Admin?
+  groups                Group[]
+}
+
+model Group {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  color       String
+  users       User[]
+  events      Event[]
 }
 
 model FormationCenter {
@@ -67,7 +77,7 @@ model Apprentice {
   userId             Int               @unique
   user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyId          Int?
-  company            Compagny?         @relation(fields: [companyId], references: [id])
+  company            Company?          @relation(fields: [companyId], references: [id])
   promotion          String?
   poste              String?
   educationalTutorId Int?
@@ -79,11 +89,11 @@ model Apprentice {
 }
 
 model ApprenticeMentor {
-  id        Int       @id @default(autoincrement())
-  userId    Int       @unique
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyId Int?
-  company   Compagny? @relation(fields: [companyId], references: [id])
+  company   Company? @relation(fields: [companyId], references: [id])
   poste     String?
 
   apprentice Apprentice[]
@@ -126,7 +136,7 @@ model Admin {
   user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Compagny {
+model Company {
   id               Int     @id @default(autoincrement())
   name             String
   address          String
@@ -139,21 +149,63 @@ model Compagny {
   apprentice       Apprentice[]
   apprenticeMentor ApprenticeMentor[]
   speciality       Speciality[]
+
+  @@map("Company")
 }
 
 model Speciality {
   id   Int    @id @default(autoincrement())
   name String
 
-  teacher  Teacher[]
-  compagny Compagny[]
+  teacher Teacher[]
+  company Company[]
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  createdAt DateTime @default(now())
+  event     Event?   @relation(fields: [eventId], references: [id])
+  eventId   Int?
+}
+
+model Event {
+  id          Int          @id @default(autoincrement())
+  type        String
+  description String?
+  endDate     DateTime
+  groups      Group[]
+  files       File[]
+  delivrables Deliverable[]
 }
 
 model TrainingDiary {
   id           Int        @id @default(autoincrement())
   description  String?
-  event        String[]
-  deliverable  String[]
   apprenticeId Int        @unique
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
+  notes        Note[]
+  Delivrable Deliverable[]
+}
+
+model Note {
+  id              Int           @id @default(autoincrement())
+  title           String
+  content         String
+  trainingDiaryId Int
+  trainingDiary   TrainingDiary @relation(fields: [trainingDiaryId], references: [id], onDelete: Cascade)
+  creationDate    DateTime      @default(now())
+  updateDate      DateTime      @default(now())
+}
+
+model Deliverable {
+  id        Int      @id @default(autoincrement())
+  comment   String?
+  blobName       String
+  createdAt DateTime @default(now())
+  event     Event?   @relation(fields: [eventId], references: [id])
+  eventId   Int?
+  trainingDiary TrainingDiary? @relation(fields: [trainingDiaryId], references: [id])
+  trainingDiaryId Int?
 }

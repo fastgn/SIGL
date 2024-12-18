@@ -6,5 +6,21 @@
   {
     "name": "Diary",
     "description": "Operations sur le Journal de formation"
+  },
+  {
+    "name": "Event",
+    "description": "Operations sur les événements"
+  },
+  {
+    "name": "User",
+    "description": "Operations sur les utilisateurs"
+  },
+  {
+    "name": "Group",
+    "description": "Operations sur les groupes"
+  },
+  {
+    "name": "Deliverable",
+    "description": "Operations sur les livrables"
   }
 ]

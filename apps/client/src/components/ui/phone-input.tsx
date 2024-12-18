@@ -19,7 +19,7 @@ import { Input, InputProps } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { cn } from "@/utilities/utils";
+import { cn } from "@/utilities/style";
 
 type PhoneInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> &
   Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
@@ -33,7 +33,7 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> = React.forwa
   return (
     <RPNInput.default
       ref={ref}
-      className={cn("flex border border-input rounded-md", className)}
+      className={cn("flex border border-0 rounded-md", className)}
       flagComponent={FlagComponent}
       countrySelectComponent={CountrySelect}
       inputComponent={InputComponent}
@@ -83,7 +83,7 @@ const CountrySelect = ({ disabled, value, onChange, options }: CountrySelectProp
         <Button
           type="button"
           variant={"outline"}
-          className={cn("flex gap-1 rounded-e-none rounded-s-md px-3")}
+          className={cn("flex gap-1 rounded-e-none rounded-s-md px-3 shadow-none border-r-0")}
           disabled={disabled}
         >
           <FlagComponent country={value} countryName={value} />

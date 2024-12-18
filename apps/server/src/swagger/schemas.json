@@ -40,7 +40,6 @@
       }
     }
   },
-
   "trainingDiary": {
     "type": "object",
     "properties": {
@@ -53,12 +52,6 @@
       "description": {
         "type": "string"
       },
-      "event": {
-        "type": "array",
-        "items": {
-          "type": "string"
-        }
-      },
       "deliverable": {
         "type": "array",
         "items": {
@@ -66,6 +59,97 @@
         }
       },
       "apprenticeId": {
+        "type": "int"
+      }
+    }
+  },
+  "Event": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "endDate": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      }
+    }
+  },
+
+  "Group": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "int"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "color": {
+        "type": "string"
+      },
+      "users": {
+        "type": "array",
+        "items": {
+          "$ref": "#/User"
+        }
+      }
+    }
+  },
+  "Note": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    },
+    "id": {
+      "type": "int"
+    },
+    "creationDate": {
+      "type": "string"
+    },
+    "updateDate": {
+      "type": "string"
+    },
+    "trainingDiaryId": {
+      "type": "int"
+    }
+  },
+
+  "Deliverable": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "int"
+      },
+      "comment": {
+        "type": "string"
+      },
+      "url": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "eventId": {
+        "type": "int"
+      },
+      "userId": {
         "type": "int"
       }
     }

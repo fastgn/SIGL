@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { EnumUserRole } from "../enums";
 import validator from "validator";
+import {z} from "zod";
+import {EnumUserRole} from "../enums";
 
 /**
  * Schéma de validation pour la création d'un utilisateur
@@ -19,9 +19,17 @@ const login = z.object({
   password: z.string(),
 });
 
+const getData = z.object({
+  id: z.number(),
+  lastName: z.string(),
+  firstName: z.string(),
+  email: z.string().email(),
+});
+
 const UserSchema = {
   create,
   login,
+  getData,
 };
 
 export { UserSchema };

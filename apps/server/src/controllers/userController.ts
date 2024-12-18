@@ -6,6 +6,7 @@ import { ControllerResponse } from "../types/controller";
 import { db } from "../providers/db";
 import logger from "../utils/logger";
 import { removePassword } from "../utils/user";
+import userService, { UserWithRoles } from "../services/user.service";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -14,7 +15,8 @@ const userController = {
       // Validate the input data
       try {
         form = UserSchema.create.parse(payload);
-      } catch (_err) {
+      } catch {
+        logger.error("Invalid params");
         return ControllerError.INVALID_PARAMS();
       }
 
@@ -25,6 +27,7 @@ const userController = {
         },
       });
       if (emailAlreadyUsed) {
+        logger.error("Adresse email déjà utilisée");
         return ControllerError.INVALID_PARAMS({
           message: "Adresse email déjà utilisée",
         });
@@ -54,6 +57,9 @@ const userController = {
         [EnumUserRole.TEACHER]: {
           teacher: { create: {} },
         },
+        [EnumUserRole.ADMIN]: {
+          admin: { create: {} },
+        },
       };
 
       // Forcer l'heure de naissance à 00:00:00
@@ -77,20 +83,18 @@ const userController = {
       const userWithoutPassword = removePassword(user);
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
     } catch (error: any) {
-      console.error(error);
       logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
+
   get: async (id: number): Promise<ControllerResponse> => {
     try {
       if (!id || isNaN(id)) {
+        logger.error("Invalid params");
         return ControllerError.INVALID_PARAMS();
       }
-      const user = await db.user.findFirst({
-        where: {
-          id,
-        },
+      const user: UserWithRoles | null = await db.user.findUnique({
         include: {
           apprentice: true,
           apprenticeCoordinator: true,
@@ -98,18 +102,29 @@ const userController = {
           curriculumManager: true,
           educationalTutor: true,
           teacher: true,
+          admin: true,
+        },
+        where: {
+          id,
         },
       });
+
       if (!user) {
+        logger.error("User not found");
         return ControllerError.NOT_FOUND();
       }
+
       const userWithoutPassword = removePassword(user);
-      return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
+      const finalUser: any = userWithoutPassword;
+      finalUser.roles = userService.getRoles(user);
+
+      return ControllerSuccess.SUCCESS({ data: finalUser });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
+
   getAll: async (): Promise<ControllerResponse> => {
     try {
       const users = await db.user.findMany({
@@ -125,10 +140,59 @@ const userController = {
       const usersWithoutPassword = users.map(removePassword);
       return ControllerSuccess.SUCCESS({ data: usersWithoutPassword });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
   },
+
+  getCount: async (): Promise<ControllerResponse> => {
+    try {
+      const total = await db.user.count();
+      return ControllerSuccess.SUCCESS({ data: total });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  getCountForRole: async (): Promise<ControllerResponse> => {
+    try {
+      const users = await db.user.findMany({
+        include: {
+          apprentice: true,
+          apprenticeCoordinator: true,
+          apprenticeMentor: true,
+          curriculumManager: true,
+          educationalTutor: true,
+          teacher: true,
+          admin: true,
+        },
+      });
+
+      const rolesCount: Record<string, number> = {
+        [EnumUserRole.APPRENTICE]: 0,
+        [EnumUserRole.APPRENTICE_COORDINATOR]: 0,
+        [EnumUserRole.APPRENTICE_MENTOR]: 0,
+        [EnumUserRole.CURICULUM_MANAGER]: 0,
+        [EnumUserRole.EDUCATIONAL_TUTOR]: 0,
+        [EnumUserRole.TEACHER]: 0,
+        [EnumUserRole.ADMIN]: 0,
+      };
+
+      users.forEach((user) => {
+        const roles = userService.getRoles(user);
+        roles.forEach((role) => {
+          rolesCount[role]++;
+        });
+      });
+
+      return ControllerSuccess.SUCCESS({ data: rolesCount });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+
   delete: async (id: number): Promise<ControllerResponse> => {
     let user;
     try {
@@ -138,14 +202,18 @@ const userController = {
         },
       });
     } catch (error: any) {
-      console.error(error);
+      logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
     }
+
     if (!user) {
+      logger.error("User not found");
       return ControllerError.NOT_FOUND();
     }
+
     return ControllerSuccess.SUCCESS({ data: user });
   },
+
   updatePasswordAdmin: async (
     id: number,
     password: string,
@@ -153,12 +221,13 @@ const userController = {
   ): Promise<ControllerResponse> => {
     try {
       if (password !== confirmPassword) {
+        logger.error("Passwords do not match");
         return ControllerError.INVALID_PARAMS({
           message: "Passwords do not match",
         });
       }
       const passwordHash = bcrypt.hashSync(password, 10);
-      const user = await db.user.update({
+      await db.user.update({
         where: {
           id,
         },
@@ -167,6 +236,83 @@ const userController = {
         },
       });
       return ControllerSuccess.SUCCESS();
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  updatePasswordUser: async (
+    id: number,
+    password: string,
+    confirmPassword: string,
+    currentPassword: string,
+  ): Promise<ControllerResponse> => {
+    try {
+      const user = await db.user.findUnique({
+        select: {
+          password: true,
+        },
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      if (!bcrypt.compareSync(currentPassword, user.password)) {
+        return ControllerError.UNAUTHORIZED({
+          message: "Current password is incorrect",
+        });
+      }
+
+      if (password !== confirmPassword) {
+        return ControllerError.INVALID_PARAMS({
+          message: "Passwords do not match",
+        });
+      }
+      const passwordHash = bcrypt.hashSync(password, 10);
+      await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          password: passwordHash,
+        },
+      });
+      return ControllerSuccess.SUCCESS();
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  getFromTrainingDiary: async (trainingDiaryId: number): Promise<ControllerResponse> => {
+    try {
+      const trainingDiary = await db.trainingDiary.findUnique({
+        include: {
+          apprentice: {
+            include: {
+              user: true,
+            },
+          },
+        },
+        where: {
+          id: trainingDiaryId,
+        },
+      });
+
+      if (!trainingDiary) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      const user = trainingDiary.apprentice?.user;
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      return ControllerSuccess.SUCCESS({ data: user });
     } catch (error: any) {
       console.error(error);
       return ControllerError.INTERNAL();

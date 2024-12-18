@@ -5,60 +5,109 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { SearchIcon } from "lucide-react";
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { ListRestart, SearchIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface SearchBarProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  filter: { id: number; name: string }[];
-  setFilter: (filterId: number) => void;
-  sortOptions: { id: number; name: string }[];
-  setSortOption: (sortOptionId: number) => void;
+  filters?: string[];
+  setSelectedFilter?: (filter: string) => void;
+  sortOptions?: string[];
+  setSelectedSortOption?: (sortOption: string) => void;
+  clearSearch: () => void;
 }
 
 export const SearchBar = ({
   searchTerm,
   onSearchChange,
-  filter,
-  setFilter,
+  filters,
+  setSelectedFilter,
   sortOptions,
-  setSortOption,
+  setSelectedSortOption,
+  clearSearch,
 }: SearchBarProps) => {
+  const { t } = useTranslation();
+  const [filterChoice, setFilterChoice] = useState<string | null>("");
+  const [sortOptionChoice, setSortOptionChoice] = useState<string | null>("");
+
+  const clearSearchOption = () => {
+    clearSearch();
+    setFilterChoice(null);
+    setSortOptionChoice(null);
+  };
+
+  const updateFilterChoice = (value: string) => {
+    setFilterChoice(value);
+    setSelectedFilter?.(value);
+  };
+
+  const updateSortOptionChoice = (value: string) => {
+    setSortOptionChoice(value);
+    setSelectedSortOption?.(value);
+  };
+
+  const hasFilters = filters && filters.length > 0 && setSelectedFilter;
+  const hasSortOptions = sortOptions && sortOptions.length > 0 && setSelectedSortOption;
+
   return (
     <div className="flex flex-row justify-between p-3 shadow-0 rounded-[18px] bg-blue-10">
-      <div className="flex flex-row gap-5">
-        <Select onValueChange={(value) => setFilter(Number(value))}>
-          <SelectTrigger className="bg-white rounded-[6px] shadow-1">
-            <SelectValue placeholder="Filtre" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {filter.map((filter) => (
-                <SelectItem key={filter.id} value={filter.id.toString()}>
-                  {filter.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select onValueChange={(value) => setSortOption(Number(value))}>
-          <SelectTrigger className="bg-white rounded-[6px] shadow-1">
-            <SelectValue placeholder="Tri" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {sortOptions.map((sortOption) => (
-                <SelectItem key={sortOption.id} value={sortOption.id.toString()}>
-                  {sortOption.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-row gap-3 items-center">
+        {(hasFilters || hasSortOptions) && (
+          <div className="flex flex-row gap-5">
+            {hasFilters && (
+              <Select
+                onValueChange={(value) => updateFilterChoice(value)}
+                value={filterChoice || ""}
+              >
+                <SelectTrigger className="bg-white rounded-[6px] shadow-1">
+                  <SelectValue placeholder="Filtre" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {filters.map((filter) => (
+                      <SelectItem key={filter} value={filter}>
+                        {t(`globals.filters.${filter}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+            {hasSortOptions && (
+              <Select
+                onValueChange={(value) => updateSortOptionChoice(value)}
+                value={sortOptionChoice || ""}
+              >
+                <SelectTrigger className="bg-white rounded-[6px] shadow-1">
+                  <SelectValue placeholder="Tri" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {sortOptions.map((sortOption) => (
+                      <SelectItem key={sortOption} value={sortOption}>
+                        {t(`globals.sortOptions.${sortOption}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        )}
+        {(hasFilters || hasSortOptions) && (
+          <div className="h-full flex flex-col justify-center">
+            <Button variant="empty" className="w-fit p-2 h-fit" onClick={clearSearchOption}>
+              <ListRestart className="w-5 h-5 text-gray-700" />
+            </Button>
+          </div>
+        )}
       </div>
-      <div className="bg-white rounded-[6px] shadow-1 w-2/5 relative ">
+      <div className="bg-white rounded-[6px] shadow-1 w-2/5 relative">
         <Input
           type="search"
           placeholder="Rechercher"
@@ -72,3 +121,5 @@ export const SearchBar = ({
     </div>
   );
 };
+
+export default SearchBar;

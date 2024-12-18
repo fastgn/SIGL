@@ -11,6 +11,7 @@ export const ControllerError: {
     };
   },
   INTERNAL: ({ message, data } = {}) => {
+    console.trace("Internal error thrown");
     return {
       status: 500,
       message: message || "Server error",

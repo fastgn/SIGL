@@ -1,37 +1,94 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { ControllerError } from "../utils/controller";
+import { db } from "../providers/db";
+import { UserWithRoles } from "../services/user.service";
+import { reply } from "../utils/http";
+import env from "../services/env.service";
+import { EnumUserRole } from "@sigl/types";
+import logger from "../utils/logger";
 
-interface CustomRequest extends Request {
-  headers: {
-    authorization?: string;
-  };
+export interface CustomRequestUser extends Request {
   user?: JwtPayload;
 }
 
-const authenticateToken = (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction,
-): Response | void => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+const authMiddleware = (authorisedRoles: EnumUserRole[] = []) => {
+  return (req: CustomRequestUser, res: Response, next: NextFunction): Response | void => {
+    if (!req.headers["authorization"]) {
+      logger.error("No authorization header");
+      return reply(res, ControllerError.UNAUTHORIZED());
+    }
 
-  if (token == null) {
-    return res.sendStatus(401);
-  }
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
 
-  jwt.verify(
-    token,
-    process.env.JWT_SECRET as string,
-    (err: jwt.VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
+    if (!token) {
+      logger.error("No token provided");
+      return reply(res, ControllerError.UNAUTHORIZED());
+    }
+
+    jwt.verify(token, env.get.TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-        return res.sendStatus(403);
+        logger.error("Invalid token");
+        return reply(res, ControllerError.UNAUTHORIZED());
       }
 
-      req.user = decoded as JwtPayload;
-      next();
-    },
-  );
+      try {
+        const payload = decoded as JwtPayload;
+        const user = await db.user.findUnique({
+          include: {
+            admin: true,
+            apprentice: true,
+            apprenticeCoordinator: true,
+            apprenticeMentor: true,
+            curriculumManager: true,
+            educationalTutor: true,
+            teacher: true,
+          },
+          where: {
+            id: payload.id,
+          },
+        });
+
+        if (!user) {
+          logger.error("User not found");
+          return reply(
+            res,
+            ControllerError.UNAUTHORIZED({
+              message: "You are not authorised to perform this action",
+            }),
+          );
+        }
+
+        if (user.password) {
+          const { password, ...userWithoutPassword } = user;
+        }
+
+        const roles: EnumUserRole[] = [];
+        if (user.apprentice) roles.push(EnumUserRole.APPRENTICE);
+        if (user.apprenticeCoordinator) roles.push(EnumUserRole.APPRENTICE_COORDINATOR);
+        if (user.apprenticeMentor) roles.push(EnumUserRole.APPRENTICE_MENTOR);
+        if (user.curriculumManager) roles.push(EnumUserRole.CURICULUM_MANAGER);
+        if (user.educationalTutor) roles.push(EnumUserRole.EDUCATIONAL_TUTOR);
+        if (user.teacher) roles.push(EnumUserRole.TEACHER);
+        if (user.admin) roles.push(EnumUserRole.ADMIN);
+
+        if (authorisedRoles.length > 0 && !authorisedRoles.some((role) => roles.includes(role))) {
+          logger.error("User not authorised");
+          return reply(
+            res,
+            ControllerError.UNAUTHORIZED({
+              message: "You are not authorised to perform this action",
+            }),
+          );
+        }
+        req.context.user = user as UserWithRoles;
+        next();
+      } catch {
+        return reply(res, ControllerError.INTERNAL());
+      }
+    });
+  };
 };
 
-export default authenticateToken;
+export default authMiddleware;
