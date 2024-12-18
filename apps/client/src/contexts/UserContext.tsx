@@ -18,30 +18,43 @@ export interface UserContextType {
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAdmin, setIsAdmin] = useState(sessionStorage.getItem("isAdmin") === "true" || false);
-  const [id, setId] = useState(parseInt(sessionStorage.getItem("id") as string) || -1);
+  const [storage, setStorage] = useState(localStorage);
+
+  useEffect(() => {
+    setStorage(localStorage.getItem("authToken") !== null ? localStorage : sessionStorage);
+  }, []);
+  const getIsAdmin = () => {
+    return storage.getItem("isAdmin") === "true";
+  };
+
+  const getUserId = () => {
+    return storage.getItem("id");
+  };
+
+  const [isAdmin, setIsAdmin] = useState(getIsAdmin() || false);
+  const [id, setId] = useState(parseInt(getUserId() as string) || -1);
 
   if (isAdmin === null) {
-    sessionStorage.removeItem("isAdmin");
+    storage.removeItem("isAdmin");
   } else {
-    sessionStorage.setItem("isAdmin", isAdmin.toString());
+    storage.setItem("isAdmin", isAdmin.toString());
   }
   if (id === null) {
-    sessionStorage.removeItem("id");
+    storage.removeItem("id");
   } else {
-    sessionStorage.setItem("id", id.toString());
+    storage.setItem("id", id.toString());
   }
 
   useEffect(() => {
-    const isAdmin = sessionStorage.getItem("isAdmin");
+    const isAdmin = storage.getItem("isAdmin");
     if (isAdmin) {
       setIsAdmin(isAdmin === "true");
     }
-    const id = sessionStorage.getItem("id");
+    const id = storage.getItem("id");
     if (id) {
       setId(parseInt(id as string));
     }
-  }, []);
+  }, [storage]);
 
   return (
     <UserContext.Provider value={{ isAdmin, setIsAdmin, id, setId }}>

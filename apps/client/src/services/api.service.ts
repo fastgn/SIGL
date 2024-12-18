@@ -42,7 +42,9 @@ class ApiService {
   }
 
   public getToken() {
-    return localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    if (token) this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    return !token ? null : token;
   }
 
   public clearToken() {

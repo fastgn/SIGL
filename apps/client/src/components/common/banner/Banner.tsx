@@ -54,7 +54,7 @@ export const Banner = () => {
     },
   ];
 
-  const isSelected = (link: string) => location.pathname === link;
+  const isSelected = (link: string) => location.pathname.startsWith(link);
 
   const logout = () => {
     setToken(null);

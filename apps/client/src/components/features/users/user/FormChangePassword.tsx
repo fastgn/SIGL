@@ -90,7 +90,7 @@ export const FormChangePassword = ({ user, isAdmin }: PropsFormChangePassword) =
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="admin">
           <Key className="mr-2 h-4 w-4" />
           Change
         </Button>
