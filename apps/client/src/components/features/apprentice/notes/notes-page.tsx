@@ -1,30 +1,23 @@
 import { Banner } from "@/components/common/banner/Banner";
-import { Content } from "@tiptap/react";
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/utilities/style";
-import ApprenticeNoteEditor, { ApprenticeNoteEditorRef } from "./editor";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { NoteEditorSidebar } from "./sidebar";
-import { Spinner } from "@/components/ui/spinner";
-import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Check, MoreVertical, X } from "lucide-react";
-import { NoteProvider, useNote } from "./note-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/utilities/style";
+import { Content } from "@tiptap/react";
+import { Check, MoreVertical, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import ApprenticeNoteEditor, { ApprenticeNoteEditorRef } from "./editor";
+import { NoteProvider, useNote } from "./note-context";
+import { NoteEditorSidebar } from "./sidebar";
 
 export type Note = { id: number; title: string; content: string };
 
@@ -43,25 +36,21 @@ const PageContent = () => {
   const [hasPendingModifications, setHasPendingModifications] = useState<boolean>(false);
   const [note, setNote] = useState<Note | null>(null);
   const [noteTitle, setNoteTitle] = useState<string>("");
-  const [noteContent, setNoteContent] = useState<Content>(
-    `<h1 class="heading-node">jncezkcekcnecncez zecze</h1>`,
-  );
+  const [noteContent, setNoteContent] = useState<Content>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [remoteNotes, setRemoteNotes] = useState<Note[]>([]);
 
   useEffect(() => {
     notes.fetch().then((notes) => {
       setRemoteNotes(notes);
-      if (notes.length) loadNote(remoteNotes[0]);
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      if (notes.length) loadNote(notes[0]);
+      setLoading(false);
     });
   }, []);
 
   const loadNote = async (note: Note) => {
     if (hasPendingModifications) {
-      if (confirm("Des modifications ont été apportées. Voulez-vous les sauvegarder ?")) {
+      if (confirm("Des modifications ont été apportées. Voulez-vous les enregister ?")) {
         await saveNoteContent();
       }
     }
