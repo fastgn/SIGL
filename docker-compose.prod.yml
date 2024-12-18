@@ -8,5 +8,5 @@ services:
       - .env
     command: >
       bash -c "
-      pnpm db:reset
+      pnpm db:reset && pnpm db:seed:prod
       && pnpm run start"
