@@ -55,6 +55,7 @@ import userRoutes from "./routes/userRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import deliverableRoutes from "./routes/deliverableRoutes";
 import noteRoutes from "./routes/noteRoutes";
+import groupRoutes from "./routes/groupRoutes";
 
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
@@ -93,7 +94,6 @@ app.get("/file/:blobName", async (req: Request, res: Response) => {
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
-import groupRoutes from "./routes/groupRoutes";
 import { BlobServiceClient } from "@azure/storage-blob";
 app.use("/api-docs", swaggerConfig);
 
