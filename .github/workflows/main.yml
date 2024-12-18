@@ -160,7 +160,7 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     needs: [build-docker-image, build-database , build-app]
-    name: Deploy the frontend on the production server
+    name: Deploy the Sigl App
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -246,6 +246,7 @@ jobs:
         run: |
           scp -r apps/client/dist/ sigladmin@sigl-frontend:/tmp/dist/
           ssh sigl-frontend "sudo mv /tmp/dist/* /var/www/sigl/"
+          ssh sigl-frontend "sudo rm -rf /tmp/dist/"
       
       - name: Deploy Backend to the Server
         run: |
