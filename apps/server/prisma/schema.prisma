@@ -142,10 +142,10 @@ model Company {
   name             String
   address          String
   city             String
-  country          String
-  description      String?
-  apprenticeNumber Int?
-  opco             String?
+  country          String  @default("France")
+  description      String? @default(" ")
+  apprenticeNumber Int?    @default(0)
+  opco             String? @default("")
 
   apprentice       Apprentice[]
   apprenticeMentor ApprenticeMentor[]
@@ -196,7 +196,7 @@ model CompagnyAccount {
   userId    Int      @unique
   user      User     @relation(fields: [userId], references: [id])
   compagnyId Int     @unique
-  compagny  Compagny @relation(fields: [compagnyId], references: [id])
+  compagny  Company @relation(fields: [compagnyId], references: [id])
 }
 
 model Note {

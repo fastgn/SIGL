@@ -20,7 +20,7 @@ const compagnyAccountController = {
       logger.error("L'utilisateur n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
     }
-    const checkCompagnyExist = await db.compagny.findFirst({
+    const checkCompagnyExist = await db.company.findFirst({
       select: { id: true },
       where: {
         id: compagny_id,
