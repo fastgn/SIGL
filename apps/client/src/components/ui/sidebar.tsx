@@ -82,9 +82,9 @@ const SidebarProvider = React.forwardRef<
     );
 
     // Helper to toggle the sidebar.
-    // const toggleSidebar = React.useCallback(() => {
-    //   return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-    // }, [isMobile, setOpen, setOpenMobile]);
+    const toggleSidebar = React.useCallback(() => {
+      return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
+    }, [isMobile, setOpen, setOpenMobile]);
 
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
@@ -179,25 +179,25 @@ const Sidebar = React.forwardRef<
       );
     }
 
-    if (isMobile) {
-      return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-          <SheetContent
-            data-sidebar="sidebar"
-            data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
-            style={
-              {
-                "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
-              } as React.CSSProperties
-            }
-            side={side}
-          >
-            <div className="flex h-full w-full flex-col">{children}</div>
-          </SheetContent>
-        </Sheet>
-      );
-    }
+    // if (isMobile) {
+    //   return (
+    //     <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+    //       <SheetContent
+    //         data-sidebar="sidebar"
+    //         data-mobile="true"
+    //         className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+    //         style={
+    //           {
+    //             "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+    //           } as React.CSSProperties
+    //         }
+    //         side={side}
+    //       >
+    //         <div className="flex h-full w-full flex-col">{children}</div>
+    //       </SheetContent>
+    //     </Sheet>
+    //   );
+    // }
 
     return (
       <div
