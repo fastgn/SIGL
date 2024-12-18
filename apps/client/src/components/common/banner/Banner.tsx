@@ -17,7 +17,7 @@ import { useUser } from "@/contexts/UserContext";
 
 export const Banner = () => {
   const { setToken } = useAuth();
-  const { isAdmin, id } = useUser();
+  const { isAdmin, id, clear } = useUser();
 
   const profileRef = useRef<SVGSVGElement>(null);
 
@@ -62,6 +62,7 @@ export const Banner = () => {
 
   const logout = () => {
     setToken(null);
+    clear();
     navigate("/login");
   };
 

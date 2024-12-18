@@ -24,7 +24,7 @@ const LoginForm = () => {
   const [alertTitle, setAlertTitle] = useState<string | null>(null);
   const [alertDescription, setAlertDescription] = useState<string | null>(null);
   const [remember, setRemember] = useState(false);
-  const { setIsAdmin, setId } = useUser();
+  const { setIsAdmin, setId, updateIsAdminAndId } = useUser();
 
   useEffect(() => {
     if (token) {
@@ -49,13 +49,15 @@ const LoginForm = () => {
         switch (res.status) {
           case 200:
             setToken(res.data.data.token, remember);
-            if (user.roles.includes(EnumUserRole.ADMIN)) {
-              setIsAdmin(true);
-            } else {
-              setIsAdmin(false);
+            {
+              let isAdmin;
+              if (user.roles.includes(EnumUserRole.ADMIN)) {
+                isAdmin = true;
+              } else {
+                isAdmin = false;
+              }
+              updateIsAdminAndId(isAdmin, user.id);
             }
-            setId(user.id);
-            navigate("/");
             break;
           case 401:
             setAlertTitle("Mauvais identifiants");

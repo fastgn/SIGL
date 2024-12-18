@@ -6,12 +6,14 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TotalUserCard } from "./admin/TotalUserCard";
 import { TotalUserRoleCard } from "./admin/TotalUserRoleCard";
+import { useUser } from "@/contexts/UserContext";
 
 export const HomePage = () => {
   const [cards, setCards] = useState([
     { id: "1", title: "Nombre d'utilisateurs", component: TotalUserCard },
     { id: "2", title: "Nombre d'utilisateurs par rôle", component: TotalUserRoleCard },
   ]);
+  const { isAdmin } = useUser();
 
   const moveCard = (fromIndex: number, toIndex: number) => {
     const updatedCards = [...cards];
@@ -36,11 +38,12 @@ export const HomePage = () => {
               alignItems: "stretch",
             }}
           >
-            {cards.map((card, index) => (
-              <DraggableCard key={card.id} index={index} moveCard={moveCard} title={card.title}>
-                {card.component()}
-              </DraggableCard>
-            ))}
+            {isAdmin &&
+              cards.map((card, index) => (
+                <DraggableCard key={card.id} index={index} moveCard={moveCard} title={card.title}>
+                  {card.component()}
+                </DraggableCard>
+              ))}
           </div>
         </div>
       </div>

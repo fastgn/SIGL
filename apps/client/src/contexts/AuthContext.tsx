@@ -11,12 +11,7 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const getTokenEx = () => {
-    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-    return token === "" || null || undefined ? null : token;
-  };
-
-  const [token, setTokenState] = useState<string | null>(getTokenEx());
+  const [token, setTokenState] = useState<string | null>(api.getToken());
 
   const setToken = (token: string | null, persist: boolean = false) => {
     api.setToken(token, persist);

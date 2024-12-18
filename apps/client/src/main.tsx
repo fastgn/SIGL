@@ -41,9 +41,12 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/events" element={<ProtectedRoute component={EventsPage} />} />
               <Route path="/groups" element={<ProtectedRoute component={GroupsPage} />} />
               <Route path="/notes" element={<ProtectedRoute component={ApprenticeNotesPage} />} />
-              <Route path="/deliverables" element={<ProtectedRoute component={DeliverablePage} />} />
-              <Route path="/" element={<Navigate to="/users" />} />
-              <Route path="*" element={<Navigate to="/users" />} />
+              <Route
+                path="/deliverables"
+                element={<ProtectedRoute component={DeliverablePage} />}
+              />
+              <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="*" element={<Navigate to="/home" />} />
             </Routes>
           </AdminProvider>
         </AuthProvider>

@@ -13,51 +13,60 @@ export interface UserContextType {
   setIsAdmin: Dispatch<SetStateAction<boolean>>;
   id: number | null;
   setId: Dispatch<SetStateAction<number>>;
+  updateIsAdminAndId: (isAdmin: boolean, id: number) => void;
+  clear: () => void;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [storage, setStorage] = useState(localStorage);
+  const getStorage = () => {
+    const value = localStorage.getItem("authToken") !== null ? localStorage : sessionStorage;
+    return value;
+  };
 
-  useEffect(() => {
-    setStorage(localStorage.getItem("authToken") !== null ? localStorage : sessionStorage);
-  }, []);
+  const getStorageOpposite = () => {
+    return getStorage() === localStorage ? sessionStorage : localStorage;
+  };
+
   const getIsAdmin = () => {
-    return storage.getItem("isAdmin") === "true";
+    return getStorage().getItem("isAdmin") === "true";
   };
 
   const getUserId = () => {
-    return storage.getItem("id");
+    return getStorage().getItem("id");
   };
 
-  const [isAdmin, setIsAdmin] = useState(getIsAdmin() || false);
-  const [id, setId] = useState(parseInt(getUserId() as string) || -1);
+  const [isAdmin, setIsAdmin] = useState(getIsAdmin());
+  const [id, setId] = useState(parseInt(getUserId() as string));
 
-  if (isAdmin === null) {
-    storage.removeItem("isAdmin");
-  } else {
-    storage.setItem("isAdmin", isAdmin.toString());
-  }
-  if (id === null) {
-    storage.removeItem("id");
-  } else {
-    storage.setItem("id", id.toString());
-  }
+  const updateIsAdminAndId = (isAdmin: boolean, id: number) => {
+    setIsAdmin(isAdmin);
+    setId(id);
+    getStorage().setItem("isAdmin", isAdmin.toString());
+    getStorage().setItem("id", id.toString());
+    getStorageOpposite().removeItem("isAdmin");
+    getStorageOpposite().removeItem("id");
+  };
 
   useEffect(() => {
-    const isAdmin = storage.getItem("isAdmin");
+    const isAdmin = getStorage().getItem("isAdmin");
     if (isAdmin) {
       setIsAdmin(isAdmin === "true");
     }
-    const id = storage.getItem("id");
+    const id = getStorage().getItem("id");
     if (id) {
       setId(parseInt(id as string));
     }
-  }, [storage]);
+  }, []);
+
+  const clear = () => {
+    getStorage().removeItem("isAdmin");
+    getStorage().removeItem("id");
+  };
 
   return (
-    <UserContext.Provider value={{ isAdmin, setIsAdmin, id, setId }}>
+    <UserContext.Provider value={{ isAdmin, setIsAdmin, id, setId, updateIsAdminAndId, clear }}>
       {children}
     </UserContext.Provider>
   );
