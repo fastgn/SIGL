@@ -45,6 +45,64 @@ const eventController = {
     });
   },
 
+  getEventsByDiary: async (diaryId: number) => {
+    try {
+      const trainingDiaryData = await db.trainingDiary.findFirst({
+        where: { id: diaryId },
+        include: {
+          apprentice: {
+            include: {
+              user: {
+                include: {
+                  groups: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!trainingDiaryData) {
+        logger.error(`Journal de formation introuvable pour ID: ${diaryId}`);
+        return ControllerError.INVALID_PARAMS({ message: "Le journal de formation n'existe pas" });
+      }
+
+      const apprentice = trainingDiaryData.apprentice;
+      if (!apprentice) {
+        logger.error(`Aucun apprenti associé au journal de formation ID: ${diaryId}`);
+        return ControllerError.INVALID_PARAMS({ message: "L'apprenti n'existe pas" });
+      }
+
+      const user = apprentice.user;
+      if (!user || !user.groups || user.groups.length === 0) {
+        logger.error(`Utilisateur ou groupes introuvables pour l'apprenti ID: ${apprentice.id}`);
+        return ControllerError.INVALID_PARAMS({
+          message: "Aucun groupe ou utilisateur trouvé pour cet apprenti",
+        });
+      }
+
+      const groupIds = user.groups.map((group) => group.id);
+
+      const events = await db.event.findMany({
+        where: {
+          groups: {
+            some: { id: { in: groupIds } },
+          },
+        },
+      });
+
+      return ControllerSuccess.SUCCESS({
+        message: "Évènements récupérés avec succès",
+        data: events,
+      });
+    } catch (error: any) {
+      logger.error(`Erreur dans getEventsByDiary: ${error.message}`);
+      return ControllerError.INTERNAL({
+        message: "Erreur serveur lors de la récupération des évènements",
+      });
+    }
+  },
+
   createEvent: async (description: string, endDate: Date, type: string) => {
     const event = await db.event.create({
       data: {
@@ -92,6 +150,7 @@ const eventController = {
 
     return ControllerSuccess.SUCCESS({ message: "Evènement modifié avec succès", data: event });
   },
+
   deleteEvent: async (id: number) => {
     const eventExist = await db.event.findFirst({
       where: {
@@ -151,4 +210,5 @@ const eventController = {
     }
   },
 };
+
 export default eventController;

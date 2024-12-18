@@ -39,6 +39,38 @@ router.get("/", authMiddleware(), async (_req: Request, res: Response) => {
   }
 });
 
+router.get(
+  "/count",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (_req: Request, res: Response) => {
+    try {
+      logger.info("Récupération du nombre total d'utilisateurs");
+      const result = await userController.getCount();
+      logger.info("Nombre total d'utilisateurs récupéré");
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get(
+  "/count/role",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (_req: Request, res: Response) => {
+    try {
+      logger.info("Récupération du nombre d'utilisateurs par rôle");
+      const result = await userController.getCountForRole();
+      logger.info("Nombre d'utilisateurs par rôle récupéré");
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
 router.get("/:id", authMiddleware(), async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);

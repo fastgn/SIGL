@@ -38,6 +38,43 @@ router.post(
   },
 );
 
+router.post(
+  "/:id/link",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const { userIds } = req.body;
+      const ids = userIds.map((id: string) => parseInt(id));
+      const groupId = parseInt(req.params.id);
+      logger.info(`Linking users ${ids} to group ${groupId}`);
+      const result = await groupController.linkUsersToGroup(ids, groupId);
+      logger.info(`Users ${ids} linked to group ${groupId}`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Server error: ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.delete(
+  "/:id/link",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const { userIds } = req.body;
+      const groupId = parseInt(req.params.id);
+      logger.info(`Unlinking users ${userIds} from group ${groupId}`);
+      const result = await groupController.unlinkUsersFromGroup(userIds, groupId);
+      logger.info(`Users ${userIds} unlinked from group ${groupId}`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Server error: ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
 router.delete(
   "/:id",
   authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),

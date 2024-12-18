@@ -23,6 +23,7 @@ const getData = z.object({
   id: z.number(),
   lastName: z.string(),
   firstName: z.string(),
+  email: z.string().email(),
 });
 
 const UserSchema = {

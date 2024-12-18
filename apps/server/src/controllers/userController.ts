@@ -87,6 +87,7 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+
   get: async (id: number): Promise<ControllerResponse> => {
     try {
       if (!id || isNaN(id)) {
@@ -123,6 +124,7 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+
   getAll: async (): Promise<ControllerResponse> => {
     try {
       const users = await db.user.findMany({
@@ -142,6 +144,55 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+
+  getCount: async (): Promise<ControllerResponse> => {
+    try {
+      const total = await db.user.count();
+      return ControllerSuccess.SUCCESS({ data: total });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  getCountForRole: async (): Promise<ControllerResponse> => {
+    try {
+      const users = await db.user.findMany({
+        include: {
+          apprentice: true,
+          apprenticeCoordinator: true,
+          apprenticeMentor: true,
+          curriculumManager: true,
+          educationalTutor: true,
+          teacher: true,
+          admin: true,
+        },
+      });
+
+      const rolesCount: Record<string, number> = {
+        [EnumUserRole.APPRENTICE]: 0,
+        [EnumUserRole.APPRENTICE_COORDINATOR]: 0,
+        [EnumUserRole.APPRENTICE_MENTOR]: 0,
+        [EnumUserRole.CURICULUM_MANAGER]: 0,
+        [EnumUserRole.EDUCATIONAL_TUTOR]: 0,
+        [EnumUserRole.TEACHER]: 0,
+        [EnumUserRole.ADMIN]: 0,
+      };
+
+      users.forEach((user) => {
+        const roles = userService.getRoles(user);
+        roles.forEach((role) => {
+          rolesCount[role]++;
+        });
+      });
+
+      return ControllerSuccess.SUCCESS({ data: rolesCount });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+
   delete: async (id: number): Promise<ControllerResponse> => {
     let user;
     try {
@@ -231,6 +282,37 @@ const userController = {
         },
       });
       return ControllerSuccess.SUCCESS();
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  getFromTrainingDiary: async (trainingDiaryId: number): Promise<ControllerResponse> => {
+    try {
+      const trainingDiary = await db.trainingDiary.findUnique({
+        include: {
+          apprentice: {
+            include: {
+              user: true,
+            },
+          },
+        },
+        where: {
+          id: trainingDiaryId,
+        },
+      });
+
+      if (!trainingDiary) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      const user = trainingDiary.apprentice?.user;
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      return ControllerSuccess.SUCCESS({ data: user });
     } catch (error: any) {
       console.error(error);
       return ControllerError.INTERNAL();

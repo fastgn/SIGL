@@ -13,6 +13,7 @@ import api from "./services/api.service";
 import env from "./services/env.service";
 import { HomePage } from "./components/features/home/HomePage";
 import { GroupsPage } from "./components/features/groups/GroupsPage";
+import { DeliverablePage } from "./components/features/deliverable/DeliverablePage";
 import { ApprenticeNotesPage } from "./components/features/apprentice/notes/notes-page";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { AdminProvider } from "./contexts/UserContext";
@@ -40,6 +41,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/events" element={<ProtectedRoute component={EventsPage} />} />
               <Route path="/groups" element={<ProtectedRoute component={GroupsPage} />} />
               <Route path="/notes" element={<ProtectedRoute component={ApprenticeNotesPage} />} />
+              <Route path="/deliverables" element={<ProtectedRoute component={DeliverablePage} />} />
               <Route path="/" element={<Navigate to="/users" />} />
               <Route path="*" element={<Navigate to="/users" />} />
             </Routes>
