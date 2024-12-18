@@ -64,23 +64,26 @@
     }
   },
   "Event": {
-    "id": {
-      "type": "int"
-    },
-    "name": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string"
-    },
-    "endDate": {
-      "type": "string"
-    },
-    "type": {
-      "type": "string"
-    },
-    "state": {
-      "type": "string"
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "number"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "endDate": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "state": {
+        "type": "string"
+      }
     }
   },
 
@@ -125,6 +128,30 @@
     },
     "trainingDiaryId": {
       "type": "int"
+    }
+  },
+
+  "Deliverable": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "int"
+      },
+      "comment": {
+        "type": "string"
+      },
+      "url": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "eventId": {
+        "type": "int"
+      },
+      "userId": {
+        "type": "int"
+      }
     }
   }
 }

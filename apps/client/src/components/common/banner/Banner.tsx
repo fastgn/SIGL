@@ -49,6 +49,10 @@ export const Banner = () => {
       link: "/home",
     },
     {
+      name: "Livrables",
+      link: "/deliverables",
+    },
+    {
       name: "Notes",
       link: "/notes",
     },

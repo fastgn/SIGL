@@ -53,6 +53,7 @@ import authRoutes from "./routes/authRoutes";
 import diaryRoutes from "./routes/diaryRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventRoutes from "./routes/eventRoutes";
+import deliverableRoutes from "./routes/deliverableRoutes";
 import noteRoutes from "./routes/noteRoutes";
 
 app.use("/auth", authRoutes);
@@ -61,10 +62,39 @@ app.use("/user", userRoutes);
 app.use("/groups", groupRoutes);
 app.use("/events", eventRoutes);
 app.use("/note", noteRoutes);
+app.use("/deliverables", deliverableRoutes);
+
+// Stream /files to Azure Blob Storage
+import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
+
+app.get("/file/:blobName", async (req: Request, res: Response) => {
+  const containerName = CONTAINER_NAME;
+  const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING);
+
+  const blobName = req.params.blobName;
+
+  try {
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+    const blobClient = containerClient.getBlobClient(blobName);
+    const downloadBlockBlobResponse = await blobClient.download(0);
+
+    res.setHeader(
+      "Content-Type",
+      downloadBlockBlobResponse.contentType || "application/octet-stream",
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=${blobName}`);
+
+    downloadBlockBlobResponse.readableStreamBody?.pipe(res);
+  } catch (error: any) {
+    logger.error(`Erreur lors du téléchargement du fichier : ${error.message}`);
+    res.status(500).send("Erreur lors du téléchargement du fichier");
+  }
+});
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
 import groupRoutes from "./routes/groupRoutes";
+import { BlobServiceClient } from "@azure/storage-blob";
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {

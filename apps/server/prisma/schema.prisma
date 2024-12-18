@@ -166,17 +166,18 @@ model File {
   name      String
   url       String
   createdAt DateTime @default(now())
-  Event     Event?   @relation(fields: [eventId], references: [id])
+  event     Event?   @relation(fields: [eventId], references: [id])
   eventId   Int?
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   type        String
   description String?
   endDate     DateTime
   groups      Group[]
   files       File[]
+  delivrables Deliverable[]
 }
 
 model TrainingDiary {
@@ -185,6 +186,7 @@ model TrainingDiary {
   apprenticeId Int        @unique
   apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
   notes        Note[]
+  Delivrable Deliverable[]
 }
 
 model Note {
@@ -195,4 +197,15 @@ model Note {
   trainingDiary   TrainingDiary @relation(fields: [trainingDiaryId], references: [id], onDelete: Cascade)
   creationDate    DateTime      @default(now())
   updateDate      DateTime      @default(now())
+}
+
+model Deliverable {
+  id        Int      @id @default(autoincrement())
+  comment   String?
+  blobName       String
+  createdAt DateTime @default(now())
+  event     Event?   @relation(fields: [eventId], references: [id])
+  eventId   Int?
+  trainingDiary TrainingDiary? @relation(fields: [trainingDiaryId], references: [id])
+  trainingDiaryId Int?
 }

@@ -20,6 +20,19 @@ router.get("/", authMiddleware(), async (_req, res) => {
   }
 });
 
+router.get("/diary/:id", authMiddleware(), async (req, res) => {
+  try {
+    const { id } = req.params;
+    logger.info(`Récupération des événements du journal ${id}`);
+    const result = await eventController.getEventsByDiary(parseInt(id));
+    logger.info(`Evénements du journal ${id} récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
 router.post(
   "/",
   authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),

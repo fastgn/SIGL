@@ -8,13 +8,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@/components/ui/alert-dialog.tsx";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { GroupSchemaType } from "./GroupsPage";
+import { GroupDialog } from "./GroupDialog";
+import { useEffect } from "react";
+import z from "zod";
+import { UserSchema } from "@sigl/types";
+import api from "@/services/api.service.ts";
+
+type UserShemaType = z.infer<typeof UserSchema.getData>;
 
 interface GroupCardListProps {
   groups: GroupSchemaType[];
@@ -23,6 +30,18 @@ interface GroupCardListProps {
 
 export const GroupsList = ({ groups, onDeleteGroup }: GroupCardListProps) => {
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
+  const [users, setUsers] = useState<UserShemaType[]>([]);
+
+  useEffect(() => {
+    api
+      .get("/user")
+      .then((res) => {
+        setUsers(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   const handleDeleteConfirm = () => {
     if (groupToDelete !== null) {
@@ -59,6 +78,8 @@ export const GroupsList = ({ groups, onDeleteGroup }: GroupCardListProps) => {
             </CardContent>
           </div>
           <div className="flex flex-col justify-between items-center self-stretch">
+            <GroupDialog group={group} users={users} />
+
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button

@@ -279,11 +279,7 @@ export const EventForm = ({
                 <FormItem className="w-full">
                   <FormLabel className="text-sm font-medium">Groupes</FormLabel>
                   <MultiSelect
-                    placeholder={
-                      field.value.length
-                        ? field.value.map((group) => group.name).join(", ")
-                        : "Groupes"
-                    }
+                    placeholder="Groupes"
                     options={groups.map((group) => ({
                       label: group.name,
                       value: group.id.toString(),
