@@ -5,6 +5,7 @@ export interface AuthContextType {
   token: string | null;
   setToken: (token: string | null, persist?: boolean) => void;
   getToken: () => string | null;
+  clearToken: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -13,36 +14,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [token, setTokenState] = useState<string | null>(null);
 
   const setToken = (token: string | null, persist: boolean = false) => {
-    api.setToken(token);
+    api.setToken(token, persist);
     setTokenState(token);
+  };
 
-    if (token) {
-      if (persist) {
-        localStorage.setItem("authToken", token);
-      } else {
-        sessionStorage.setItem("authToken", token);
-      }
-    } else {
-      localStorage.removeItem("authToken");
-      sessionStorage.removeItem("authToken");
-    }
+  const getToken = () => {
+    return api.getToken();
   };
 
   useEffect(() => {
     // Check for an existing token in either storage on load
-    const existingToken = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-    if (existingToken) {
-      api.setToken(existingToken);
-      setTokenState(existingToken);
-    }
+    const existingToken = getToken();
+    if (existingToken) setToken(existingToken);
   }, []);
 
-  const getToken = () => {
-    return token;
+  const clearToken = () => {
+    api.clearToken();
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, setToken, getToken }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ token, setToken, getToken, clearToken }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

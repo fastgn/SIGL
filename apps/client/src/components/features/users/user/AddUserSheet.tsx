@@ -1,33 +1,33 @@
-import { Input } from "@/components/ui/input.tsx";
+import { Input } from "@/components/ui/input";
 import {
   SheetContent,
   SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select.tsx";
-import { PhoneInput } from "@/components/ui/phone-input.tsx";
+} from "@/components/ui/select";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { EnumUserRole, UserSchema } from "@sigl/types";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
-import { Calendar } from "@/components/ui/calendar.tsx";
-import { cn } from "@/utilities/utils.ts";
+import { Form, FormField, FormItem, FormControl, FormLabel } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/utilities/style";
 import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import api from "@/services/api.service.ts";
+import api from "@/services/api.service";
 import { useState } from "react";
 
 const FormSchema = UserSchema.create;

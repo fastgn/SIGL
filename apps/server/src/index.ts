@@ -5,6 +5,7 @@ import cors, { CorsOptions } from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { ReqContext } from "./providers/req-context";
 
 const app = express();
 const port = env.get.PORT;
@@ -41,21 +42,28 @@ app.use((req, _res, next) => {
   next();
 });
 
+// Ajout du contexte de requête (ex: mémorisation de l'utilisateur connecté)
+app.use((req, _, next) => {
+  req.context = new ReqContext();
+  next();
+});
+
 // Routes
 import authRoutes from "./routes/authRoutes";
 import diaryRoutes from "./routes/diaryRoutes";
 import userRoutes from "./routes/userRoutes";
 import eventRoutes from "./routes/eventRoutes";
+import noteRoutes from "./routes/noteRoutes";
 
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
 app.use("/user", userRoutes);
 app.use("/groups", groupRoutes);
 app.use("/events", eventRoutes);
+app.use("/note", noteRoutes);
 
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
-import { ReqContext } from "./providers/req-context";
 import groupRoutes from "./routes/groupRoutes";
 app.use("/api-docs", swaggerConfig);
 
@@ -82,13 +90,4 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 app.listen(port, async () => {
   console.log(`[*] Server is running at http://localhost:${port}`);
   logger.info(`[*] Server is running on port ${port}`);
-  // initDB().then(async (db) => {
-  //   try {
-  //     await db.$connect();
-  //     console.log("[*] Connected to database");
-  //   } catch (error) {
-  //     console.error("[!] Error connecting to database:", error);
-  //     process.exit(1);
-  //   }
-  // });
 });

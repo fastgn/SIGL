@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api.service";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -12,9 +12,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { getErrorInformation } from "@/utilities/utils";
-import { UserTypeReq } from "@/components/features/users/UsersPage.tsx";
-import { useUser } from "@/contexts/UserContext.tsx";
+import { getErrorInformation } from "@/utilities/http";
+import { UserTypeReq } from "@/components/features/users/UsersPage";
+import { useUser } from "@/contexts/UserContext";
 
 const FormSchema = UserSchema.login.extend({ remember: z.boolean() });
 

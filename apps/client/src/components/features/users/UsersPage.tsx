@@ -1,12 +1,12 @@
-import { Banner } from "@/components/common/banner/Banner.tsx";
-import { UsersList } from "@/components/features/users/UsersList.tsx";
+import { Banner } from "@/components/common/banner/Banner";
+import { UsersList } from "@/components/features/users/UsersList";
 import { useEffect, useState } from "react";
-import { SearchBar } from "@/components/common/searchBar/SearchBar.tsx";
-import api from "@/services/api.service.ts";
+import { SearchBar } from "@/components/common/searchBar/SearchBar";
+import api from "@/services/api.service";
 import { EnumSortOption, EnumUserRole } from "@sigl/types";
-import { getErrorInformation } from "@/utilities/utils.ts";
+import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type UserTypeReq = {
   id: number;

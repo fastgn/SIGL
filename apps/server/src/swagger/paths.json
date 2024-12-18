@@ -155,14 +155,26 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "status": {
+                    "type": "integer",
+                    "description": "Status du succes de la requete"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "type": "object",
                     "description": "Données de la requete",
                     "properties": {
-                      "id": { "type": "integer", "description": "Id du journal" },
-                      "description": { "type": "string", "description": "Description du journal" },
+                      "id": {
+                        "type": "integer",
+                        "description": "Id du journal"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description du journal"
+                      },
                       "apprenticeId": {
                         "type": "integer",
                         "description": "Id de l'apprenti lié au journal"
@@ -199,14 +211,26 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "status": {
+                    "type": "integer",
+                    "description": "Status du succes de la requete"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "type": "object",
                     "description": "Données de la requete",
                     "properties": {
-                      "id": { "type": "integer", "description": "Id du journal" },
-                      "description": { "type": "string", "description": "Description du journal" },
+                      "id": {
+                        "type": "integer",
+                        "description": "Id du journal"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description du journal"
+                      },
                       "apprenticeId": {
                         "type": "integer",
                         "description": "Id de l'apprenti lié au journal"
@@ -243,14 +267,26 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "status": {
+                    "type": "integer",
+                    "description": "Status du succes de la requete"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "type": "object",
                     "description": "Données de la requete",
                     "properties": {
-                      "id": { "type": "integer", "description": "Id du journal" },
-                      "description": { "type": "string", "description": "Description du journal" },
+                      "id": {
+                        "type": "integer",
+                        "description": "Id du journal"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description du journal"
+                      },
                       "apprenticeId": {
                         "type": "integer",
                         "description": "Id de l'apprenti lié au journal"
@@ -285,6 +321,117 @@
       "summary": "Modification d'un événement",
       "tags": ["Event"],
       "description": "Permet à un admin de modifier un événement"
+    }
+  },
+  "/note": {
+    "post": {
+      "summary": "Création d'une note",
+      "tags": ["Notes"],
+      "description": "Permet à un utilisateur de créer une note",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Note créée avec succès",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "creationDate": {
+                    "type": "string"
+                  },
+                  "updateDate": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Récupération des notes de l'utilisateur",
+      "tags": ["Notes"],
+      "description": "Permet à un utilisateur de récupérer la liste de ses notes"
+    }
+  },
+  "/note/{noteId}": {
+    "delete": {
+      "summary": "Suppression d'une note",
+      "tags": ["Notes"],
+      "description": "Permet à un utilisateur de supprimer une note",
+      "parameters": [
+        {
+          "name": "noteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de la note"
+        }
+      ]
+    },
+    "patch": {
+      "summary": "Modification d'une note",
+      "tags": ["Notes"],
+      "description": "Permet à un utilisateur de modifier une note",
+      "parameters": [
+        {
+          "name": "noteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de la note"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

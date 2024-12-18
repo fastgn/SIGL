@@ -14,24 +14,41 @@ class ApiService {
 
     // Ajout d'un intercepteur pour chaque réponse
     this.api.interceptors.response.use(
+      // Code executé pour chaque réponse (code 2xx)
       (response) => {
-        // Code executé pour chaque réponse (code 2xx)
         return response;
       },
+      // Code executé pour chaque erreur
       (error) => {
-        // Code executé pour chaque erreur
-        console.error(error);
+        // Si nous ne sommes pas autorisé
+        if (error.response?.status === 401) {
+          this.clearToken();
+          window.location.href = "/login";
+        }
         return Promise.reject(error);
       },
     );
   }
 
-  public setToken(token: string | null) {
+  public setToken(token: string | null, persist: boolean = false) {
     if (!token) {
-      delete this.api.defaults.headers.common["Authorization"];
+      this.clearToken();
       return;
     }
+    if (persist) localStorage.setItem("authToken", token);
+    else sessionStorage.setItem("authToken", token);
+
     this.api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  }
+
+  public getToken() {
+    return localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+  }
+
+  public clearToken() {
+    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("authToken");
+    delete this.api.defaults.headers.common["Authorization"];
   }
 
   public post = this.api.post;

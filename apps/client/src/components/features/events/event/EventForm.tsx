@@ -1,6 +1,6 @@
-import { EventSchemaType } from "@/components/features/events/EventsPage.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Calendar } from "@/components/ui/calendar.tsx";
+import { EventSchemaType } from "@/components/features/events/EventsPage";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogClose,
@@ -9,10 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog.tsx";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+} from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import MultiSelect from "@/components/ui/multi-select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -20,9 +20,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select.tsx";
-import api from "@/services/api.service.ts";
-import { cn, getErrorInformation } from "@/utilities/utils.ts";
+} from "@/components/ui/select";
+import api from "@/services/api.service";
+import { cn } from "@/utilities/style";
+import { getErrorInformation } from "@/utilities/http";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { EnumEventType, EventSchema, GroupSchema } from "@sigl/types";

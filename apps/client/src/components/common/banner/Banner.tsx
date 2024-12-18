@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button";
 import { AvatarIcon } from "@radix-ui/react-icons";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User } from "lucide-react";
-import { useUser } from "@/contexts/UserContext.tsx";
+import { useUser } from "@/contexts/UserContext";
 
 export const Banner = () => {
   const { setToken } = useAuth();
@@ -47,6 +47,10 @@ export const Banner = () => {
     {
       name: "Accueil",
       link: "/home",
+    },
+    {
+      name: "Notes",
+      link: "/notes",
     },
   ];
 

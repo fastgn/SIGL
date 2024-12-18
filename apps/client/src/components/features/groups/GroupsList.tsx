@@ -1,4 +1,3 @@
-import { AddUserSheet } from "@/components/features/users/user/AddUserSheet.tsx";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,14 +8,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog.tsx";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet.tsx";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+} from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { GroupSchemaType } from "./GroupsPage";
 
 interface GroupCardListProps {

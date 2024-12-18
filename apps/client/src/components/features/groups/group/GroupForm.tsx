@@ -6,19 +6,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog.tsx";
-import { Button } from "@/components/ui/button.tsx";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import api from "@/services/api.service.ts";
+import api from "@/services/api.service";
 import { toast } from "sonner";
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { UpdateIcon } from "@radix-ui/react-icons";
-import { getErrorInformation } from "@/utilities/utils.ts";
-import { GroupSchemaType } from "@/components/features/groups/GroupsPage.tsx";
+import { getErrorInformation } from "@/utilities/http";
+import { GroupSchemaType } from "@/components/features/groups/GroupsPage";
 import { GroupColor, GroupSchema } from "@sigl/types";
 import {
   Select,

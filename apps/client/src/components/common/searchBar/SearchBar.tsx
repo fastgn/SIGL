@@ -5,10 +5,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select.tsx";
-import { Input } from "@/components/ui/input.tsx";
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { ListRestart, SearchIcon } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export interface SearchBarProps {

@@ -14,7 +14,7 @@ async function main() {
   await db.formationCenter.deleteMany({});
   await db.speciality.deleteMany({});
   await db.teacher.deleteMany({});
-  await db.compagny.deleteMany({});
+  await db.company.deleteMany({});
   await db.user.deleteMany({});
 
   // Insertion d'utilisateurs
@@ -98,7 +98,7 @@ async function main() {
   });
 
   // Insertion d'entreprises
-  const company1 = await db.compagny.create({
+  const company1 = await db.company.create({
     data: {
       name: "Entreprise A",
       address: "789 Boulevard Exemple",
@@ -111,7 +111,7 @@ async function main() {
   });
 
   //const company2 =
-  await db.compagny.create({
+  await db.company.create({
     data: {
       name: "Entreprise B",
       address: "321 Place Exemple",
