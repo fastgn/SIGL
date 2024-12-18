@@ -34,6 +34,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Textarea } from "@/components/ui/textarea";
 
 interface EventFormProps {
   onAddEvent: (event: EventSchemaType) => void;
@@ -219,7 +220,7 @@ export const EventForm = ({
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Description</FormLabel>
-                  <textarea
+                  <Textarea
                     className="w-full p-2 border rounded max-h-32 min-h-10 text-sm font-normal"
                     {...field}
                     disabled={submitting}

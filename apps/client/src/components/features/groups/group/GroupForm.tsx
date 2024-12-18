@@ -27,6 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface GroupFormProps {
   onAddGroup: (event: GroupSchemaType) => void;
@@ -105,7 +107,7 @@ export const GroupForm = ({ onAddGroup, isOpen, onOpenChange }: GroupFormProps) 
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Nom</FormLabel>
-                  <input
+                  <Input
                     className="w-full p-2 border rounded text-sm font-normal"
                     {...field}
                     disabled={submitting}
@@ -119,7 +121,7 @@ export const GroupForm = ({ onAddGroup, isOpen, onOpenChange }: GroupFormProps) 
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className="text-sm font-medium">Description</FormLabel>
-                  <textarea
+                  <Textarea
                     className="w-full p-2 border rounded max-h-32 min-h-10 text-sm font-normal"
                     {...field}
                     disabled={submitting}
