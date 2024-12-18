@@ -265,6 +265,7 @@ jobs:
           ssh sigl-backend "sudo mv /tmp/docker-compose.prod.yml /etc/backend/docker-compose.yml"
 
           # Set environment variables on the remote server
+          ssh sigl-backend "echo \"PORT=${{ secrets.PORT }}\" | sudo tee -a /etc/backend/.env"
           ssh sigl-backend "echo \"CLIENT_URL=${{ secrets.CLIENT_URL }}\" | sudo tee -a /etc/backend/.env"
           ssh sigl-backend "echo \"TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}\" | sudo tee -a /etc/backend/.env"
           ssh sigl-backend "echo \"DATABASE_URL=${{ secrets.DATABASE_URL }}\" | sudo tee -a /etc/backend/.env"

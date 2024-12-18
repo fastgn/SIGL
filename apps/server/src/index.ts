@@ -6,6 +6,19 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { ReqContext } from "./providers/req-context";
+// Routes
+import authRoutes from "./routes/authRoutes";
+import diaryRoutes from "./routes/diaryRoutes";
+import userRoutes from "./routes/userRoutes";
+import eventRoutes from "./routes/eventRoutes";
+import deliverableRoutes from "./routes/deliverableRoutes";
+import noteRoutes from "./routes/noteRoutes";
+import groupRoutes from "./routes/groupRoutes";
+// Stream /files to Azure Blob Storage
+import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
+// Swagger
+import swaggerConfig from "./swagger/swaggerConfig";
+import { BlobServiceClient } from "@azure/storage-blob";
 
 const app = express();
 const port = env.get.PORT;
@@ -48,15 +61,6 @@ app.use((req, _, next) => {
   next();
 });
 
-// Routes
-import authRoutes from "./routes/authRoutes";
-import diaryRoutes from "./routes/diaryRoutes";
-import userRoutes from "./routes/userRoutes";
-import eventRoutes from "./routes/eventRoutes";
-import deliverableRoutes from "./routes/deliverableRoutes";
-import noteRoutes from "./routes/noteRoutes";
-import groupRoutes from "./routes/groupRoutes";
-
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
 app.use("/user", userRoutes);
@@ -64,9 +68,6 @@ app.use("/groups", groupRoutes);
 app.use("/events", eventRoutes);
 app.use("/note", noteRoutes);
 app.use("/deliverables", deliverableRoutes);
-
-// Stream /files to Azure Blob Storage
-import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
 
 app.get("/file/:blobName", async (req: Request, res: Response) => {
   const containerName = CONTAINER_NAME;
@@ -92,9 +93,7 @@ app.get("/file/:blobName", async (req: Request, res: Response) => {
   }
 });
 
-// Swagger
-import swaggerConfig from "./swagger/swaggerConfig";
-import { BlobServiceClient } from "@azure/storage-blob";
+
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {
