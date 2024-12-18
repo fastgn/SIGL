@@ -1,7 +1,6 @@
-import { z } from "zod";
-import { EnumUserRole } from "../enums";
 import validator from "validator";
-import {GroupSchema} from "./group.schema";
+import {z} from "zod";
+import {EnumUserRole} from "../enums";
 
 /**
  * Schéma de validation pour la création d'un utilisateur

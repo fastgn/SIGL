@@ -16,6 +16,7 @@ import { GroupsPage } from "./components/features/groups/GroupsPage";
 import { ApprenticeNotesPage } from "./components/features/apprentice/notes/notes-page";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { AdminProvider } from "./contexts/UserContext";
+import { TrainingDiaryPage } from "./components/features/users/user/trainingDiary/TrainingDiaryPage";
 
 env.init();
 api.init(env.get.API_URL);
@@ -32,6 +33,10 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/home" element={<HomePage />} />
               <Route path="/users" element={<ProtectedRoute component={UsersPage} />} />
               <Route path="/users/:id" element={<ProtectedRoute component={UserDetailsPage} />} />
+              <Route
+                path="/users/:id/training-diary"
+                element={<ProtectedRoute component={TrainingDiaryPage} />}
+              />
               <Route path="/events" element={<ProtectedRoute component={EventsPage} />} />
               <Route path="/groups" element={<ProtectedRoute component={GroupsPage} />} />
               <Route path="/notes" element={<ProtectedRoute component={ApprenticeNotesPage} />} />

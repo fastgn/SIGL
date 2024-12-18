@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Banner } from "@/components/common/banner/Banner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,6 +12,11 @@ import { UpdateIcon } from "@radix-ui/react-icons";
 import { useUser } from "@/contexts/UserContext";
 import { FormChangePassword } from "@/components/features/users/user/FormChangePassword";
 import Bloc from "@/components/common/bloc/bloc";
+import { z } from "zod";
+import { DiarySchema, EnumUserRole } from "@sigl/types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+export type GroupSchemaType = z.infer<typeof DiarySchema.getData>;
 
 export interface User {
   id: number;
@@ -31,6 +36,7 @@ export const UserDetailsPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<User | null>(null);
+  const [diary, setDiary] = useState<GroupSchemaType | null>(null);
   const { isAdmin } = useUser();
 
   const navigate = useNavigate();
@@ -56,6 +62,11 @@ export const UserDetailsPage = () => {
       };
       setUser(user);
       setEditedUser(user);
+    });
+
+    api.get(`/diary/user/${id}`).then((res) => {
+      const diaryReq = res.data.data as GroupSchemaType;
+      setDiary(diaryReq);
     });
   }, [id]);
 
@@ -94,15 +105,44 @@ export const UserDetailsPage = () => {
     </div>
   );
 
+  const createDiary = () => {
+    api.post(`/diary/user/${user?.id}`).then((res) => {
+      const diaryReq = res.data.data as GroupSchemaType;
+      setDiary(diaryReq);
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Banner />
       <div className="flex flex-col gap-5 px-16 py-12">
         <div className="flex justify-between items-center gap-3">
           <h1 className="text-3xl font-bold">Edition d'utilisateur</h1>
-          <Button variant={"add"} onClick={undefined}>
-            Créer le journal de formation
-          </Button>
+          {user?.role.includes(EnumUserRole.APPRENTICE) &&
+            (diary ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={"add"} onClick={() => navigate(`/users/${id}/training-diary`)}>
+                      Journal de formation
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>"Acceder au journal de formation"</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={"add"} onClick={createDiary}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Journal de formation
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>"Ajouter un nouveau journal de formation"</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ))}
         </div>
         {user && editedUser ? (
           <div className="flex flex-row gap-5">
@@ -214,7 +254,7 @@ export const UserDetailsPage = () => {
 
             <div className="flex-auto">
               {editedUser.role.map((role) => (
-                <Bloc title={`Rôle: ${role}`} actions={undefined} isOpenable></Bloc>
+                <Bloc title={`Rôle: ${role}`} actions={undefined} isOpenable key={role}></Bloc>
               ))}
             </div>
           </div>
