@@ -1,21 +1,21 @@
-import * as React from "react";
 import "@/components/ui/minimal-tiptap/styles/index.css";
+import * as React from "react";
 
-import type { Content, Editor } from "@tiptap/react";
+import { LinkBubbleMenu } from "@/components/ui/minimal-tiptap/components/bubble-menu/link-bubble-menu";
+import { MeasuredContainer } from "@/components/ui/minimal-tiptap/components/measured-container";
+import { SectionFive } from "@/components/ui/minimal-tiptap/components/section/five";
+import { SectionFour } from "@/components/ui/minimal-tiptap/components/section/four";
+import { SectionOne } from "@/components/ui/minimal-tiptap/components/section/one";
+import { SectionThree } from "@/components/ui/minimal-tiptap/components/section/three";
+import { SectionTwo } from "@/components/ui/minimal-tiptap/components/section/two";
 import type { UseMinimalTiptapEditorProps } from "@/components/ui/minimal-tiptap/hooks/use-minimal-tiptap";
-import { EditorContent } from "@tiptap/react";
+import { useMinimalTiptapEditor } from "@/components/ui/minimal-tiptap/hooks/use-minimal-tiptap";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/utilities/style";
-import { SectionOne } from "@/components/ui/minimal-tiptap/components/section/one";
-import { SectionTwo } from "@/components/ui/minimal-tiptap/components/section/two";
-import { SectionThree } from "@/components/ui/minimal-tiptap/components/section/three";
-import { SectionFour } from "@/components/ui/minimal-tiptap/components/section/four";
-import { SectionFive } from "@/components/ui/minimal-tiptap/components/section/five";
-import { LinkBubbleMenu } from "@/components/ui/minimal-tiptap/components/bubble-menu/link-bubble-menu";
-import { useMinimalTiptapEditor } from "@/components/ui/minimal-tiptap/hooks/use-minimal-tiptap";
-import { MeasuredContainer } from "@/components/ui/minimal-tiptap/components/measured-container";
+import type { Content, Editor } from "@tiptap/react";
+import { EditorContent } from "@tiptap/react";
 import { useImperativeHandle } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface MinimalTiptapProps extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
   value?: Content;

@@ -15,8 +15,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ component: Component, .
 
   const { getToken } = authContext;
 
-  console.log("ProtectedRoute", getToken());
-
   return getToken() ? <Component {...rest} /> : <Navigate to="/login" />;
 };
 

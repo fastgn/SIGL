@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import api from "@/services/api.service";
 
 export interface AuthContextType {
@@ -11,7 +11,12 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setTokenState] = useState<string | null>(null);
+  const getTokenEx = () => {
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    return token === "" || null || undefined ? null : token;
+  };
+
+  const [token, setTokenState] = useState<string | null>(getTokenEx());
 
   const setToken = (token: string | null, persist: boolean = false) => {
     api.setToken(token, persist);
