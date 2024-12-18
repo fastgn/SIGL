@@ -18,6 +18,7 @@ import { ApprenticeNotesPage } from "./components/features/apprentice/notes/note
 import { TooltipProvider } from "./components/ui/tooltip";
 import { AdminProvider } from "./contexts/UserContext";
 import { TrainingDiaryPage } from "./components/features/users/user/trainingDiary/TrainingDiaryPage";
+import "./translations/i18n";
 
 env.init();
 api.init(env.get.API_URL);

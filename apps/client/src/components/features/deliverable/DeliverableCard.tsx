@@ -6,6 +6,7 @@ import { EventSchemaType } from "../events/EventsPage";
 import { DeliverableSchema } from "@sigl/types";
 import { z } from "zod";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type DeliverableSchemaType = z.infer<typeof DeliverableSchema.getData>;
 
@@ -16,6 +17,7 @@ export const DeliverableCard = ({
   event: EventSchemaType;
   trainingDiaryId: number;
 }) => {
+  const { t } = useTranslation();
   const [deliverables, setDeliverables] = useState<DeliverableSchemaType[]>([]);
 
   const [endDate, setEndDate] = useState<Date>(new Date(event.endDate));
@@ -35,7 +37,9 @@ export const DeliverableCard = ({
     >
       <div className="flex flex-row">
         <CardContent>
-          <CardTitle className="text-lg font-semibold leading-7">{event.type}</CardTitle>
+          <CardTitle className="text-lg font-semibold leading-7">
+            {t(`globals.filters.${event.type}`)}
+          </CardTitle>
           <CardDescription
             className={`text-sm flex items-center gap-1 ${daysLeft <= 1 ? "text-red-500" : daysLeft <= 7 ? "text-orange-500" : "text-green-500"}`}
           >

@@ -9,11 +9,14 @@ import api from "@/services/api.service";
 import z from "zod";
 import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { useTranslation } from "react-i18next";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
 export const EventsPage = () => {
+  const { t } = useTranslation();
+
   const [events, setEvents] = useState<EventSchemaType[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<EventSchemaType[]>([]);
   const [searchTerm, setSearchTerm] = useState<string | null>(null);
@@ -44,14 +47,14 @@ export const EventsPage = () => {
               break;
             default: {
               const error = getErrorInformation(res.status);
-              toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+              toast.error(error?.description || t("globals.errors.connection"));
               break;
             }
           }
         },
         (err) => {
           const error = getErrorInformation(err.status);
-          toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+          toast.error(error?.description || t("globals.errors.connection"));
         },
       );
     };
@@ -103,17 +106,17 @@ export const EventsPage = () => {
           case 200:
           case 201:
             setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventObject.id));
-            toast.success("Événement supprimé avec succès.");
+            toast.success(t("events.success.delete"));
             break;
           default: {
             const error = getErrorInformation(res.status);
-            toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+            toast.error(error?.description || t("globals.errors.connection"));
             break;
           }
         }
       },
       (err) => {
-        const message = err.response?.data?.message || "Une erreur est survenue.";
+        const message = err.response?.data?.message || t("globals.errors.common");
         toast.error(message);
       },
     );
@@ -130,7 +133,7 @@ export const EventsPage = () => {
       <ScrollArea className="w-full overflow-x-auto ">
         <div className="flex flex-col gap-5 px-16 py-12">
           <div className="flex flex-row justify-between">
-            <h1 className="text-3xl font-bold">Évènements</h1>
+            <h1 className="text-3xl font-bold">{t("events.title")}</h1>
             <EventForm
               onAddEvent={handleAddEvent}
               onUpdateEvent={handleUpdateEvent}

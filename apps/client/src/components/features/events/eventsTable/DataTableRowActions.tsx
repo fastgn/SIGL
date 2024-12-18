@@ -6,6 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -18,6 +19,8 @@ export const DataTableRowActions = <TData,>({
   onDelete,
   onEdit,
 }: DataTableRowActionsProps<TData>) => {
+  const { t } = useTranslation();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="h-full flex flex-col justify-center">
@@ -29,14 +32,14 @@ export const DataTableRowActions = <TData,>({
           className="flex flex-row items-center"
         >
           <Edit />
-          Modifier
+          {t("globals.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => onDelete(row.original)}
           className="flex flex-row items-center"
         >
           <Trash2 />
-          Supprimer
+          {t("globals.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

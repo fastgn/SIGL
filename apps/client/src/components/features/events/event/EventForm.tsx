@@ -29,6 +29,8 @@ import { CalendarIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { EnumEventType, EventSchema, GroupSchema } from "@sigl/types";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
+
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -61,6 +63,8 @@ export const EventForm = ({
   onOpenChange,
   eventObject,
 }: EventFormProps) => {
+  const { t } = useTranslation();
+
   const [submitting, setSubmitting] = useState(false);
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
   const [groups, setGroups] = useState<GroupsSchemaType[]>([]);
@@ -82,7 +86,7 @@ export const EventForm = ({
       },
       (err) => {
         const error = getErrorInformation(err.status);
-        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+        toast.error(error?.description || t("globals.error.connection"));
       },
     );
   }, []);
@@ -110,7 +114,7 @@ export const EventForm = ({
           case 201:
           case 200:
             {
-              toast.success(`Évènement ajouté avec succès`);
+              toast.success(t("events.success.create"));
               const newEvent: EventSchemaType = {
                 ...data,
                 id: res.data.data.id,
@@ -125,7 +129,7 @@ export const EventForm = ({
       },
       (err) => {
         const error = getErrorInformation(err.status);
-        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+        toast.error(error?.description || t("globals.error.connection"));
         setSubmitting(false);
       },
     );
@@ -139,7 +143,7 @@ export const EventForm = ({
           case 201:
           case 200:
             {
-              toast.success(`Évènement modifié avec succès`);
+              toast.success(t("events.success.update"));
               const event: EventSchemaType = {
                 ...data,
                 id: res.data.data.id,
@@ -154,7 +158,7 @@ export const EventForm = ({
       },
       (err) => {
         const error = getErrorInformation(err.status);
-        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+        toast.error(error?.description || t("globals.error.connection"));
         setSubmitting(false);
       },
     );
@@ -165,22 +169,23 @@ export const EventForm = ({
     form.setValue("groups", selectedGroups);
   }, [selectedItems, groups, form]);
 
+  const action = eventObject ? "modifier" : "ajouter";
+  const newEvent = eventObject ? "" : "nouvel";
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="add">
           <Plus className="mr-2 h-4 w-4" />
-          Nouvel évènement
+          {t("events.form.newEvent")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {eventObject ? "Modifier un évènement" : "Ajouter un nouvel évènement"}
+            {eventObject ? t("events.form.title.update") : t("events.form.title.create")}
           </DialogTitle>
-          <DialogDescription>
-            {`Remplissez le formulaire ci-dessous pour ${eventObject ? "modifier" : "ajouter"} un ${eventObject ? "" : "nouvel"} évènement.`}
-          </DialogDescription>
+          <DialogDescription>{t("events.form.info", { action, newEvent })}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -192,20 +197,22 @@ export const EventForm = ({
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Type</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    {t("events.form.type.title")}
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     disabled={submitting}
                   >
                     <SelectTrigger className="bg-white rounded-[6px] border">
-                      <SelectValue placeholder="Type" />
+                      <SelectValue placeholder={t("events.form.type.placeholder")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
                         {Object.values(EnumEventType).map((eventType) => (
                           <SelectItem key={eventType} value={eventType}>
-                            {eventType}
+                            {t(`globals.filters.${eventType}`)}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -219,11 +226,14 @@ export const EventForm = ({
               name="description"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-medium">Description</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    {t("events.form.description.title")}
+                  </FormLabel>
                   <Textarea
                     className="w-full p-2 border rounded max-h-32 min-h-10 text-sm font-normal"
                     {...field}
                     disabled={submitting}
+                    placeholder={t("events.form.description.placeholder")}
                   />
                 </FormItem>
               )}
@@ -233,7 +243,9 @@ export const EventForm = ({
               name="endDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-medium">Date de fin</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    {t("events.form.endDate.title")}
+                  </FormLabel>
                   <Popover open={isDatePickerOpen} onOpenChange={setDatePickerOpen}>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -250,7 +262,7 @@ export const EventForm = ({
                               {format(field.value, "PPP", { locale: fr })}
                             </span>
                           ) : (
-                            <span className="text-sm">Choisir une date</span>
+                            <span className="text-sm">{t("events.form.endDate.placeholder")}</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -277,9 +289,15 @@ export const EventForm = ({
               name="groups"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="text-sm font-medium">Groupes</FormLabel>
+                  <FormLabel className="text-sm font-medium">
+                    {t("events.form.groups.title")}
+                  </FormLabel>
                   <MultiSelect
-                    placeholder="Groupes"
+                    placeholder={
+                      field.value.length
+                        ? field.value.map((group) => group.name).join(", ")
+                        : t("events.form.groups.placeholder")
+                    }
                     options={groups.map((group) => ({
                       label: group.name,
                       value: group.id.toString(),
@@ -294,16 +312,16 @@ export const EventForm = ({
             <div className="flex flex-row gap-4 justify-end">
               <DialogClose asChild>
                 <Button type="button" variant="cancel" className="shadow-1">
-                  Annuler
+                  {t("globals.cancel")}
                 </Button>
               </DialogClose>
               <Button type="submit" variant="add" disabled={submitting} className="shadow-1">
                 {submitting ? (
                   <UpdateIcon className="h-4 w-4 animate-spin" />
                 ) : eventObject ? (
-                  "Modifier"
+                  t("globals.edit")
                 ) : (
-                  "Ajouter"
+                  t("globals.add")
                 )}
               </Button>
             </div>
