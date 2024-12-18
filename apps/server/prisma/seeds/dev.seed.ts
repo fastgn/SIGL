@@ -76,6 +76,82 @@ async function main() {
       },
     },
   });
+
+  // mail de confirmation
+  await db.emailTemplate.create({
+    data: {
+      name: "account_created", // Unique name of the template
+      subject: "Confirmation de création de compte", // Email subject
+      body: `
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Compte créé avec succès</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              margin: 0;
+              padding: 0;
+              background-color: #f9f9f9;
+              color: #333;
+            }
+            .container {
+              width: 100%;
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #ffffff;
+              border-radius: 8px;
+              box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            .content {
+              text-align: left;
+            }
+            .footer {
+              text-align: center;
+              margin-top: 20px;
+              font-size: 0.9em;
+              color: #888;
+            }
+            .footer a {
+              color: #007bff;
+              text-decoration: none;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h2>Bienvenue !</h2>
+            </div>
+            <div class="content">
+              <p>Bonjour {{name}},</p>
+              <p>Nous avons le plaisir de vous informer que votre compte a été créé avec succès.</p>
+              <p>Voici vos identifiants de connexion : <br>
+                <strong>Adresse email :</strong> {{email}} <br>
+                <strong>Mot de passe :</strong> {{password}} <br>
+              </p>
+              <p>Merci de ne pas partager ces informations avec d'autres personnes.</p>
+              <p>Nous restons à votre disposition pour toute question supplémentaire.</p>
+              <p>Cordialement,<br>L'équipe FastGN</p>
+            </div>
+            <div class="footer">
+              <p>&copy; 2024 FastGN. Tous droits réservés.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    },
+  });
+
   console.log("Base de données initialisée.");
 }
 

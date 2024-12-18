@@ -209,3 +209,12 @@ model Deliverable {
   trainingDiary TrainingDiary? @relation(fields: [trainingDiaryId], references: [id])
   trainingDiaryId Int?
 }
+
+model EmailTemplate {
+  id      Int    @id @default(autoincrement()) 
+  name    String @unique                       
+  subject String                               
+  body    String                               
+  createdAt DateTime @default(now())           
+  updatedAt DateTime @updatedAt               
+}
