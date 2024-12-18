@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { ListRestart, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface SearchBarProps {
   searchTerm: string;
@@ -30,6 +31,7 @@ export const SearchBar = ({
   setSelectedSortOption,
   clearSearch,
 }: SearchBarProps) => {
+  const { t } = useTranslation();
   const [filterChoice, setFilterChoice] = useState<string | null>("");
   const [sortOptionChoice, setSortOptionChoice] = useState<string | null>("");
 
@@ -69,7 +71,7 @@ export const SearchBar = ({
                   <SelectGroup>
                     {filters.map((filter) => (
                       <SelectItem key={filter} value={filter}>
-                        {filter}
+                        {t(`globals.filters.${filter}`)}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -88,7 +90,7 @@ export const SearchBar = ({
                   <SelectGroup>
                     {sortOptions.map((sortOption) => (
                       <SelectItem key={sortOption} value={sortOption}>
-                        {sortOption}
+                        {t(`globals.sortOptions.${sortOption}`)}
                       </SelectItem>
                     ))}
                   </SelectGroup>

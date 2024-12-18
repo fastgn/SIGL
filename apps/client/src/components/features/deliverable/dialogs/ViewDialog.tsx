@@ -19,6 +19,7 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { z } from "zod";
 import { DeliverableSchema } from "@sigl/types";
 import { DeliverablesCard } from "../cards/DeliverablesCard";
+import { useTranslation } from "react-i18next";
 
 export type DeliverableSchemaType = z.infer<typeof DeliverableSchema.getData>;
 
@@ -33,6 +34,7 @@ export const ViewDialog = ({
   setDeliverables: (deliverables: DeliverableSchemaType[]) => void;
   trainingDiaryId: number;
 }) => {
+  const { t } = useTranslation();
   const [endDate, setEndDate] = useState<Date>(new Date(event.endDate));
   const [daysLeft, setDaysLeft] = useState<number>(
     new Date(event.endDate).getDate() - new Date().getDate(),
@@ -64,7 +66,7 @@ export const ViewDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{event.type}</DialogTitle>
+          <DialogTitle>{t(`globals.filters.${event.type}`)}</DialogTitle>
           <DialogDescription
             className={`text-sm flex items-center gap-1 ${daysLeft <= 1 ? "text-red-500" : daysLeft <= 7 ? "text-orange-500" : "text-green-500"}`}
           >

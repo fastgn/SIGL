@@ -9,6 +9,19 @@
     "errors": {
       "common": "Une erreur est survenue.",
       "connection": "Une erreur s'est produite lors de la connexion."
+    },
+    "filters": {
+      "s5_report": "Rapport S5",
+      "s6_report": "Rapport S6",
+      "s7_report": "Rapport S7",
+      "s8_report": "Rapport S8",
+      "ping_pre_report": "Rapport pré PING",
+      "ping_mi_report": "Rapport avancement PING",
+      "ping_report": "Rapport PING"
+    },
+    "sortOptions": {
+      "acs": "Croissant",
+      "desc": "Décroissant"
     }
   },
   "home": {},
@@ -50,15 +63,6 @@
         "terminated": "Terminé"
       },
       "endDate": "Date de fin"
-    },
-    "eventTypes": {
-      "s5_report": "Rapport S5",
-      "s6_report": "Rapport S6",
-      "s7_report": "Rapport S7",
-      "s8_report": "Rapport S8",
-      "ping_pre_report": "Rapport pré PING",
-      "ping_mi_report": "Rapport avancement PING",
-      "ping_report": "Rapport PING"
     },
     "success": {
       "create": "L'évènement a été créé avec succès.",

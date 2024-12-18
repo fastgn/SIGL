@@ -68,7 +68,7 @@ export const getColumns = ({ onDelete, onEdit }: ColumnsProps): ColumnDef<EventS
                 );
               }
             })}
-            <h1 className="font-bold">{t(`events.eventTypes.${type}`)}</h1>
+            <h1 className="font-bold">{t(`globals.filters.${type}`)}</h1>
             <p className="text-gray-500 truncate">{description}</p>
           </div>
         );

@@ -212,7 +212,7 @@ export const EventForm = ({
                       <SelectGroup>
                         {Object.values(EnumEventType).map((eventType) => (
                           <SelectItem key={eventType} value={eventType}>
-                            {t(`events.eventTypes.${eventType}`)}
+                            {t(`globals.filters.${eventType}`)}
                           </SelectItem>
                         ))}
                       </SelectGroup>

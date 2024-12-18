@@ -20,6 +20,7 @@ import api from "@/services/api.service.ts";
 import { toast } from "sonner";
 import { getErrorInformation } from "@/utilities/utils";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { useTranslation } from "react-i18next";
 
 const FormSchema = z.object({
   comment: z.string(),
@@ -35,6 +36,7 @@ export const AddDeliverableDialog = ({
   setDeliverables: any;
   trainingDiaryId: number;
 }) => {
+  const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [isOpen, onOpenChange] = useState(false);
 
@@ -82,7 +84,8 @@ export const AddDeliverableDialog = ({
         <DialogHeader>
           <DialogTitle>Ajouter un livrable</DialogTitle>
           <DialogDescription>
-            Merci d'ajouter votre livrable pour l'événement <strong>{event.type}</strong>
+            Merci d'ajouter votre livrable pour l'événement{" "}
+            <strong>{t(`globals.filters.${event.type}`)}</strong>
           </DialogDescription>
         </DialogHeader>
 

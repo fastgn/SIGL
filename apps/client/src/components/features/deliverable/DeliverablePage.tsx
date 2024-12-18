@@ -59,7 +59,7 @@ export const DeliverablePage = () => {
           <div className="w-full">
             <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
               {events.map((event) => (
-                <DeliverableCard event={event} trainingDiaryId={trainingDiaryId} />
+                <DeliverableCard event={event} trainingDiaryId={trainingDiaryId} key={event.id} />
               ))}
             </div>
           </div>
