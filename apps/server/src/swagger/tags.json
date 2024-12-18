@@ -22,5 +22,9 @@
   {
     "name": "Deliverable",
     "description": "Operations sur les livrables"
+  },
+  {
+    "name": "Company Account",
+    "description": "Operations sur les comptes d'entreprise"
   }
 ]

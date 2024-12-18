@@ -9,13 +9,16 @@ import authMiddleware from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
 
 router.post(
-  "/",
+  "/compagny/:Compagny_id/user/:user_id",
   authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
   async (req, res) => {
     try {
-      const { compagny_id, user_id } = req.body;
+      const { compagny_id, user_id } = req.params;
       logger.info(`Création du compte compagnie`);
-      const result = await compagnyAccountController.createCompagnyAccount(compagny_id, user_id);
+      const result = await compagnyAccountController.createCompagnyAccount(
+        parseInt(compagny_id),
+        parseInt(user_id),
+      );
       logger.info(`Compte compagnie créé`);
 
       reply(res, result);
@@ -27,13 +30,13 @@ router.post(
 );
 
 router.delete(
-  "/",
+  "/user/:user_id",
   authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
   async (req, res) => {
     try {
-      const { compagny_id, user_id } = req.body;
+      const { user_id } = req.params;
       logger.info(`Suppression du compte compagnie`);
-      const result = await compagnyAccountController.deleteCompagnyAccount(compagny_id, user_id);
+      const result = await compagnyAccountController.deleteCompagnyAccount(parseInt(user_id));
       logger.info(`Compte compagnie supprimé`);
 
       reply(res, result);
@@ -43,5 +46,40 @@ router.delete(
     }
   },
 );
-export default router;
 
+router.get(
+  "/",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      logger.info(`Récupération des comptes compagnie`);
+      const result = await compagnyAccountController.getAllCompagnyAccount();
+      logger.info(`Comptes compagnie récupérés`);
+
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get(
+  "/compagny/:compagny_id",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const { compagny_id } = req.params;
+      logger.info(`Récupération du compte compagnie`);
+      const result = await compagnyAccountController.getCompagnyAccount(parseInt(compagny_id));
+      logger.info(`Compte compagnie récupéré`);
+
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+export default router;
