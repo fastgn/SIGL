@@ -1,0 +1,274 @@
+name: Sigl Server CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-22.04
+    name: Setup Environment
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+  build-app:
+    runs-on: ubuntu-22.04
+    needs: setup  
+    strategy:
+      matrix:
+        pnpm-version: [9.x]
+    name: Build Application with pnpm ${{ matrix.pnpm-version }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Install pnpm
+        run: npm install -g pnpm@${{ matrix.pnpm-version }}
+      - name: Install Dependencies
+        run: pnpm install
+
+  install-docker:
+    runs-on: ubuntu-22.04
+    name: Install Docker and Docker Compose
+    steps:
+      # Install Docker and Docker Compose
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
+
+      - name: Install Docker Compose (specific version)
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version  # Verify installation
+
+  build-docker-image:
+    runs-on: ubuntu-22.04
+    needs: [ install-docker]
+    strategy:
+      matrix:
+        docker-version: [20.x]
+        docker-compose-version: [1.29.x]
+    name: Build and Push Docker Image
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Build Docker image if not present
+      - name: Build Docker Image
+        run: |
+          if ! docker image inspect stevenoumi3010/sigl-server:latest > /dev/null 2>&1; then
+            echo "Image does not exist locally. Building the image."
+            docker build -t stevenoumi3010/sigl-server:latest .
+          else
+            echo "Image already exists locally."
+          fi
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "Logging into Docker Hub..."
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          echo "Pushing Docker image to Docker Hub..."
+          docker push stevenoumi3010/sigl-server:latest
+
+      - name: Start Services with Docker Compose
+        run: |
+          echo "Starting services using Docker Compose..."
+          docker compose -f docker-compose.local.yml up -d
+    
+      - name: Validate Docker Compose File
+        run: |
+          docker compose -f docker-compose.local.yml config
+          docker compose -f docker-compose.local.yml config
+
+
+      - name: Check Docker Compose Status
+        run: docker compose -f docker-compose.local.yml ps
+
+      - name: View Docker Compose Logs
+        run: docker compose -f docker-compose.local.yml logs
+
+  build-database:
+    runs-on: ubuntu-22.04
+    needs: [ install-docker]
+    strategy:
+      matrix:
+        docker-version: [20.x]
+        docker-compose-version: [1.29.x]
+    name: Setup and Test Database
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        run: npm install -g pnpm@${{ matrix.pnpm-version }}
+
+      - name: Load Environment Variables
+        run: |
+          echo "PORT=5600" >> apps/server/.env
+          echo "CLIENT_URL+${{ secrets.PREPROD_CLIENT_URL }}" >> apps/server/.env
+          echo "TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}" >> apps/server/.env
+          echo "DATABASE_URL=${{ secrets.PREPROD_DATABASE_URL }}" >> apps/server/.env
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Bring Up the Database
+        run: docker compose -f docker-compose.dev.yml up -d 
+
+      - name: Check Database Status
+        run: docker compose -f docker-compose.dev.yml ps
+      
+      - name: Wait for Database to Start
+        run: sleep 10
+      
+      - name: Run Database Migrations
+        run: pnpm run --filter server db:migrate:dev
+
+      - name: Generate Database Files
+        run: pnpm run --filter server db:generate
+
+      - name: Start Server for Testing
+        run: pnpm run --filter server dev &
+
+# deploy on existing azure vm
+  deploy:
+    runs-on: ubuntu-22.04
+    needs: [build-docker-image, build-database , build-app]
+    name: Deploy the frontend on the production server
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Install pnpm
+        run: npm install -g pnpm@${{ matrix.pnpm-version }}
+      
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Configure SSH and Prepare Deployment
+        run: |
+          # Create the .ssh directory
+          mkdir -p ~/.ssh
+
+          # Save private keys from GitHub Secrets to files
+          echo "${{ secrets.BASTION_KEY }}" > ~/.ssh/bastion_key
+          echo "${{ secrets.Frontend_KEY }}" > ~/.ssh/frontend_key
+          echo "${{ secrets.BACKEND_KEY }}" > ~/.ssh/backend_key
+
+          # Set secure permissions on key files
+          chmod 600 ~/.ssh/bastion_key
+          chmod 600 ~/.ssh/frontend_key
+          chmod 600 ~/.ssh/backend_key
+
+          # Start SSH agent and add keys
+          if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+              eval "$(ssh-agent -s)"
+          fi
+          ssh-add ~/.ssh/bastion_key
+          ssh-add ~/.ssh/frontend_key
+          ssh-add ~/.ssh/backend_key
+
+          # Configure SSH
+          echo "Creating SSH configuration file..."
+          if [ -f ~/.ssh/config ]; then
+              cp ~/.ssh/config ~/.ssh/config.bak
+              echo "Backup of existing SSH config created: ~/.ssh/config.bak"
+          fi
+
+          # Create the SSH config file using IPs from GitHub secrets
+          cat <<EOL > ~/.ssh/config
+
+          # SSH configuration for bastion and internal servers
+
+          Host sigl-bastion
+            HostName ${{ secrets.BASTION_IP }}
+            User sigladmin
+            IdentityFile ~/.ssh/bastion_key
+            ForwardAgent yes
+
+          Host sigl-frontend
+            HostName ${{ secrets.FRONTEND_IP }}
+            User sigladmin
+            ProxyJump sigl-bastion
+            IdentityFile ~/.ssh/frontend_key
+
+          Host sigl-backend
+            HostName ${{ secrets.BACKEND_IP }}
+            User sigladmin
+            ProxyJump sigl-bastion
+            IdentityFile ~/.ssh/backend_key
+            StrictHostKeyChecking no
+          EOL
+
+          echo "SSH configuration complete."
+
+          # Add the bastion key to known hosts
+          ssh-keyscan -H ${{ secrets.BASTION_IP }} >> ~/.ssh/known_hosts
+
+
+      - name: Build Frontend Application Packages
+        run: pnpm run build:packages
+
+      - name: Build Client
+        run: cd apps/client && pnpm run build
+
+      - name: Prepare Server for Deployment
+        run: |
+          ssh -o StrictHostKeyChecking=no sigl-frontend "sudo mkdir -p /var/www/sigl && sudo rm -rf /var/www/sigl/*"
+
+      - name: Deploy Frontend to the Server
+        run: |
+          scp -r apps/client/dist/ sigladmin@sigl-frontend:/tmp/dist/
+          ssh sigl-frontend "sudo mv /tmp/dist/* /var/www/sigl/"
+      
+      - name: Deploy Backend to the Server
+        run: |
+          # Prepare the backend directory and remove old files
+          ssh -o StrictHostKeyChecking=no sigl-backend "sudo mkdir -p /etc/backend && sudo rm -rf /etc/backend/*"
+          
+          # Stop and remove all running containers
+          ssh sigl-backend "sudo docker stop \$(sudo docker ps -aq)"
+          ssh sigl-backend "sudo docker rm \$(sudo docker ps -aq)"
+          
+          # Remove all images
+          ssh sigl-backend "sudo docker rmi \$(sudo docker images -aq)"
+
+          # Copy docker-compose file to the server
+          scp -r docker-compose.prod.yml sigladmin@sigl-backend:/tmp/
+          ssh sigl-backend "sudo mv /tmp/docker-compose.prod.yml /etc/backend/docker-compose.yml"
+
+          # Set environment variables on the remote server
+          ssh sigl-backend "echo \"CLIENT_URL=${{ secrets.CLIENT_URL }}\" | sudo tee -a /etc/backend/.env"
+          ssh sigl-backend "echo \"TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}\" | sudo tee -a /etc/backend/.env"
+          ssh sigl-backend "echo \"DATABASE_URL=${{ secrets.DATABASE_URL }}\" | sudo tee -a /etc/backend/.env"
+
+          # Run Docker Compose
+          ssh sigl-backend "sudo docker-compose -f /etc/backend/docker-compose.yml up -d"
+
+          
