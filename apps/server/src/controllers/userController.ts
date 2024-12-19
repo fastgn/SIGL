@@ -7,6 +7,7 @@ import { db } from "../providers/db";
 import logger from "../utils/logger";
 import { removePassword } from "../utils/user";
 import userService, { UserWithRoles } from "../services/user.service";
+import { emailService } from "../services/email.service";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -79,6 +80,19 @@ const userController = {
         },
       });
 
+      const variables = {
+        name: `${form.firstName} ${form.lastName}`,
+        email: form.email,
+        password: newPassword,
+      };
+      // send email with password here
+      try {
+        await emailService.sendEmailWithTemplate(form.email, "account_created", variables);
+        console.log("Email sent successfully");
+      } catch (error) {
+        console.error("Failed to send email:", error);
+        // Handle the error appropriately, e.g., notify the user, retry, etc.
+      }
       // Retirer le mot de passe de la réponse
       const userWithoutPassword = removePassword(user);
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
