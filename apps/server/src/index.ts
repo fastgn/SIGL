@@ -93,7 +93,6 @@ app.get("/file/:blobName", async (req: Request, res: Response) => {
   }
 });
 
-
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {
