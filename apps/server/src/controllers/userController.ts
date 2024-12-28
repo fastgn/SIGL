@@ -149,9 +149,16 @@ const userController = {
           curriculumManager: true,
           educationalTutor: true,
           teacher: true,
+          admin: true,
         },
       });
-      const usersWithoutPassword = users.map(removePassword);
+
+      const UsersWithRoles = users.map((user) => {
+        const finalUser: any = user;
+        finalUser.roles = userService.getRoles(user);
+        return finalUser;
+      });
+      const usersWithoutPassword = UsersWithRoles.map(removePassword);
       return ControllerSuccess.SUCCESS({ data: usersWithoutPassword });
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);

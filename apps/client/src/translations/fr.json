@@ -17,7 +17,14 @@
       "s8_report": "Rapport S8",
       "ping_pre_report": "Rapport pré PING",
       "ping_mi_report": "Rapport avancement PING",
-      "ping_report": "Rapport PING"
+      "ping_report": "Rapport PING",
+      "educational_tutor": "Tuteur pédagogique",
+      "apprentice": "Apprenti",
+      "apprentice_mentor": "Maître d'apprentissage",
+      "apprentice_coordinator": "Tuteur pédagogique",
+      "teacher": "Enseignant",
+      "curiculum_manager": "Responsable de formation",
+      "admin": "Administrateur"
     },
     "sortOptions": {
       "acs": "Croissant",

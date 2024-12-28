@@ -83,7 +83,7 @@ export const UsersPage = () => {
 
     if (listFilter) {
       filteredUsers = filteredUsers.filter((user) => {
-        return user.roles.some((r) => r.toLowerCase().includes(listFilter.toLowerCase()));
+        return user.roles?.some((r) => r.toLowerCase().includes(listFilter.toLowerCase()));
       });
     }
 
