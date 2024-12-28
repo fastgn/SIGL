@@ -77,6 +77,331 @@ async function main() {
     },
   });
 
+  const groups = [
+    { name: "Pointcaré", description: "Promotion 2022/2025", color: "blue" },
+    { name: "Newton", description: "Promotion 2021/2024", color: "green" },
+    { name: "Galilée", description: "Promotion 2020/2023", color: "red" },
+    { name: "Curie", description: "Promotion 2019/2022", color: "purple" },
+    { name: "Tesla", description: "Promotion 2023/2026", color: "orange" },
+    { name: "Edison", description: "Promotion 2024/2027", color: "sky" },
+    { name: "Kepler", description: "Promotion 2025/2028", color: "yellow" },
+    { name: "Delmotte", description: "", color: "pink" },
+    { name: "Fleming", description: "", color: "black" },
+    { name: "Hopfield", description: "", color: "brown" },
+  ];
+
+  for (const group of groups) {
+    await db.group.create({ data: group });
+  }
+
+  const events = [
+    {
+      type: "s6_report",
+      description: "Rapport projet simplifé",
+      endDate: new Date("2025-12-15"),
+      groups: [1, 3],
+    },
+    {
+      type: "s6_report",
+      description: "Synthèse S6",
+      endDate: new Date("2023-11-20"),
+      groups: [2, 8],
+    },
+    {
+      type: "s7_report",
+      description: "Synthèse S7",
+      endDate: new Date("2025-10-10"),
+      groups: [4, 6],
+    },
+    {
+      type: "ping_pre_report",
+      description: "Rapport avant projet",
+      endDate: new Date("2024-09-05"),
+      groups: [5, 7],
+    },
+    {
+      type: "ping_pre_report",
+      description: "Diaporama de soutenance",
+      endDate: new Date("2023-08-25"),
+      groups: [1, 9],
+    },
+    {
+      type: "ping_pre_report",
+      description: "Confidentialité",
+      endDate: new Date("2023-07-18"),
+      groups: [3, 6],
+    },
+    {
+      type: "s8_report",
+      description: "Rapport de synthèse S8",
+      endDate: new Date("2024-06-22"),
+      groups: [2, 8, 9],
+    },
+    {
+      type: "ping_mi_report",
+      description: "Rapport de mi projet",
+      endDate: new Date("2023-05-13"),
+      groups: [4, 5, 7],
+    },
+    {
+      type: "ping_report",
+      description: "Rapport de fin de projet",
+      endDate: new Date("2023-04-30"),
+      groups: [1, 3, 6],
+    },
+    {
+      type: "s5_report",
+      description: "Synthèse S5",
+      endDate: new Date("2023-03-11"),
+      groups: [2, 8],
+    },
+  ];
+
+  const users = [
+    {
+      lastName: "Smith",
+      firstName: "Emma",
+      birthDate: new Date("1993-04-05"),
+      active: true,
+      email: "emma@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "1111111111",
+      groups: {
+        connect: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Johnson",
+      firstName: "Liam",
+      birthDate: new Date("1994-05-06"),
+      active: true,
+      email: "liam@domain.com",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "2222222222",
+      groups: {
+        connect: [{ id: 4 }, { id: 5 }, { id: 6 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 1",
+                  content: `<h1 class="heading-node">Première semaine en entreprise</h1><p class="text-node">La première semaine en entreprise a été intense et enrichissante</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      lastName: "Williams",
+      firstName: "Olivia",
+      birthDate: new Date("1995-06-07"),
+      active: true,
+      email: "olivia@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "3333333333",
+      groups: {
+        connect: [{ id: 7 }, { id: 8 }, { id: 9 }],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Brown",
+      firstName: "Noah",
+      birthDate: new Date("1996-07-08"),
+      active: true,
+      email: "noah@domain.com",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "4444444444",
+      groups: {
+        connect: [{ id: 1 }, { id: 4 }, { id: 7 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 2",
+                  content: `<h1 class="heading-node">Deuxième semaine en entreprise</h1><p class="text-node">La deuxième semaine en entreprise a été un peu plus difficile que la première</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      lastName: "Jones",
+      firstName: "Ava",
+      birthDate: new Date("1997-08-09"),
+      active: true,
+      email: "ava@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "5555555555",
+      groups: {
+        connect: [{ id: 2 }, { id: 5 }, { id: 8 }],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Garcia",
+      firstName: "Elijah",
+      birthDate: new Date("1998-09-10"),
+      active: true,
+      email: "elijah@domain.com",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "6666666666",
+      groups: {
+        connect: [{ id: 3 }, { id: 6 }, { id: 9 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 3",
+                  content: `<h1 class="heading-node">Troisième semaine en entreprise</h1><p class="text-node">La troisième semaine en entreprise a été la plus difficile jusqu’à présent</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      lastName: "Miller",
+      firstName: "Sophia",
+      birthDate: new Date("1999-10-11"),
+      active: true,
+      email: "sophia@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "7777777777",
+      groups: {
+        connect: [
+          { id: 1 },
+          { id: 2 },
+          { id: 3 },
+          { id: 4 },
+          { id: 5 },
+          { id: 6 },
+          { id: 7 },
+          { id: 8 },
+          { id: 9 },
+        ],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Davis",
+      firstName: "James",
+      birthDate: new Date("2000-11-12"),
+      active: true,
+      email: "james@domain.com",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "8888888888",
+      groups: {
+        connect: [{ id: 1 }, { id: 4 }, { id: 7 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 4",
+                  content: `<h1 class="heading-node">Quatrième semaine en entreprise</h1><p class="text-node">La quatrième semaine en entreprise a été un peu plus facile que la troisième</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      lastName: "Lopez",
+      firstName: "Isabella",
+      birthDate: new Date("2001-12-13"),
+      active: true,
+      email: "isabella@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "9999999999",
+      groups: {
+        connect: [{ id: 2 }, { id: 5 }, { id: 8 }],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Gonzalez",
+      firstName: "Lucas",
+      birthDate: new Date("2002-01-14"),
+      active: true,
+      email: "lucas@domain.com",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "1010101010",
+      groups: {
+        connect: [{ id: 3 }, { id: 6 }, { id: 9 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 5",
+                  content: `<h1 class="heading-node">Cinquième semaine en entreprise</h1><p class="text-node">La cinquième semaine en entreprise a été la plus facile jusqu’à présent</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  ];
+
+  for (const user of users) {
+    await db.user.create({ data: user });
+  }
+
+  for (const event of events) {
+    await db.event.create({
+      data: {
+        type: event.type,
+        description: event.description,
+        endDate: event.endDate,
+        groups: {
+          connect: event.groups.map((groupId) => ({ id: groupId })),
+        },
+      },
+    });
+  }
+
   // mail de confirmation
   await db.emailTemplate.create({
     data: {
