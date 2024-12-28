@@ -18,7 +18,7 @@ import { GroupSchemaType } from "./GroupsPage";
 import { GroupDialog } from "./GroupDialog";
 import { useEffect } from "react";
 import z from "zod";
-import { UserSchema } from "@sigl/types";
+import { getHexColor, GroupColor, UserSchema } from "@sigl/types";
 import api from "@/services/api.service.ts";
 
 type UserShemaType = z.infer<typeof UserSchema.getData>;
@@ -61,7 +61,9 @@ export const GroupsList = ({ groups, onDeleteGroup }: GroupCardListProps) => {
             <CardHeader className="p-0">
               <Avatar>
                 <AvatarImage
-                  src={`https://api.dicebear.com/6.x/initials/svg?seed=${group.name}`}
+                  src={`https://api.dicebear.com/6.x/initials/svg?seed=${group.name}&backgroundColor=${getHexColor(
+                    GroupColor[group.color as keyof typeof GroupColor],
+                  )}`}
                   alt={group.name}
                 />
                 <AvatarFallback>
