@@ -6,3 +6,6 @@ export * from "./group.schema";
 export * from "./groupFile.schema";
 export * from "./deliverable.schema";
 export * from "./diary.schema";
+export * from "./biannualEvaluation.schema";
+export * from "./skill.schema";
+export * from "./skillEvaluation.schema";

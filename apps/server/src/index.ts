@@ -67,6 +67,7 @@ app.use("/note", noteRoutes);
 app.use("/compagnyAccount", compagnyAccountRoute);
 app.use("/deliverables", deliverableRoutes);
 app.use("/company", companyRoutes);
+app.use("/biannualEvaluations", biannualEvaluationRoutes);
 
 // Stream /files to Azure Blob Storage
 import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
@@ -99,6 +100,7 @@ app.get("/file/:blobName", async (req: Request, res: Response) => {
 import swaggerConfig from "./swagger/swaggerConfig";
 import groupRoutes from "./routes/groupRoutes";
 import { BlobServiceClient } from "@azure/storage-blob";
+import biannualEvaluationRoutes from "./routes/biannualEvaluationRoutes";
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {
