@@ -188,6 +188,18 @@ CREATE TABLE "Deliverable" (
 );
 
 -- CreateTable
+CREATE TABLE "EmailTemplate" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "EmailTemplate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_GroupToUser" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -237,6 +249,9 @@ CREATE UNIQUE INDEX "Admin_userId_key" ON "Admin"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TrainingDiary_apprenticeId_key" ON "TrainingDiary"("apprenticeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "EmailTemplate_name_key" ON "EmailTemplate"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_GroupToUser_AB_unique" ON "_GroupToUser"("A", "B");
