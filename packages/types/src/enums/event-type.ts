@@ -6,4 +6,5 @@ export enum EnumEventType {
   PING_PRE_REPORT = "ping_pre_report",
   PING_MI_REPORT = "ping_mi_report",
   PING_REPORT = "ping_report",
+  OTHER = "other",
 }
