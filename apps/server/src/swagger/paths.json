@@ -849,5 +849,124 @@
         }
       }
     }
+  },
+  "/company/": {
+    "post": {
+      "summary": "Create a company",
+      "description": "Create a new company with the provided details.",
+      "tags": ["Company"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the company."
+                },
+                "address": {
+                  "type": "string",
+                  "description": "Address of the company."
+                },
+                "city": {
+                  "type": "string",
+                  "description": "City where the company is located."
+                },
+                "country": {
+                  "type": "string",
+                  "description": "Country where the company is located."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the company."
+                },
+                "apprenticeNumber": {
+                  "type": "integer",
+                  "description": "Number of apprentices in the company."
+                },
+                "opco": {
+                  "type": "string",
+                  "description": "OPCO of the company."
+                }
+              },
+              "required": ["name", "address", "city", "country", "description", "apprenticeNumber", "opco"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Company created successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "get": {
+      "summary": "Get all companies",
+      "description": "Retrieve a list of all companies.",
+      "tags": ["Company"],
+      "responses": {
+        "200": {
+          "description": "List of companies retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/company/{company_id}": {
+    "get": {
+      "summary": "Get a specific company",
+      "description": "Retrieve details of a specific company by ID.",
+      "tags": ["Company"],
+      "parameters": [
+        {
+          "name": "company_id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the company to retrieve.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Company retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete a company",
+      "description": "Delete an existing company by ID.",
+      "tags": ["Company"],
+      "parameters": [
+        {
+          "name": "company_id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the company to delete.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Company deleted successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
   }
 }

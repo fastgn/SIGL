@@ -26,5 +26,9 @@
   {
     "name": "Company Account",
     "description": "Operations sur les comptes d'entreprise"
+  },
+  {
+    "name": "Company",
+    "description": "Operations sur les informations des entreprises"
   }
 ]

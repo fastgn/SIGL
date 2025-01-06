@@ -28,7 +28,7 @@ const companyController = {
       });
 
       return ControllerSuccess.SUCCESS({
-        message: "Tous les Compte compagny récupéré avec succès",
+        message: "Compte compagny créé avec succès",
         data: newCompany,
       });
     } catch (error) {

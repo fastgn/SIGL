@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import companyController from "../controllers/company";
+import companyController from "../controllers/companyController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import logger from "../utils/logger";
@@ -86,3 +86,5 @@ router.get(
     }
   },
 );
+
+export default router;

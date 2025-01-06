@@ -56,6 +56,7 @@ import eventRoutes from "./routes/eventRoutes";
 import deliverableRoutes from "./routes/deliverableRoutes";
 import noteRoutes from "./routes/noteRoutes";
 import compagnyAccountRoute from "./routes/compagnyAccountRoute";
+import companyRoutes from "./routes/companyRoutes";
 
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
@@ -65,6 +66,7 @@ app.use("/events", eventRoutes);
 app.use("/note", noteRoutes);
 app.use("/compagnyAccount", compagnyAccountRoute);
 app.use("/deliverables", deliverableRoutes);
+app.use("/company", companyRoutes);
 
 // Stream /files to Azure Blob Storage
 import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
