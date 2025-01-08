@@ -67,21 +67,27 @@ const eventController = {
 
       if (!trainingDiaryData) {
         logger.error(`Journal de formation introuvable pour ID: ${diaryId}`);
-        return ControllerError.INVALID_PARAMS({ message: "Le journal de formation n'existe pas" });
+        return ControllerError.DIARY_NOT_FOUND({ message: "Le journal de formation n'existe pas" });
       }
 
       const apprentice = trainingDiaryData.apprentice;
       if (!apprentice) {
         logger.error(`Aucun apprenti associé au journal de formation ID: ${diaryId}`);
-        return ControllerError.INVALID_PARAMS({ message: "L'apprenti n'existe pas" });
+        return ControllerError.APPRENTICE_NOT_FOUND({ message: "L'apprenti n'existe pas" });
       }
 
       const user = apprentice.user;
-      if (!user || !user.groups || user.groups.length === 0) {
-        logger.error(`Utilisateur ou groupes introuvables pour l'apprenti ID: ${apprentice.id}`);
-        return ControllerError.INVALID_PARAMS({
-          message: "Aucun groupe ou utilisateur trouvé pour cet apprenti",
+      if (!user) {
+        logger.error(`Utilisateur introuvables pour l'apprenti ID: ${apprentice.id}`);
+        return ControllerError.USER_NOT_FOUND({
+          message: "Aucun utilisateur trouvé pour cet apprenti",
         });
+      }
+
+      const groups = user.groups;
+      if (!groups) {
+        logger.error(`Aucun groupe associé à l'utilisateur ID: ${user.id}`);
+        return ControllerError.GROUP_NOT_FOUND({ message: "L'utilisateur n'a pas de groupe" });
       }
 
       const groupIds = user.groups.map((group) => group.id);

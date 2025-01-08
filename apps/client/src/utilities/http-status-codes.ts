@@ -161,6 +161,22 @@ export const httpStatusCodes: { [code: string]: HttpStatusCode } = {
     name: "Indisponible pour des raisons légales",
     description: "La ressource demandée est inaccessible pour des raisons d'ordre légal.",
   },
+  "460": {
+    name: "Jounal de formation introuvable",
+    description: "Le journal de formation n'existe pas.",
+  },
+  "461": {
+    name: "Apprenti introuvable",
+    description: "L'utilisateur n'est pas un apprenti.",
+  },
+  "462": {
+    name: "Utilisateur introuvable",
+    description: "L'utilisateur n'existe pas.",
+  },
+  "463": {
+    name: "Groupe introuvable",
+    description: "L'utilisateur n'a pas de groupe.",
+  },
   "500": {
     name: "Erreur interne du serveur",
     description: "Erreur interne du serveur.",

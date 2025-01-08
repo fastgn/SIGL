@@ -123,14 +123,20 @@ const diaryController = {
 
     if (user === null) {
       logger.error("L'utilisateur n'existe pas");
-      return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
+      return ControllerError.USER_NOT_FOUND({ message: "L'utilisateur n'existe pas" });
     }
 
-    const diary = user.apprentice?.trainingDiary;
+    const apprentice = user.apprentice;
+    if (!apprentice) {
+      logger.error("L'apprenti n'existe pas");
+      return ControllerError.APPRENTICE_NOT_FOUND({ message: "L'apprenti n'existe pas" });
+    }
+
+    const diary = apprentice.trainingDiary;
 
     if (!diary) {
       logger.error("Le journal n'existe pas");
-      return ControllerError.INTERNAL({ message: "Le journal n'existe pas" });
+      return ControllerError.DIARY_NOT_FOUND({ message: "Le journal n'existe pas" });
     }
 
     return ControllerSuccess.SUCCESS({ message: "Journal trouvé avec succès", data: diary });

@@ -6,6 +6,7 @@ import api from "@/services/api.service.ts";
 import { useUser } from "@/contexts/UserContext.tsx";
 import { toast } from "sonner";
 import { DeliverableCard } from "./DeliverableCard";
+import { getErrorInformation } from "@/utilities/http";
 
 type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
@@ -30,8 +31,9 @@ export const DeliverablePage = () => {
         if (isMounted) {
           setEvents(eventsResponse.data.data);
         }
-      } catch (error) {
-        toast.error("Erreur lors de la récupération des événements");
+      } catch (error: any) {
+        const errorInformation = getErrorInformation(error.status);
+        toast.error(errorInformation.description);
       } finally {
         if (isMounted) {
           setIsLoading(false);
