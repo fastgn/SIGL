@@ -87,11 +87,9 @@ const userController = {
       };
       // send email with password here
       try {
-        await emailService.sendEmailWithTemplate(form.email, "account_created", variables);
-        console.log("Email sent successfully");
+        await emailService.sendEmailWithTemplate(form.email, "ACCOUNT_CREATION", variables);
       } catch (error) {
         console.error("Failed to send email:", error);
-        // Handle the error appropriately, e.g., notify the user, retry, etc.
       }
       // Retirer le mot de passe de la réponse
       const userWithoutPassword = removePassword(user);
