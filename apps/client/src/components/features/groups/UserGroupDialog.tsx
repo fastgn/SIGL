@@ -96,6 +96,9 @@ export const UserGroupDialog = ({
                 key={user.id}
                 user={user}
                 last={groupUsers.indexOf(user) === groupUsers.length - 1}
+                users={groupUsers}
+                setUsers={setGroupUsers}
+                groupId={group.id}
               />
             ))}
           </ScrollArea>
