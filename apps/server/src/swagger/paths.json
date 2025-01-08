@@ -374,17 +374,6 @@
           }
         }
       },
-      "post": {
-            "summary": "Création d'un événement",
-            "tags": ["Event"],
-            "description": "Permet à un admin de créer un événement"
-        },
-        "put": {
-            "summary": "Modification d'un événement",
-            "tags": ["Event"],
-            "description": "Permet à un admin de modifier un événement"
-        }
-    },
     "/events/{id}": {
       "put": {
         "summary": "Modification d'un événement",

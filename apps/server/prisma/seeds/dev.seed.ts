@@ -405,8 +405,8 @@ async function main() {
   // mail de confirmation
   await db.emailTemplate.create({
     data: {
-      name: "account_created", // Unique name of the template
-      subject: "Confirmation de création de compte", // Email subject
+      name: "ACCOUNT_CREATION",
+      subject: "Confirmation de création de compte",
       body: `
        <!DOCTYPE html>
         <html lang="fr">
@@ -517,6 +517,80 @@ async function main() {
           </div>
         </body>
         </html>
+
+      `,
+    },
+  });
+
+  await db.emailTemplate.create({
+    data: {
+      name: "EVENT_CREATION",
+      subject: "Nouvel évènement créé",
+      body: `
+       <!DOCTYPE html>
+          <html lang="fr">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Ajout à un événement</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f9;
+                color: #333;
+                padding: 20px;
+              }
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+              }
+              .header {
+                text-align: center;
+              }
+              .message {
+                font-size: 16px;
+                line-height: 1.5;
+              }
+              .link {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 10px 15px;
+                background-color: #4CAF50;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 5px;
+              }
+              .footer {
+                margin-top: 30px;
+                font-size: 14px;
+                text-align: center;
+                color: #777;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>Vous avez été ajouté à un événement !</h1>
+              </div>
+              <div class="message">
+                <p>Bonjour,</p>
+                <p>Vous venez d'être ajouté à l'événement <strong>{{event_name}}</strong> ! 🎉</p>
+                <p>Vous avez jusqu'au <strong>{{end_date}}</strong> pour déposer les fichiers nécessaires pour cet événement.</p>
+                <p>Pour consulter l'événement et soumettre vos fichiers, cliquez sur le lien suivant :</p>
+                <a href="{{event_link}}" class="link">Voir l'événement</a>
+              </div>
+              <div class="footer">
+                <p>Cordialement,</p>
+                <p><strong>L'équipe de la plateforme scolaire</strong></p>
+              </div>
+            </div>
+          </body>
+          </html>
 
       `,
     },

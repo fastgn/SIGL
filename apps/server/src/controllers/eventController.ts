@@ -2,6 +2,8 @@ import { ControllerError, ControllerSuccess } from "../utils/controller";
 import { db } from "../providers/db";
 import logger from "../utils/logger";
 import { deleteFileFromBlob } from "../middleware/fileMiddleware";
+import { emailService } from "../services/email.service";
+import env from "../services/env.service";
 
 const eventController = {
   getEvents: async () => {
@@ -223,8 +225,24 @@ const eventController = {
       }),
     );
 
+    const event = await db.event.findFirst({
+      where: {
+        id: event_id,
+      },
+    });
+
+    const variables = {
+      event_name: `${event?.description}`,
+      end_date: event?.endDate
+        ? `${new Date(event.endDate).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" })}`
+        : "",
+      event_link: `${env.get.CLIENT_URL}/events`,
+    };
+
     try {
       await Promise.all(promises);
+      console.log("Envoi d'email à des groupes:", groups_id, "avec les variables:", variables);
+      await emailService.sendEmailToGroups(groups_id, "EVENT_CREATION", variables);
     } catch (error) {
       return ControllerError.INTERNAL({
         message: "Erreur lors de l'association de l'évènement avec le groupe : " + error,
@@ -320,5 +338,4 @@ const eventController = {
     return ControllerSuccess.SUCCESS({ message: "Fichier supprimé avec succès" });
   },
 };
-
 export default eventController;
