@@ -38,6 +38,7 @@ model User {
   curriculumManager     CurriculumManager?
   apprenticeCoordinator ApprenticeCoordinator?
   admin                 Admin?
+  companyAccount        CompanyAccount?
   groups                Group[]
 }
 
@@ -141,14 +142,15 @@ model Company {
   name             String
   address          String
   city             String
-  country          String
-  description      String?
-  apprenticeNumber Int?
-  opco             String?
+  country          String  @default("France")
+  description      String? @default(" ")
+  apprenticeNumber Int?    @default(0)
+  opco             String? @default("")
 
   apprentice       Apprentice[]
   apprenticeMentor ApprenticeMentor[]
   speciality       Speciality[]
+  companyAccount   CompanyAccount[]
 
   @@map("Company")
 }
@@ -171,7 +173,7 @@ model File {
 }
 
 model Event {
-  id          Int          @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   type        String
   description String?
   endDate     DateTime
@@ -181,12 +183,20 @@ model Event {
 }
 
 model TrainingDiary {
-  id           Int        @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   description  String?
-  apprenticeId Int        @unique
-  apprentice   Apprentice @relation(fields: [apprenticeId], references: [id])
+  apprenticeId Int           @unique
+  apprentice   Apprentice    @relation(fields: [apprenticeId], references: [id])
   notes        Note[]
-  Delivrable Deliverable[]
+  Delivrable   Deliverable[]
+}
+
+model CompanyAccount {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  user      User    @relation(fields: [userId], references: [id])
+  companyId Int     @unique
+  company   Company @relation(fields: [companyId], references: [id])
 }
 
 model Note {
@@ -200,21 +210,21 @@ model Note {
 }
 
 model Deliverable {
-  id        Int      @id @default(autoincrement())
-  comment   String?
-  blobName       String
-  createdAt DateTime @default(now())
-  event     Event?   @relation(fields: [eventId], references: [id])
-  eventId   Int?
-  trainingDiary TrainingDiary? @relation(fields: [trainingDiaryId], references: [id])
+  id              Int            @id @default(autoincrement())
+  comment         String?
+  blobName        String
+  createdAt       DateTime       @default(now())
+  event           Event?         @relation(fields: [eventId], references: [id])
+  eventId         Int?
+  trainingDiary   TrainingDiary? @relation(fields: [trainingDiaryId], references: [id])
   trainingDiaryId Int?
 }
 
 model EmailTemplate {
-  id      Int    @id @default(autoincrement()) 
-  name    String @unique                       
-  subject String                               
-  body    String                               
-  createdAt DateTime @default(now())           
-  updatedAt DateTime @updatedAt               
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  subject   String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

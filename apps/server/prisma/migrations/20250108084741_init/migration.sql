@@ -117,10 +117,10 @@ CREATE TABLE "Company" (
     "name" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "country" TEXT NOT NULL,
-    "description" TEXT,
-    "apprenticeNumber" INTEGER,
-    "opco" TEXT,
+    "country" TEXT NOT NULL DEFAULT 'France',
+    "description" TEXT DEFAULT ' ',
+    "apprenticeNumber" INTEGER DEFAULT 0,
+    "opco" TEXT DEFAULT '',
 
     CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
 );
@@ -164,6 +164,15 @@ CREATE TABLE "TrainingDiary" (
 );
 
 -- CreateTable
+CREATE TABLE "CompanyAccount" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "companyId" INTEGER NOT NULL,
+
+    CONSTRAINT "CompanyAccount_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Note" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
@@ -185,6 +194,18 @@ CREATE TABLE "Deliverable" (
     "trainingDiaryId" INTEGER,
 
     CONSTRAINT "Deliverable_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EmailTemplate" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "EmailTemplate_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -237,6 +258,15 @@ CREATE UNIQUE INDEX "Admin_userId_key" ON "Admin"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TrainingDiary_apprenticeId_key" ON "TrainingDiary"("apprenticeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CompanyAccount_userId_key" ON "CompanyAccount"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CompanyAccount_companyId_key" ON "CompanyAccount"("companyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "EmailTemplate_name_key" ON "EmailTemplate"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_GroupToUser_AB_unique" ON "_GroupToUser"("A", "B");
@@ -306,6 +336,12 @@ ALTER TABLE "File" ADD CONSTRAINT "File_eventId_fkey" FOREIGN KEY ("eventId") RE
 
 -- AddForeignKey
 ALTER TABLE "TrainingDiary" ADD CONSTRAINT "TrainingDiary_apprenticeId_fkey" FOREIGN KEY ("apprenticeId") REFERENCES "Apprentice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CompanyAccount" ADD CONSTRAINT "CompanyAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CompanyAccount" ADD CONSTRAINT "CompanyAccount_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Note" ADD CONSTRAINT "Note_trainingDiaryId_fkey" FOREIGN KEY ("trainingDiaryId") REFERENCES "TrainingDiary"("id") ON DELETE CASCADE ON UPDATE CASCADE;
