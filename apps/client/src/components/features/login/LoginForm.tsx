@@ -45,7 +45,6 @@ const LoginForm = () => {
     api.post("/auth/login", data).then(
       (res) => {
         const user = res.data.data.user as UserTypeReq;
-        console.log(user);
         switch (res.status) {
           case 200:
             setToken(res.data.data.token, remember);
