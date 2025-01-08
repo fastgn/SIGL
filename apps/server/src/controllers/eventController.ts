@@ -1,6 +1,7 @@
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import { db } from "../providers/db";
 import logger from "../utils/logger";
+import { deleteFileFromBlob } from "../middleware/fileMiddleware";
 
 const eventController = {
   getEvents: async () => {
@@ -89,6 +90,9 @@ const eventController = {
             some: { id: { in: groupIds } },
           },
         },
+        include: {
+          files: true,
+        },
       });
 
       return ControllerSuccess.SUCCESS({
@@ -163,6 +167,24 @@ const eventController = {
       return ControllerError.INVALID_PARAMS({ message: "L'évènement n'existe pas" });
     }
 
+    const eventFiles = await db.eventFile.findMany({
+      where: {
+        eventId: id,
+      },
+    });
+
+    if (eventFiles) {
+      eventFiles.forEach((eventFile) => {
+        deleteFileFromBlob(eventFile.blobName);
+      });
+    }
+
+    await db.eventFile.deleteMany({
+      where: {
+        eventId: id,
+      },
+    });
+
     const deleteEvent = await db.event.delete({
       where: {
         id: id,
@@ -208,6 +230,94 @@ const eventController = {
         message: "Erreur lors de l'association de l'évènement avec le groupe : " + error,
       });
     }
+  },
+
+  addFileToEvent: async (eventId: number, name: string, comment: string, blobName: string) => {
+    const event = await db.event.findFirst({
+      where: {
+        id: eventId,
+      },
+    });
+
+    if (!event) {
+      logger.error("L'évènement n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "L'évènement n'existe pas" });
+    }
+
+    const eventFile = await db.eventFile.create({
+      data: {
+        name: name,
+        comment: comment,
+        blobName: blobName,
+        event: {
+          connect: {
+            id: eventId,
+          },
+        },
+      },
+    });
+
+    if (!eventFile) {
+      logger.error("Erreur lors de l'ajout du fichier à l'évènement");
+      return ControllerError.INTERNAL({
+        message: "Erreur lors de l'ajout du fichier à l'évènement",
+      });
+    }
+
+    return ControllerSuccess.SUCCESS({
+      message: "Fichier ajouté à l'évènement avec succès",
+      data: eventFile,
+    });
+  },
+
+  getFilesFromEvent: async (eventId: number) => {
+    const event = await db.event.findFirst({
+      where: {
+        id: eventId,
+      },
+      include: {
+        files: true,
+      },
+    });
+
+    if (!event) {
+      logger.error("L'évènement n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "L'évènement n'existe pas" });
+    }
+
+    return ControllerSuccess.SUCCESS({
+      message: "Fichiers récupérés avec succès",
+      data: event.files,
+    });
+  },
+
+  deleteFileFromEvent: async (eventId: number, fileId: number) => {
+    const eventFile = await db.eventFile.findFirst({
+      where: {
+        id: fileId,
+        eventId: eventId,
+      },
+    });
+
+    if (!eventFile) {
+      logger.error("Le fichier n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "Le fichier n'existe pas" });
+    }
+
+    const deleteFile = await db.eventFile.delete({
+      where: {
+        id: fileId,
+      },
+    });
+
+    if (!deleteFile) {
+      logger.error("Erreur lors de la suppression du fichier");
+      return ControllerError.INTERNAL({ message: "Erreur lors de la suppression du fichier" });
+    }
+
+    deleteFileFromBlob(deleteFile.blobName);
+
+    return ControllerSuccess.SUCCESS({ message: "Fichier supprimé avec succès" });
   },
 };
 

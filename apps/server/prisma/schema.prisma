@@ -49,6 +49,17 @@ model Group {
   color       String
   users       User[]
   events      Event[]
+  files       GroupFile[]
+}
+
+model GroupFile {
+  id        Int      @id @default(autoincrement())
+  name      String
+  comment   String?
+  blobName  String
+  createdAt DateTime @default(now())
+  group     Group?   @relation(fields: [groupId], references: [id])
+  groupId   Int?
 }
 
 model FormationCenter {
@@ -163,23 +174,24 @@ model Speciality {
   company Company[]
 }
 
-model File {
-  id        Int      @id @default(autoincrement())
-  name      String
-  url       String
-  createdAt DateTime @default(now())
-  event     Event?   @relation(fields: [eventId], references: [id])
-  eventId   Int?
-}
-
 model Event {
   id          Int           @id @default(autoincrement())
   type        String
   description String?
   endDate     DateTime
   groups      Group[]
-  files       File[]
+  files       EventFile[]
   delivrables Deliverable[]
+}
+
+model EventFile {
+  id        Int      @id @default(autoincrement())
+  name      String
+  comment   String?
+  blobName  String
+  createdAt DateTime @default(now())
+  event     Event?   @relation(fields: [eventId], references: [id])
+  eventId   Int?
 }
 
 model TrainingDiary {

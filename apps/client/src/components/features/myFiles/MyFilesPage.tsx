@@ -1,0 +1,92 @@
+import { Banner } from "@/components/common/banner/Banner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useState } from "react";
+import api from "@/services/api.service.ts";
+import env from "@/services/env.service.ts";
+import { useUser } from "@/contexts/UserContext";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { GroupSchemaType } from "../groups/GroupsPage";
+import { Button } from "@/components/ui/button";
+import { FileDown } from "lucide-react";
+
+export const MyFilesPage = () => {
+  const { id } = useUser();
+
+  const [groups, setGroups] = useState([] as GroupSchemaType[]);
+
+  useEffect(() => {
+    api.get("/user/" + id + "/groups").then(
+      (res) => {
+        switch (res.status) {
+          case 200:
+          case 201:
+            setGroups(res.data.data);
+            break;
+          default: {
+            break;
+          }
+        }
+      },
+      (err) => {
+        console.log(err);
+      },
+    );
+  }, []);
+
+  return (
+    <div className="flex flex-col h-screen">
+      <Banner />
+      <ScrollArea className="w-full overflow-x-auto ">
+        <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
+          <h1 className="text-3xl font-bold">Mes fichiers</h1>
+          <div className="w-full">
+            <div>
+              <Accordion type={groups.length > 1 ? "multiple" : "single"} collapsible>
+                {groups.map((group) => (
+                  <AccordionItem key={group.id} value={"group-" + group.id}>
+                    <AccordionTrigger>
+                      <div className="flex flex-row gap-3 items-end pb-1">
+                        <h6 className="leading-none text-lg font-semibold">{group.name}</h6>
+                        <p className="leading-none text-sm text-gray-500">{group.description}</p>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-3">
+                        {group.files.map((file) => (
+                          <div
+                            key={file.id}
+                            className="flex flex-row gap-3 p-3 rounded-lg justify-between
+                                                            items-center cursor-pointer bg-blue-10 border-[1px] border-gray-700"
+                          >
+                            <div className="flex flex-row gap-3 items-end">
+                              <h6 className="leading-none text-xl font-semibold">{file.name}</h6>
+                              <p className="leading-none text-base text-gray-500">{file.comment}</p>
+                            </div>
+                            <Button
+                              variant={"user"}
+                              size={"sm"}
+                              onClick={() =>
+                                window.open(env.get.API_URL + "/file/" + file.blobName)
+                              }
+                            >
+                              <FileDown className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+        </div>
+      </ScrollArea>
+    </div>
+  );
+};

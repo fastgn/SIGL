@@ -16,17 +16,23 @@ import { useEffect, useState } from "react";
 import z from "zod";
 import { UserSchema } from "@sigl/types";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type UserShemaType = z.infer<typeof UserSchema.getData>;
 
-export const GroupDialog = ({
+export const UserGroupDialog = ({
   group,
   users,
+  groupUsers,
+  setGroupUsers,
+  setUsers,
 }: {
   group: GroupSchemaType;
   users: UserShemaType[];
+  groupUsers: UserShemaType[];
+  setGroupUsers: (users: UserShemaType[]) => void;
+  setUsers: (users: UserShemaType[]) => void;
 }) => {
-  const [groupUsers, setGroupUsers] = useState<UserShemaType[]>(group.users || []);
   const [usersFiltered, setUsersFiltered] = useState<UserShemaType[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -46,6 +52,7 @@ export const GroupDialog = ({
           ...groupUsers,
           ...users.filter((user) => selectedItems.includes(user.id.toString())),
         ]);
+        setUsers(users.filter((user) => !selectedItems.includes(user.id.toString())));
         setSelectedItems([]);
         toast.success("Utilisateurs ajoutés au groupe avec succès");
       })
@@ -82,8 +89,16 @@ export const GroupDialog = ({
             <UserPlus className="h-4 w-4" />
           </Button>
         </div>
-        <DialogDescription className="flex flex-col gap-2">
-          {groupUsers?.map((user) => <UserMicroCard key={user.id} user={user} />)}
+        <DialogDescription>
+          <ScrollArea className="w-full max-h-80 flex flex-col gap-2">
+            {groupUsers.map((user) => (
+              <UserMicroCard
+                key={user.id}
+                user={user}
+                last={groupUsers.indexOf(user) === groupUsers.length - 1}
+              />
+            ))}
+          </ScrollArea>
         </DialogDescription>
       </DialogContent>
     </Dialog>

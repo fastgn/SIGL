@@ -339,6 +339,32 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+
+  getFiles: async (id: number): Promise<ControllerResponse> => {
+    try {
+      const user = await db.user.findUnique({
+        include: {
+          groups: {
+            include: {
+              files: true,
+            },
+          },
+        },
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      return ControllerSuccess.SUCCESS({ data: user.groups });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
 };
 
 export default userController;

@@ -8,7 +8,7 @@ import { GroupSchema } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
-import { GroupsList } from "./GroupsList";
+import { GroupCard } from "./GroupCard";
 
 export type GroupSchemaType = z.infer<typeof GroupSchema.getData>;
 
@@ -111,7 +111,11 @@ export const GroupsPage = () => {
               }}
             />
           </div>
-          <GroupsList groups={filteredGroups} onDeleteGroup={handleDeleteGroup} />
+          <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
+            {filteredGroups.map((group) => (
+              <GroupCard key={group.id} group={group} onDeleteGroup={handleDeleteGroup} />
+            ))}
+          </div>
         </div>
       </ScrollArea>
     </div>

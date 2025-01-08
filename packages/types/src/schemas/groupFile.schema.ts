@@ -6,13 +6,14 @@ import {z} from "zod";
 const getData = z.object({
   id: z.number(),
   name: z.string(),
-  url: z.string(),
+  comment: z.string(),
+  blobName: z.string(),
   createdAt: z.string(),
-  eventId: z.number(),
+  groupId: z.number(),
 });
 
-const FileSchema = {
+const GroupFileSchema = {
   getData,
 };
 
-export { FileSchema };
+export { GroupFileSchema };
