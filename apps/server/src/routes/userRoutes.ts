@@ -138,4 +138,17 @@ router.patch("/:id/password", authMiddleware(), async (req: CustomRequestUser, r
   }
 });
 
+router.get("/:id/groups", authMiddleware(), async (req: CustomRequestUser, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    logger.info(`Récupération des groupes de l'utilisateur ${id}`);
+    const result = await userController.getFiles(id);
+    logger.info(`Groupes de l'utilisateur ${id} récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
 export default router;

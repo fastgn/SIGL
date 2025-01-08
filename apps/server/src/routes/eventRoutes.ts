@@ -1,10 +1,11 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import eventController from "../controllers/eventController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import authMiddleware from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
 import logger from "../utils/logger";
+import { fileMiddleware } from "../middleware/fileMiddleware";
 
 const router = express.Router();
 
@@ -94,6 +95,55 @@ router.delete(
       logger.info(`Suppression de l'événement ${id}`);
       const result = await eventController.deleteEvent(parseInt(id));
       logger.info(`Evénement ${id} supprimé`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get("/:id/file", authMiddleware(), async (req, res) => {
+  try {
+    const { id } = req.params;
+    logger.info(`Récupération des fichiers de l'événement ${id}`);
+    const result = await eventController.getFilesFromEvent(parseInt(id));
+    logger.info(`Fichiers de l'événement ${id} récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
+router.post(
+  "/:id/file",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  fileMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      logger.info(`Ajout d'un fichier à l'événement ${id}`);
+      const { name, comment, blobName } = req.body;
+      const result = await eventController.addFileToEvent(parseInt(id), name, comment, blobName);
+      logger.info(`Fichier ajouté à l'événement ${id}`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.delete(
+  "/:id/file/:fileId",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const { id, fileId } = req.params;
+      logger.info(`Suppression du fichier ${fileId} de l'événement ${id}`);
+      const result = await eventController.deleteFileFromEvent(parseInt(id), parseInt(fileId));
+      logger.info(`Fichier ${fileId} supprimé de l'événement ${id}`);
       reply(res, result);
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);

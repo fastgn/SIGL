@@ -9,15 +9,35 @@ import logger from "../utils/logger";
 import authMiddleware from "../middleware/authMiddleware";
 import { fileMiddleware } from "../middleware/fileMiddleware";
 import userController from "../controllers/userController";
-import userService, { UserWithRoles } from "../services/user.service";
+import userService from "../services/user.service";
 import { User } from "@prisma/client";
 import { EnumUserRole } from "@sigl/types";
 
 router.post("/", authMiddleware(), fileMiddleware, async (req: Request, res: Response) => {
   try {
+    const { comment, eventId, trainingDiaryId, blobName } = req.body;
     logger.info(`Création du livrable`);
-    const result = await deliverableController.createDeliverable(req, res);
+    const result = await deliverableController.createDeliverable(
+      comment,
+      eventId,
+      trainingDiaryId,
+      blobName,
+    );
     logger.info(`Livrable créé`);
+
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
+router.delete("/:id", authMiddleware(), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    logger.info(`Suppression du livrable ${id}`);
+    const result = await deliverableController.deleteDeliverable(parseInt(id));
+    logger.info(`Livrable supprimé`);
 
     reply(res, result);
   } catch (error: any) {

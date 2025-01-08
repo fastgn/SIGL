@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Input } from "./input";
 
 type Option = { label: string; value: string };
 
@@ -112,7 +113,7 @@ const MultiSelect = ({
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <div className="p-2">
-            <input
+            <Input
               type="text"
               placeholder="Search..."
               value={searchValue}

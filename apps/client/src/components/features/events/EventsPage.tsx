@@ -4,15 +4,17 @@ import { getColumns } from "@/components/features/events/eventsTable/getColumns"
 import { EventForm } from "@/components/features/events/event/EventForm";
 import { SearchBar } from "@/components/common/searchBar/SearchBar";
 import { useCallback, useEffect, useState } from "react";
-import { EnumEventType, EnumSortOption, EventSchema } from "@sigl/types";
+import { EnumEventType, EnumSortOption, EventFileSchema, EventSchema } from "@sigl/types";
 import api from "@/services/api.service";
 import z from "zod";
 import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { useTranslation } from "react-i18next";
+import { FileForm } from "./event/FileForm";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
+export type EventFileSchemaType = z.infer<typeof EventFileSchema.getData>;
 
 export const EventsPage = () => {
   const { t } = useTranslation();
@@ -23,6 +25,8 @@ export const EventsPage = () => {
   const [listFilter, setListFilter] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
+  const [isFileFormOpen, setIsFileFormOpen] = useState(false);
+
   const [selectedEvent, setSelectedEvent] = useState<EventSchemaType | null>(null);
 
   const handleAddEvent = (newEvent: EventSchemaType) => {
@@ -127,6 +131,34 @@ export const EventsPage = () => {
     setIsEventFormOpen(true);
   }, []);
 
+  const onAddFiles = useCallback((eventObject: EventSchemaType) => {
+    setSelectedEvent(eventObject);
+    setIsFileFormOpen(true);
+  }, []);
+
+  const addFile = (file: EventFileSchemaType) => {
+    if (!selectedEvent) {
+      return;
+    }
+    const updatedEvents = filteredEvents.map((e) => {
+      if (e.id === selectedEvent.id) {
+        return { ...e, files: [...e.files, file] };
+      }
+      return e;
+    });
+    setFilteredEvents(updatedEvents);
+  };
+
+  const removeFiles = (event: EventSchemaType, file: EventFileSchemaType) => {
+    const updatedEvents = filteredEvents.map((e) => {
+      if (e.id === event.id) {
+        return { ...e, files: e.files.filter((f) => f.id !== file.id) };
+      }
+      return e;
+    });
+    setFilteredEvents(updatedEvents);
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <Banner />
@@ -146,6 +178,17 @@ export const EventsPage = () => {
               }}
               eventObject={selectedEvent}
             />
+            <FileForm
+              addFile={addFile}
+              isOpen={isFileFormOpen}
+              onOpenChange={(value) => {
+                setIsFileFormOpen(value);
+                if (!value) {
+                  setSelectedEvent(null);
+                }
+              }}
+              selectedEvent={selectedEvent}
+            />
           </div>
           <SearchBar
             searchTerm={searchTerm || ""}
@@ -160,7 +203,10 @@ export const EventsPage = () => {
               setSortOption(null);
             }}
           />
-          <EventsTable columns={getColumns({ onDelete, onEdit })} data={filteredEvents} />
+          <EventsTable
+            columns={getColumns({ onDelete, onEdit, onAddFiles, removeFiles })}
+            data={filteredEvents}
+          />
         </div>
       </ScrollArea>
     </div>

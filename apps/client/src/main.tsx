@@ -19,6 +19,7 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { AdminProvider } from "./contexts/UserContext";
 import { TrainingDiaryPage } from "./components/features/users/user/trainingDiary/TrainingDiaryPage";
 import "./translations/i18n";
+import { MyFilesPage } from "./components/features/myFiles/MyFilesPage";
 
 env.init();
 api.init(env.get.API_URL);
@@ -46,6 +47,7 @@ createRoot(document.getElementById("root")!).render(
                 path="/deliverables"
                 element={<ProtectedRoute component={DeliverablePage} />}
               />
+              <Route path="/myfiles" element={<ProtectedRoute component={MyFilesPage} />} />
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="*" element={<Navigate to="/home" />} />
             </Routes>

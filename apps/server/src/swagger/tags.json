@@ -30,5 +30,9 @@
   {
     "name": "Company",
     "description": "Operations sur les informations des entreprises"
+  },
+  {
+    "name": "Notes",
+    "description": "Operations sur les notes"
   }
 ]

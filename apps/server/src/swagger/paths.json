@@ -131,6 +131,29 @@
       }
     }
   },
+  "/user/{id}/groups": {
+    "get": {
+      "summary": "Récupération des groupes d'un utilisateur",
+      "tags": ["User"],
+      "description": "Permet à un utilisateur de récupérer la liste des groupes auxquels il appartient",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'utilisateur"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération des groupes d'un utilisateur"
+        }
+      }
+    }
+  },
   "/diary/user/{id}": {
     "post": {
       "summary": "Création d'un journal de formation",
@@ -350,7 +373,17 @@
             "description": "Erreur interne du serveur."
           }
         }
-      }
+      },
+      "post": {
+            "summary": "Création d'un événement",
+            "tags": ["Event"],
+            "description": "Permet à un admin de créer un événement"
+        },
+        "put": {
+            "summary": "Modification d'un événement",
+            "tags": ["Event"],
+            "description": "Permet à un admin de modifier un événement"
+        }
     },
     "/events/{id}": {
       "put": {
@@ -547,7 +580,112 @@
           }
         }
       }
+    }
+  },
+  "/events/{id}/file": {
+    "get": {
+      "summary": "Récupération du fichier d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de récupérer le fichier d'un événement",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'événement"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération du fichier d'un événement"
+        }
+      }
     },
+    "post": {
+      "summary": "Ajout d'un fichier à un événement",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur d'ajouter un fichier à un événement",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'événement"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "required": true,
+                  "description": "Nom du fichier"
+                },
+                "comment": {
+                  "type": "string",
+                  "required": false,
+                  "description": "Commentaire du fichier"
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "required": true,
+                  "description": "Fichier de l'événement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Ajout d'un fichier à un événement"
+        }
+      }
+    }
+  },
+  "/events/{id}/file/{fileId}": {
+    "delete": {
+      "summary": "Suppression d'un fichier d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de supprimer un fichier d'un événement",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'événement"
+        },
+        {
+          "name": "fileId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du fichier"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Suppression d'un fichier d'un événement"
+        }
+      }
+    }
+  },
   "/groups": {
     "get": {
       "summary": "Récupération des groupes",
@@ -724,6 +862,110 @@
               }
             }
           }
+        }
+      }
+    }
+  },
+  "/groups/{id}/file": {
+    "get": {
+      "summary": "Récupération du fichier d'un groupe",
+      "tags": ["Group"],
+      "description": "Permet à un utilisateur de récupérer le fichier d'un groupe",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du groupe"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération du fichier d'un groupe"
+        }
+      }
+    },
+    "post": {
+      "summary": "Ajout d'un fichier à un groupe",
+      "tags": ["Group"],
+      "description": "Permet à un utilisateur d'ajouter un fichier à un groupe",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du groupe"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "required": true,
+                  "description": "Nom du fichier"
+                },
+                "comment": {
+                  "type": "string",
+                  "required": false,
+                  "description": "Commentaire du fichier"
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "required": true,
+                  "description": "Fichier du groupe"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Ajout d'un fichier à un groupe"
+        }
+      }
+    }
+  },
+  "/groups/{id}/file/{fileId}": {
+    "delete": {
+      "summary": "Suppression d'un fichier d'un groupe",
+      "tags": ["Group"],
+      "description": "Permet à un utilisateur de supprimer un fichier d'un groupe",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du groupe"
+        },
+        {
+          "name": "fileId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du fichier"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Suppression d'un fichier d'un groupe"
         }
       }
     }

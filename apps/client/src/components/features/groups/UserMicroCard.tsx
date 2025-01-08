@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 
 type UserType = z.infer<typeof UserSchema.getData>;
 
-export const UserMicroCard = ({ user }: { user: UserType }) => {
+export const UserMicroCard = ({ user, last }: { user: UserType; last: boolean }) => {
   const name = user.lastName + " " + user.firstName;
 
   return (
@@ -25,7 +25,7 @@ export const UserMicroCard = ({ user }: { user: UserType }) => {
           <p className="text-sm leading-5">{user.email}</p>
         </div>
       </div>
-      <Separator />
+      {!last && <Separator className="mt-2 mb-2" />}
     </>
   );
 };

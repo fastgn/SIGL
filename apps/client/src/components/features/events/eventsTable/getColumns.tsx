@@ -1,19 +1,27 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { EventSchemaType } from "@/components/features/events/EventsPage";
+import { EventFileSchemaType, EventSchemaType } from "@/components/features/events/EventsPage";
 import { CheckCircle, Timer } from "lucide-react";
 import { DataTableRowActions } from "@/components/features/events/eventsTable/DataTableRowActions";
 import { GroupSchemaType } from "../../groups/GroupsPage";
 import { GroupColor } from "@sigl/types";
 import { useTranslation } from "react-i18next";
+import { FilesCell } from "./filesCell";
 
 interface ColumnsProps {
   onDelete: (event: EventSchemaType) => void;
   onEdit: (event: EventSchemaType) => void;
+  onAddFiles: (event: EventSchemaType) => void;
+  removeFiles: (event: EventSchemaType, file: EventFileSchemaType) => void;
 }
 
-export const getColumns = ({ onDelete, onEdit }: ColumnsProps): ColumnDef<EventSchemaType>[] => {
+export const getColumns = ({
+  onDelete,
+  onEdit,
+  onAddFiles,
+  removeFiles,
+}: ColumnsProps): ColumnDef<EventSchemaType>[] => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useTranslation();
 
@@ -78,25 +86,8 @@ export const getColumns = ({ onDelete, onEdit }: ColumnsProps): ColumnDef<EventS
       accessorKey: "files",
       header: t("events.table.files"),
       cell: ({ row }) => {
-        const files: {
-          name: string;
-          url: string;
-        }[] = row.original.files;
-        return (
-          <div className="flex flex-row gap-2 items-center ">
-            {files.length !== 0 ? (
-              files.map((file) => (
-                <Badge key={file.name} variant="outline" className="text-nowrap shadow-1">
-                  <a href={file.url} target="_blank" rel="noreferrer" download>
-                    {file.name}
-                  </a>
-                </Badge>
-              ))
-            ) : (
-              <p className="text-gray-300">{t("events.table.noFiles")}</p>
-            )}
-          </div>
-        );
+        const files: EventFileSchemaType[] = row.original.files ?? [];
+        return <FilesCell files={files} event={row.original} removeFiles={removeFiles} />;
       },
       size: 500,
     },
@@ -144,7 +135,12 @@ export const getColumns = ({ onDelete, onEdit }: ColumnsProps): ColumnDef<EventS
       cell: ({ row }) => {
         return (
           <div className="p-1 rounded-3xl hover:bg-gray-200">
-            <DataTableRowActions row={row} onDelete={onDelete} onEdit={onEdit} />
+            <DataTableRowActions
+              row={row}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              onAddFiles={onAddFiles}
+            />
           </div>
         );
       },
