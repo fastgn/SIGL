@@ -968,5 +968,103 @@
         }
       }
     }
-  }
+  },
+  "/compagnyAccount/compagny/{compagny_id}/user/{user_id}": {
+      "post": {
+        "summary": "Création d'un compte compagnie",
+        "tags": ["Company Account"],
+        "description": "Permet à un administrateur ou coordinateur apprenti de créer un compte compagnie pour un utilisateur donné.",
+        "parameters": [
+          {
+            "name": "compagny_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "Identifiant de la compagnie."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "Identifiant de l'utilisateur."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Compte compagnie créé avec succès."
+          },
+          "500": {
+            "description": "Erreur interne du serveur."
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/compagnyAccount/user/{user_id}": {
+      "delete": {
+        "summary": "Suppression d'un compte compagnie",
+        "tags": ["Company Account"],
+        "description": "Permet à un administrateur ou coordinateur apprenti de supprimer un compte compagnie pour un utilisateur donné.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "Identifiant de l'utilisateur."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compte compagnie supprimé avec succès."
+          },
+          "500": {
+            "description": "Erreur interne du serveur."
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/compagnyAccount": {
+      "get": {
+        "summary": "Récupération des comptes compagnie",
+        "tags": ["Company Account"],
+        "description": "Permet à un administrateur ou coordinateur apprenti de récupérer tous les comptes compagnie.",
+        "responses": {
+          "200": {
+            "description": "Liste des comptes compagnie récupérée avec succès."
+          },
+          "500": {
+            "description": "Erreur interne du serveur."
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    },
+    "/compagnyAccount/compagny/{compagny_id}": {
+      "get": {
+        "summary": "Récupération d'un compte compagnie",
+        "tags": ["Company Account"],
+        "description": "Permet à un administrateur ou coordinateur apprenti de récupérer les informations d'un compte compagnie spécifique.",
+        "parameters": [
+          {
+            "name": "compagny_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "Identifiant de la compagnie."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compte compagnie récupéré avec succès."
+          },
+          "500": {
+            "description": "Erreur interne du serveur."
+          }
+        },
+        "security": [{ "bearerAuth": [] }]
+      }
+    }
 }
