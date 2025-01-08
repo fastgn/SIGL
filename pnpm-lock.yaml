@@ -389,6 +389,9 @@ importers:
       '@types/node':
         specifier: ^20.12.7
         version: 20.16.11
+      '@types/node-schedule':
+        specifier: ^2.1.7
+        version: 2.1.7
       '@types/nodemailer':
         specifier: ^6.4.17
         version: 6.4.17
@@ -2216,6 +2219,9 @@ packages:
 
   '@types/multer@1.4.12':
     resolution: {integrity: sha512-pQ2hoqvXiJt2FP9WQVLPRO+AmiIm/ZYkavPlIQnx282u4ZrVdztx0pkh3jjpQt0Kz+YI0YhSG264y08UJKoUQg==}
+
+  '@types/node-schedule@2.1.7':
+    resolution: {integrity: sha512-G7Z3R9H7r3TowoH6D2pkzUHPhcJrDF4Jz1JOQ80AX0K2DWTHoN9VC94XzFAPNMdbW9TBzMZ3LjpFi7RYdbxtXA==}
 
   '@types/node@20.16.11':
     resolution: {integrity: sha512-y+cTCACu92FyA5fgQSAI8A1H429g7aSK2HsO7K4XYUWc4dY5IUz55JSDIYT6/VsOLfGy8vmvQYC2hfb0iF16Uw==}
@@ -6599,6 +6605,10 @@ snapshots:
   '@types/multer@1.4.12':
     dependencies:
       '@types/express': 4.17.21
+
+  '@types/node-schedule@2.1.7':
+    dependencies:
+      '@types/node': 20.16.11
 
   '@types/node@20.16.11':
     dependencies:

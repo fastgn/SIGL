@@ -1,5 +1,6 @@
 import nodemailer, { Transporter } from "nodemailer";
 import { db } from "../providers/db";
+import schedule from "node-schedule"; // Importer node-schedule
 
 class EmailService {
   private transporter: Transporter;
@@ -40,7 +41,6 @@ class EmailService {
   // Send an email with custom mail options
   async sendEmail(mailOptions: { from: string; to: string; subject: string; html: string }) {
     try {
-      // Debugging email authentication details
       const info = await this.transporter.sendMail(mailOptions);
       return info;
     } catch (error) {
@@ -69,11 +69,34 @@ class EmailService {
         html: emailBody,
       };
 
-      // Use the sendEmail method to send the email
       return await this.sendEmail(mailOptions);
     } catch (error) {
       console.error("Error sending email with template:", error);
       throw new Error("Failed to send email with template");
+    }
+  }
+
+  // Send a scheduled email using a template from the database
+  async sendScheduledEmail(
+    to: string,
+    templateName: string,
+    variables: Record<string, string>,
+    sendAt: Date,
+  ) {
+    console.log("Scheduling email with template:", templateName, "to:", to, "sendAt:", sendAt);
+
+    try {
+      // Planifier l'email à envoyer à une date donnée
+      schedule.scheduleJob(sendAt, async () => {
+        console.log("Sending scheduled email...");
+        await this.sendEmailWithTemplate(to, templateName, variables);
+        console.log("Scheduled email sent.");
+      });
+
+      return { message: "Email scheduled successfully", sendAt };
+    } catch (error) {
+      console.error("Error scheduling email:", error);
+      throw new Error("Failed to schedule email");
     }
   }
 }
