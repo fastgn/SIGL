@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import password from "../../src/services/password.service";
+import password from "../../../src/services/password.service";
 
 test("Crypter un mot de passe", async () => {
   const hash = await password.crypt("password");

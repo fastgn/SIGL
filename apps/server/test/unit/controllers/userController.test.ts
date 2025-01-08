@@ -1,6 +1,6 @@
 import { test, expect, vi, describe } from "vitest";
-import { db } from "../../src/providers/__mocks__/db";
-import userController from "../../src/controllers/userController";
+import { db } from "../../../src/providers/__mocks__/db";
+import userController from "../../../src/controllers/userController";
 import { EnumUserRole } from "@sigl/types";
 
 // Mocker les interactions avec la base de données
