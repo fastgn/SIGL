@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import EnvService, { RequiredAppEnv } from "../../src/services/env.service";
+import EnvService, { RequiredAppEnv } from "../../../src/services/env.service";
 
 test("init Env Service with valid required values", () => {
   const env: RequiredAppEnv = {

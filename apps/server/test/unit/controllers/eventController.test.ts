@@ -1,6 +1,6 @@
 import { test, expect, vi, describe } from "vitest";
-import eventController from "../../src/controllers/eventController";
-import { db } from "../../src/providers/__mocks__/db";
+import eventController from "../../../src/controllers/eventController";
+import { db } from "../../../src/providers/__mocks__/db";
 
 vi.mock("../../src/providers/db");
 
