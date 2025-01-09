@@ -87,7 +87,47 @@ async function main() {
       },
     },
   });
-  // Apprenti avec un journal de formation
+  // Apprenti avec un journal de formation et une équpe tutorale
+  const juliesTutor = await db.user.create({
+    data: {
+      lastName: "Durant",
+      firstName: "Emmanuel",
+      birthDate: new Date("1986-08-03"),
+      active: true,
+      email: "e.durant@gmail.com",
+      password: await password.crypt("password"),
+      gender: "lemon",
+      phone: "9595621452",
+      teacher: {
+        create: {},
+      },
+      educationalTutor: {
+        create: {},
+      },
+    },
+    include: {
+      educationalTutor: true,
+    },
+  });
+  const juliesMentor = await db.user.create({
+    data: {
+      lastName: "Shiba",
+      firstName: "Lisa",
+      birthDate: new Date("1989-01-03"),
+      active: true,
+      email: "l.shiba@gmail.com",
+      password: await password.crypt("password"),
+      gender: "epice",
+      phone: "9595621452",
+      apprenticeMentor: {
+        create: {},
+      },
+    },
+    include: {
+      apprenticeMentor: true,
+    },
+  });
+
   await db.user.create({
     data: {
       lastName: "Julie",
@@ -114,6 +154,12 @@ async function main() {
                 },
               },
             },
+          },
+          apprenticeMentor: {
+            connect: { id: juliesMentor.apprenticeMentor!.id },
+          },
+          educationalTutor: {
+            connect: { id: juliesTutor.educationalTutor!.id },
           },
         },
       },
