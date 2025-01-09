@@ -197,8 +197,8 @@ model EventFile {
 model TrainingDiary {
   id           Int           @id @default(autoincrement())
   description  String?
-  apprenticeId Int           @unique
-  apprentice   Apprentice    @relation(fields: [apprenticeId], references: [id])
+  apprentice   Apprentice @relation(fields: [apprenticeId], references: [id], onDelete: Cascade) 
+  apprenticeId Int        @unique
   notes        Note[]
   Delivrable   Deliverable[]
 }
