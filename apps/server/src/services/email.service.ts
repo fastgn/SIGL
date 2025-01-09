@@ -2,7 +2,6 @@ import nodemailer, { Transporter } from "nodemailer";
 import { db } from "../providers/db";
 import schedule from "node-schedule"; // Importer node-schedule
 import { ControllerError } from "../utils/controller";
-import { aw } from "vitest/dist/chunks/reporters.anwo7Y6a.js";
 
 class EmailService {
   private transporter: Transporter;

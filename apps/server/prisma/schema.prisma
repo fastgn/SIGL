@@ -72,8 +72,8 @@ model FormationCenter {
   description   String?
   field         String?
 
-  apprenticeCoordinator ApprenticeCoordinator[]
-  curriculumManager     CurriculumManager[]
+  apprenticeCoordinators ApprenticeCoordinator[]
+  curriculumManagers     CurriculumManager[]
 }
 
 model EducationalTutor {
@@ -81,7 +81,7 @@ model EducationalTutor {
   userId Int  @unique
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  apprentice Apprentice[]
+  apprentices Apprentice[]
 }
 
 model Apprentice {
@@ -108,7 +108,7 @@ model ApprenticeMentor {
   company   Company? @relation(fields: [companyId], references: [id])
   poste     String?
 
-  apprentice Apprentice[]
+  apprentices Apprentice[]
 }
 
 model Teacher {
@@ -119,7 +119,7 @@ model Teacher {
   endDate           DateTime?
   formationCenterId Int?
 
-  speciality Speciality[]
+  specialities Speciality[]
 }
 
 model CurriculumManager {
@@ -158,10 +158,10 @@ model Company {
   apprenticeNumber Int?    @default(0)
   opco             String? @default("")
 
-  apprentice       Apprentice[]
-  apprenticeMentor ApprenticeMentor[]
-  speciality       Speciality[]
-  companyAccount   CompanyAccount[]
+  apprentices       Apprentice[]
+  apprenticeMentors ApprenticeMentor[]
+  specialities      Speciality[]
+  companyAccounts   CompanyAccount[]
 
   @@map("Company")
 }
@@ -170,8 +170,8 @@ model Speciality {
   id   Int    @id @default(autoincrement())
   name String
 
-  teacher Teacher[]
-  company Company[]
+  teachers  Teacher[]
+  companies Company[]
 }
 
 model Event {
@@ -200,7 +200,7 @@ model TrainingDiary {
   apprentice   Apprentice    @relation(fields: [apprenticeId], references: [id], onDelete: Cascade)
   apprenticeId Int           @unique
   notes        Note[]
-  Delivrable   Deliverable[]
+  delivrables  Deliverable[]
 }
 
 model CompanyAccount {
