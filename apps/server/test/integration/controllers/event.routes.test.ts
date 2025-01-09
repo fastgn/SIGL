@@ -1,12 +1,10 @@
-import request from "supertest";
-import app from "../../../src/index";
-import { describe, expect, it } from "vitest";
-import prisma from "../../helpers/prisma";
 import { faker } from "@faker-js/faker";
-import passwordUtils from "../../../src/services/password.service";
+import request from "supertest";
+import { describe, expect, it } from "vitest";
 import authController from "../../../src/controllers/authController";
-import { stat } from "fs";
-import { Prisma } from "@prisma/client";
+import app from "../../../src/index";
+import passwordUtils from "../../../src/services/password.service";
+import prisma from "../../helpers/prisma";
 
 describe("/events", async () => {
   describe("[GET] /event", () => {
@@ -46,7 +44,6 @@ describe("/events", async () => {
         .get("/events")
         .set("Authorization", `Bearer ${token.data.token}`)
         .expect(200);
-      console.log(response.body);
       expect(response.body.data.map((event: { id: string }) => event.id)).toEqual([
         event1.id,
         event2.id,
@@ -97,11 +94,10 @@ describe("/events", async () => {
       }
       const id = diary.id;
       const token = await authController.login({ email: user.email, password: password });
-      const response = await request(app)
+      await request(app)
         .get(`/events/diary/${id}`)
         .set("Authorization", `Bearer ${token.data.token}`)
         .expect(200);
-      //console.log(response.body);
     });
   });
   describe("[POST] /events", async () => {
@@ -141,7 +137,7 @@ describe("/events", async () => {
       const group = await prisma.group.findFirst();
       const idgroup = group?.id;
       const token = await authController.login({ email: user.email, password: password });
-      const response = await request(app)
+      await request(app)
         .post("/events")
         .set("Authorization", `Bearer ${token.data.token}`)
         .send({
@@ -151,7 +147,6 @@ describe("/events", async () => {
           groupId: idgroup,
         })
         .expect(200);
-      console.log(response.body);
     });
   });
   describe("[PUT] /events/:id", async () => {
@@ -207,7 +202,6 @@ describe("/events", async () => {
           type: faker.lorem.word(),
         })
         .expect(200);
-      console.log(response.body);
     });
   });
   describe("[DELETE] /events/:id", async () => {
@@ -254,11 +248,10 @@ describe("/events", async () => {
       const event = await prisma.event.findFirst();
       const id = event?.id;
       const token = await authController.login({ email: user.email, password: password });
-      const response = await request(app)
+      await request(app)
         .delete(`/events/${id}`)
         .set("Authorization", `Bearer ${token.data.token}`)
         .expect(200);
-      console.log(response.body);
     });
   });
 });

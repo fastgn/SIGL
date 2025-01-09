@@ -1,11 +1,11 @@
-import request from "supertest";
-import app from "../../../src/index";
-import { describe, expect, it } from "vitest";
-import prisma from "../../helpers/prisma";
-import { fa, faker } from "@faker-js/faker";
-import passwordUtils from "../../../src/services/password.service";
-import authController from "../../../src/controllers/authController";
+import { faker } from "@faker-js/faker";
 import { EnumUserRole } from "@sigl/types";
+import request from "supertest";
+import { describe, expect, it } from "vitest";
+import authController from "../../../src/controllers/authController";
+import app from "../../../src/index";
+import passwordUtils from "../../../src/services/password.service";
+import prisma from "../../helpers/prisma";
 
 // Tests pour les routes d'utilisateur
 describe("/user", () => {
@@ -19,7 +19,6 @@ describe("/user", () => {
 
       // Exemple d'utilisation
       const RandEnumUserRole = getRandomEnumValue(EnumUserRole);
-      console.log(RandEnumUserRole);
 
       const password = faker.internet.password();
       const user = await prisma.user.create({
@@ -57,12 +56,10 @@ describe("/user", () => {
         role: EnumUserRole.APPRENTICE_MENTOR,
         birthDate: faker.date.past(),
       };
-      console.log(newUser);
       const response = await request(app)
         .post("/user")
         .set("Authorization", `Bearer ${token}`)
         .send(newUser);
-      console.log(response.body);
       expect(response.status).toBe(200);
       const useremail = await prisma.user.findUnique({
         where: {
@@ -216,7 +213,6 @@ describe("/user", () => {
         email: user.email,
         password: password,
       });
-      console.log(login);
       const token = login.data.token;
       const response = await request(app)
         .delete(`/user/${user.id}`)

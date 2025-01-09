@@ -32,7 +32,6 @@ describe("Créer un journal de formation", () => {
     });
 
     const res = await diaryController.createDiary(1);
-    //console.log("response test createDiary: \n", res);
     expect(res.status).toBe(200);
   });
   test("Supprimer un journal de formation pour un utilisateur existant", async () => {
@@ -57,7 +56,6 @@ describe("Créer un journal de formation", () => {
     });
 
     const res = await diaryController.deleteDiary(1);
-    //console.log("response test createDiary: \n", res);
     expect(res.status).toBe(200);
   });
   test("Récupérer le journal de formation d'un apprenti", async () => {

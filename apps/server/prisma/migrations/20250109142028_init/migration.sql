@@ -26,6 +26,18 @@ CREATE TABLE "Group" (
 );
 
 -- CreateTable
+CREATE TABLE "GroupFile" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "comment" TEXT,
+    "blobName" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "groupId" INTEGER,
+
+    CONSTRAINT "GroupFile_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "FormationCenter" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -134,17 +146,6 @@ CREATE TABLE "Speciality" (
 );
 
 -- CreateTable
-CREATE TABLE "File" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "url" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "eventId" INTEGER,
-
-    CONSTRAINT "File_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Event" (
     "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
@@ -152,6 +153,18 @@ CREATE TABLE "Event" (
     "endDate" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EventFile" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "comment" TEXT,
+    "blobName" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "eventId" INTEGER,
+
+    CONSTRAINT "EventFile_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -293,6 +306,9 @@ CREATE UNIQUE INDEX "_EventToGroup_AB_unique" ON "_EventToGroup"("A", "B");
 CREATE INDEX "_EventToGroup_B_index" ON "_EventToGroup"("B");
 
 -- AddForeignKey
+ALTER TABLE "GroupFile" ADD CONSTRAINT "GroupFile_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "EducationalTutor" ADD CONSTRAINT "EducationalTutor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -332,10 +348,10 @@ ALTER TABLE "ApprenticeCoordinator" ADD CONSTRAINT "ApprenticeCoordinator_format
 ALTER TABLE "Admin" ADD CONSTRAINT "Admin_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "File" ADD CONSTRAINT "File_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "EventFile" ADD CONSTRAINT "EventFile_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TrainingDiary" ADD CONSTRAINT "TrainingDiary_apprenticeId_fkey" FOREIGN KEY ("apprenticeId") REFERENCES "Apprentice"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TrainingDiary" ADD CONSTRAINT "TrainingDiary_apprenticeId_fkey" FOREIGN KEY ("apprenticeId") REFERENCES "Apprentice"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CompanyAccount" ADD CONSTRAINT "CompanyAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

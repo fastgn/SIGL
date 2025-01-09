@@ -14,7 +14,6 @@ describe("Test Event Controller", () => {
     });
 
     const res = await eventController.createEvent("Description de l'event 1", new Date(), "type 1");
-    //console.log(res);
     expect(res.status).toBe(200);
   });
   test("Modifier un event", async () => {
@@ -38,7 +37,6 @@ describe("Test Event Controller", () => {
       new Date(),
       "type 1",
     );
-    //console.log(res);
     expect(res.status).toBe(200);
   });
 });

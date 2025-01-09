@@ -1,11 +1,10 @@
-import request from "supertest";
-import app from "../../../src/index";
-import { describe, expect, it } from "vitest";
-import prisma from "../../helpers/prisma";
 import { faker } from "@faker-js/faker";
-import passwordUtils from "../../../src/services/password.service";
+import request from "supertest";
+import { describe, expect, it } from "vitest";
 import authController from "../../../src/controllers/authController";
-import { stat } from "fs";
+import app from "../../../src/index";
+import passwordUtils from "../../../src/services/password.service";
+import prisma from "../../helpers/prisma";
 
 describe("/groups", async () => {
   describe("[GET] /groups", () => {
@@ -33,7 +32,7 @@ describe("/groups", async () => {
 
       const token = login.data.token;
 
-      const group = await prisma.group.create({
+      await prisma.group.create({
         data: {
           name: "grp1",
           description: faker.lorem.sentence(),
@@ -46,12 +45,11 @@ describe("/groups", async () => {
         },
       });
 
-      const { status, body } = await request(app)
+      const { status } = await request(app)
         .get("/groups")
         .set({
           Authorization: `Bearer ${token}`,
         });
-      //console.log(body);
       expect(status).toBe(200);
     });
   });
@@ -106,7 +104,6 @@ describe("/groups", async () => {
           color: faker.internet.color(),
           user: [useradmin.id, user2.id],
         });
-      //console.log(body);
       expect(status).toBe(200);
     });
   });
@@ -157,12 +154,11 @@ describe("/groups", async () => {
         },
       });
 
-      const { status, body } = await request(app)
+      const { status } = await request(app)
         .delete(`/groups/${group.id}`)
         .set({
           Authorization: `Bearer ${token}`,
         });
-      //console.log(body);
       expect(status).toBe(200);
     });
   });
@@ -217,7 +213,7 @@ describe("/groups", async () => {
         },
       });
 
-      const { status, body } = await request(app)
+      const { status } = await request(app)
         .post(`/groups/${group.id}/link`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -225,7 +221,6 @@ describe("/groups", async () => {
         .send({
           userIds: [user2.id],
         });
-      //console.log(body);
       expect(status).toBe(200);
     });
   });
@@ -268,7 +263,7 @@ describe("/groups", async () => {
         },
       });
 
-      const { status, body } = await request(app)
+      const { status } = await request(app)
         .delete(`/groups/${group.id}/link`)
         .set({
           Authorization: `Bearer ${token}`,
@@ -276,7 +271,6 @@ describe("/groups", async () => {
         .send({
           userIds: [useradmin.id],
         });
-      console.log(body);
       expect(status).toBe(200);
     });
   });

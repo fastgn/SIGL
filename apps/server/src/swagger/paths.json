@@ -2,9 +2,7 @@
   "/auth/login": {
     "post": {
       "summary": "Route de connexion",
-      "tags": [
-        "Auth"
-      ],
+      "tags": ["Auth"],
       "description": "Permet à un utilisateur de se connecter à l'application en fournissant son email et son mot de passe",
       "requestBody": {
         "required": true,
@@ -61,9 +59,7 @@
   "/user/count": {
     "get": {
       "summary": "Récupération du nombre total d'utilisateurs",
-      "tags": [
-        "User"
-      ],
+      "tags": ["User"],
       "description": "Permet à un admin de récupérer le nombre total d'utilisateurs",
       "responses": {
         "200": {
@@ -96,9 +92,7 @@
   "/user/count/role": {
     "get": {
       "summary": "Récupération du nombre total d'utilisateurs par role",
-      "tags": [
-        "User"
-      ],
+      "tags": ["User"],
       "description": "Permet à un admin de récupérer le nombre total d'utilisateurs par role",
       "responses": {
         "200": {
@@ -161,9 +155,7 @@
   "/user/{id}/groups": {
     "get": {
       "summary": "Récupération des groupes d'un utilisateur",
-      "tags": [
-        "User"
-      ],
+      "tags": ["User"],
       "description": "Permet à un utilisateur de récupérer la liste des groupes auxquels il appartient",
       "parameters": [
         {
@@ -186,9 +178,7 @@
   "/diary/user/{id}": {
     "post": {
       "summary": "Création d'un journal de formation",
-      "tags": [
-        "Diary"
-      ],
+      "tags": ["Diary"],
       "description": "Permet à un admin de créer un journal de formation",
       "parameters": [
         {
@@ -244,9 +234,7 @@
     },
     "delete": {
       "summary": "Suppression d'un journal de formation",
-      "tags": [
-        "Diary"
-      ],
+      "tags": ["Diary"],
       "description": "Permet à un admin de supprimer un journal de formation",
       "parameters": [
         {
@@ -302,9 +290,7 @@
     },
     "get": {
       "summary": "Récupération des journaux de formation",
-      "tags": [
-        "Diary"
-      ],
+      "tags": ["Diary"],
       "description": "Permet à un utilisateur de récupérer la liste des journaux de formation",
       "parameters": [
         {
@@ -362,9 +348,7 @@
   "/events": {
     "get": {
       "summary": "Récupération des événements",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un utilisateur de récupérer la liste des événements",
       "responses": {
         "200": {
@@ -377,9 +361,7 @@
     },
     "post": {
       "summary": "Création d'un événement",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un admin ou coordinateur d'apprentissage de créer un événement.",
       "requestBody": {
         "required": true,
@@ -410,11 +392,7 @@
                   }
                 }
               },
-              "required": [
-                "description",
-                "endDate",
-                "type"
-              ]
+              "required": ["description", "endDate", "type"]
             }
           }
         }
@@ -423,9 +401,7 @@
     "/events/{id}": {
       "put": {
         "summary": "Modification d'un événement",
-        "tags": [
-          "Event"
-        ],
+        "tags": ["Event"],
         "description": "Permet à un admin ou coordinateur d'apprentissage de modifier un événement existant.",
         "parameters": [
           {
@@ -475,11 +451,7 @@
                   }
                 }
               },
-              "required": [
-                "description",
-                "endDate",
-                "type"
-              ]
+              "required": ["description", "endDate", "type"]
             }
           }
         }
@@ -495,9 +467,7 @@
     },
     "delete": {
       "summary": "Suppression d'un événement",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un admin ou coordinateur d'apprentissage de supprimer un événement.",
       "parameters": [
         {
@@ -523,9 +493,7 @@
   "/events/diary/{id}": {
     "get": {
       "summary": "Récupération des événements d'un journal",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un utilisateur de récupérer les événements associés à un journal spécifique.",
       "parameters": [
         {
@@ -551,9 +519,7 @@
   "/note": {
     "post": {
       "summary": "Création d'une note",
-      "tags": [
-        "Note"
-      ],
+      "tags": ["Note"],
       "description": "Permet à un utilisateur connecté de créer une note.",
       "requestBody": {
         "required": true,
@@ -569,10 +535,7 @@
                   "type": "string"
                 }
               },
-              "required": [
-                "title",
-                "content"
-              ]
+              "required": ["title", "content"]
             }
           }
         }
@@ -588,9 +551,7 @@
     },
     "get": {
       "summary": "Récupération des notes",
-      "tags": [
-        "Note"
-      ],
+      "tags": ["Note"],
       "description": "Permet à un utilisateur connecté de récupérer toutes ses notes.",
       "responses": {
         "200": {
@@ -605,9 +566,7 @@
   "/note/{noteId}": {
     "patch": {
       "summary": "Mise à jour d'une note",
-      "tags": [
-        "Note"
-      ],
+      "tags": ["Note"],
       "description": "Permet à un utilisateur connecté de mettre à jour une de ses notes.",
       "parameters": [
         {
@@ -649,9 +608,7 @@
     },
     "delete": {
       "summary": "Suppression d'une note",
-      "tags": [
-        "Note"
-      ],
+      "tags": ["Note"],
       "description": "Permet à un utilisateur connecté de supprimer une de ses notes.",
       "parameters": [
         {
@@ -677,9 +634,7 @@
   "/events/{id}/file": {
     "get": {
       "summary": "Récupération du fichier d'un événement",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un utilisateur de récupérer le fichier d'un événement",
       "parameters": [
         {
@@ -700,9 +655,7 @@
     },
     "post": {
       "summary": "Ajout d'un fichier à un événement",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un utilisateur d'ajouter un fichier à un événement",
       "parameters": [
         {
@@ -753,9 +706,7 @@
   "/events/{id}/file/{fileId}": {
     "delete": {
       "summary": "Suppression d'un fichier d'un événement",
-      "tags": [
-        "Event"
-      ],
+      "tags": ["Event"],
       "description": "Permet à un utilisateur de supprimer un fichier d'un événement",
       "parameters": [
         {
@@ -787,9 +738,7 @@
   "/groups": {
     "get": {
       "summary": "Récupération des groupes",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un utilisateur de récupérer la liste des groupes",
       "responses": {
         "200": {
@@ -818,9 +767,7 @@
     },
     "post": {
       "summary": "Création d'un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un admin ou un CA de créer un groupe",
       "requestBody": {
         "required": true,
@@ -835,9 +782,7 @@
     },
     "delete": {
       "summary": "Suppression d'un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un admin ou un CA de supprimer un groupe",
       "parameters": [
         {
@@ -877,9 +822,7 @@
   "/groups/{id}/link": {
     "post": {
       "summary": "Lier des utilisateurs à un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un admin ou un CA de lier des utilisateurs à un groupe",
       "parameters": [
         {
@@ -932,9 +875,7 @@
     },
     "delete": {
       "summary": "Dissocier des utilisateurs d'un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un admin ou un CA de dissocier des utilisateurs d'un groupe",
       "parameters": [
         {
@@ -992,9 +933,7 @@
   "/groups/{id}/file": {
     "get": {
       "summary": "Récupération du fichier d'un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un utilisateur de récupérer le fichier d'un groupe",
       "parameters": [
         {
@@ -1015,9 +954,7 @@
     },
     "post": {
       "summary": "Ajout d'un fichier à un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un utilisateur d'ajouter un fichier à un groupe",
       "parameters": [
         {
@@ -1068,9 +1005,7 @@
   "/groups/{id}/file/{fileId}": {
     "delete": {
       "summary": "Suppression d'un fichier d'un groupe",
-      "tags": [
-        "Group"
-      ],
+      "tags": ["Group"],
       "description": "Permet à un utilisateur de supprimer un fichier d'un groupe",
       "parameters": [
         {
@@ -1102,9 +1037,7 @@
   "/deliverables": {
     "post": {
       "summary": "Création d'un livrable",
-      "tags": [
-        "Deliverable"
-      ],
+      "tags": ["Deliverable"],
       "description": "Permet à un admin de créer un livrable",
       "requestBody": {
         "required": true,
@@ -1192,9 +1125,7 @@
   "/deliverables/trainingDiary/{trainingDiaryId}/event/{eventId}": {
     "get": {
       "summary": "Récupération des livrables d'un journal et d'un événement",
-      "tags": [
-        "Deliverable"
-      ],
+      "tags": ["Deliverable"],
       "description": "Permet à un utilisateur de récupérer la liste des livrables d'un journal et d'un événement",
       "parameters": [
         {
@@ -1250,9 +1181,7 @@
     "post": {
       "summary": "Create a company",
       "description": "Create a new company with the provided details.",
-      "tags": [
-        "Company"
-      ],
+      "tags": ["Company"],
       "requestBody": {
         "required": true,
         "content": {
@@ -1314,9 +1243,7 @@
     "get": {
       "summary": "Get all companies",
       "description": "Retrieve a list of all companies.",
-      "tags": [
-        "Company"
-      ],
+      "tags": ["Company"],
       "responses": {
         "200": {
           "description": "List of companies retrieved successfully."
@@ -1331,9 +1258,7 @@
     "get": {
       "summary": "Get a specific company",
       "description": "Retrieve details of a specific company by ID.",
-      "tags": [
-        "Company"
-      ],
+      "tags": ["Company"],
       "parameters": [
         {
           "name": "company_id",
@@ -1357,9 +1282,7 @@
     "delete": {
       "summary": "Delete a company",
       "description": "Delete an existing company by ID.",
-      "tags": [
-        "Company"
-      ],
+      "tags": ["Company"],
       "parameters": [
         {
           "name": "company_id",
@@ -1384,9 +1307,7 @@
   "/compagnyAccount/compagny/{compagny_id}/user/{user_id}": {
     "post": {
       "summary": "Création d'un compte compagnie",
-      "tags": [
-        "Company Account"
-      ],
+      "tags": ["Company Account"],
       "description": "Permet à un administrateur ou coordinateur apprenti de créer un compte compagnie pour un utilisateur donné.",
       "parameters": [
         {
@@ -1426,9 +1347,7 @@
   "/compagnyAccount/user/{user_id}": {
     "delete": {
       "summary": "Suppression d'un compte compagnie",
-      "tags": [
-        "Company Account"
-      ],
+      "tags": ["Company Account"],
       "description": "Permet à un administrateur ou coordinateur apprenti de supprimer un compte compagnie pour un utilisateur donné.",
       "parameters": [
         {
@@ -1459,9 +1378,7 @@
   "/compagnyAccount": {
     "get": {
       "summary": "Récupération des comptes compagnie",
-      "tags": [
-        "Company Account"
-      ],
+      "tags": ["Company Account"],
       "description": "Permet à un administrateur ou coordinateur apprenti de récupérer tous les comptes compagnie.",
       "responses": {
         "200": {
@@ -1481,9 +1398,7 @@
   "/compagnyAccount/compagny/{compagny_id}": {
     "get": {
       "summary": "Récupération d'un compte compagnie",
-      "tags": [
-        "Company Account"
-      ],
+      "tags": ["Company Account"],
       "description": "Permet à un administrateur ou coordinateur apprenti de récupérer les informations d'un compte compagnie spécifique.",
       "parameters": [
         {

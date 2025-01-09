@@ -69,12 +69,10 @@ describe("/diary/user/:id", async () => {
           },
         },
       });
-      console.log(user);
       const login = await authController.login({
         email: user.email,
         password: password,
       });
-      console.log(login);
       const token = login.data.token;
 
       // Faire une requête POST à /diary/user/:id
@@ -83,7 +81,6 @@ describe("/diary/user/:id", async () => {
         .set({
           Authorization: `Bearer ${token}`,
         });
-      console.log(body);
       expect(status).toBe(200);
     });
   });
@@ -113,12 +110,10 @@ describe("/diary/user/:id", async () => {
           },
         },
       });
-      console.log(user);
       const login = await authController.login({
         email: user.email,
         password: password,
       });
-      console.log(login);
       const token = login.data.token;
 
       // Faire une requête DELETE à /diary/user/:id
@@ -127,7 +122,6 @@ describe("/diary/user/:id", async () => {
         .set({
           Authorization: `Bearer ${token}`,
         });
-      console.log(body);
       expect(status).toBe(200);
     });
   });
