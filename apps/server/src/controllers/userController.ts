@@ -16,8 +16,8 @@ const userController = {
       // Validate the input data
       try {
         form = UserSchema.create.parse(payload);
-      } catch {
-        logger.error("Invalid params");
+      } catch (e: any) {
+        logger.error("Invalid params", payload, "\n error : \n", e.errors);
         return ControllerError.INVALID_PARAMS();
       }
 
