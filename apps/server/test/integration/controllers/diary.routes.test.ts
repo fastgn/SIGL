@@ -117,12 +117,18 @@ describe("/diary/user/:id", async () => {
       const token = login.data.token;
 
       // Faire une requête DELETE à /diary/user/:id
-      const { status, body } = await request(app)
+      const { status } = await request(app)
         .delete(`/diary/user/${user.id}`)
         .set({
           Authorization: `Bearer ${token}`,
         });
       expect(status).toBe(200);
+    });
+
+    it("Doit répondre avec un code `401` si on n'est pas authentifié", async () => {
+      // Faire une requête DELETE à /diary/user/:id
+      const { status } = await request(app).delete(`/diary/user/123`);
+      expect(status).toBe(401);
     });
   });
 });

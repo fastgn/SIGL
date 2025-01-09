@@ -96,6 +96,11 @@ describe("/note", async () => {
         });
       expect(status).toBe(200);
     });
+
+    it("Doit répondre avec un code `401` si on n'est pas authentifié", async () => {
+      const { status } = await request(app).get(`/note`);
+      expect(status).toBe(401);
+    });
   });
   describe("[PATCH] /note/:id", () => {
     it("Doit répondre avec un code `200` et modifier une note", async () => {
@@ -147,6 +152,11 @@ describe("/note", async () => {
         });
       expect(status).toBe(200);
     });
+
+    it("Doit répondre avec un code `401` si on n'est pas authentifié", async () => {
+      const { status } = await request(app).patch(`/note/123`);
+      expect(status).toBe(401);
+    });
   });
   describe("[DELETE] /note/:id", () => {
     it("Doit répondre avec un code `200` et supprimer une note", async () => {
@@ -195,6 +205,11 @@ describe("/note", async () => {
       expect(status).toBe(200);
       const noteSuppr = await prisma.note.findFirst({});
       expect(noteSuppr).toBeNull();
+    });
+
+    it("Doit répondre avec un code `401` si on n'est pas authentifié", async () => {
+      const { status } = await request(app).delete(`/note/123`);
+      expect(status).toBe(401);
     });
   });
 });

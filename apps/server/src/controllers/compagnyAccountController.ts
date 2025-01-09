@@ -1,8 +1,6 @@
-import { ControllerError, ControllerSuccess } from "../utils/controller";
 import { db } from "../providers/db";
+import { ControllerError, ControllerSuccess } from "../utils/controller";
 import logger from "../utils/logger";
-import { connect } from "http2";
-import { get } from "http";
 
 const compagnyAccountController = {
   createCompagnyAccount: async (compagny_id: number, user_id: number) => {
@@ -30,9 +28,9 @@ const compagnyAccountController = {
       logger.error("La compagnie n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "La compagnie n'existe pas" });
     }
-    const compagnyAccount = await db.compagnyAccount.create({
+    const compagnyAccount = await db.companyAccount.create({
       data: {
-        compagny: { connect: { id: compagny_id } },
+        company: { connect: { id: compagny_id } },
         user: { connect: { id: user_id } },
       },
     });
@@ -52,7 +50,7 @@ const compagnyAccountController = {
       logger.error("compagny_id et user_id sont requis");
       return ControllerError.INVALID_PARAMS({ message: "compagny_id et user_id sont requis" });
     }
-    const checkCompagnyAccountExist = await db.compagnyAccount.findMany({
+    const checkCompagnyAccountExist = await db.companyAccount.findMany({
       where: {
         userId: user_id,
       },
@@ -61,7 +59,7 @@ const compagnyAccountController = {
       logger.error("Le compte compagnie n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "Le compte compagnie n'existe pas" });
     }
-    const compagnyAccount = await db.compagnyAccount.delete({
+    const compagnyAccount = await db.companyAccount.delete({
       where: {
         userId: user_id,
       },
@@ -79,9 +77,9 @@ const compagnyAccountController = {
       logger.error("compagny_id est requis");
       return ControllerError.INVALID_PARAMS({ message: "compagny_id est requis" });
     }
-    const compagnyAccount = await db.compagnyAccount.findMany({
+    const compagnyAccount = await db.companyAccount.findMany({
       where: {
-        compagnyId: compagny_id,
+        companyId: compagny_id,
       },
     });
     return ControllerSuccess.SUCCESS({
@@ -90,7 +88,7 @@ const compagnyAccountController = {
     });
   },
   getAllCompagnyAccount: async () => {
-    const compagnyAccount = await db.compagnyAccount.findMany();
+    const compagnyAccount = await db.companyAccount.findMany();
     return ControllerSuccess.SUCCESS({
       message: "Tous les Compte compagny récupéré avec succès",
       data: compagnyAccount,

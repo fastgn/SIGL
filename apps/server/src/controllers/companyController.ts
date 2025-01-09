@@ -1,8 +1,6 @@
-import { ControllerError, ControllerSuccess } from "../utils/controller";
 import { db } from "../providers/db";
+import { ControllerError, ControllerSuccess } from "../utils/controller";
 import logger from "../utils/logger";
-import { Request, Response } from "express";
-import { get } from "http";
 
 const companyController = {
   createCompany: async (
