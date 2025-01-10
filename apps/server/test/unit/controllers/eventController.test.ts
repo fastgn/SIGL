@@ -1,4 +1,4 @@
-import { test, expect, vi, describe } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import eventController from "../../../src/controllers/eventController";
 import { db } from "../../../src/providers/__mocks__/db";
 

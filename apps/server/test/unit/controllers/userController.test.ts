@@ -1,4 +1,4 @@
-import { test, expect, vi, describe } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { db } from "../../../src/providers/__mocks__/db";
 import userController from "../../../src/controllers/userController";
 import { EnumUserRole } from "@sigl/types";

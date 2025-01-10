@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { GroupFileSchema } from "@sigl/types";
 import env from "@/services/env.service.ts";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 

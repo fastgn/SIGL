@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GroupSchemaType } from "./GroupsPage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getHexColor, GroupColor, GroupFileSchema, UserSchema } from "@sigl/types";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { UserGroupDialog } from "./UserGroupDialog";
 import { FileGroupDialog } from "./FileGroupDialog";
@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import api from "@/services/api.service.ts";
 import { z } from "zod";
 
 type UserShemaType = z.infer<typeof UserSchema.getData>;

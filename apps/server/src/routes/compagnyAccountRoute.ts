@@ -1,12 +1,12 @@
 import express from "express";
-const router = express.Router();
-
 import compagnyAccountController from "../controllers/compagnyAccountController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import logger from "../utils/logger";
 import authMiddleware from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
+
+const router = express.Router();
 
 router.post(
   "/compagny/:Compagny_id/user/:user_id",

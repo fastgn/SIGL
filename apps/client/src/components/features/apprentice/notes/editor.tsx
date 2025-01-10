@@ -1,5 +1,6 @@
 import "@/components/ui/minimal-tiptap/styles/index.css";
 import * as React from "react";
+import { useImperativeHandle } from "react";
 
 import { LinkBubbleMenu } from "@/components/ui/minimal-tiptap/components/bubble-menu/link-bubble-menu";
 import { MeasuredContainer } from "@/components/ui/minimal-tiptap/components/measured-container";
@@ -15,7 +16,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/utilities/style";
 import type { Content, Editor } from "@tiptap/react";
 import { EditorContent } from "@tiptap/react";
-import { useImperativeHandle } from "react";
 
 export interface MinimalTiptapProps extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
   value?: Content;

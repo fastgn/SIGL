@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
-const router = express.Router();
-
 import tutorController from "../controllers/tutorController";
 import { ControllerError } from "../utils/controller";
 import { reply } from "../utils/http";
 import logger from "../utils/logger";
+
+const router = express.Router();
 
 router.get("/apprentices/:id", async (req: Request, res: Response) => {
   try {

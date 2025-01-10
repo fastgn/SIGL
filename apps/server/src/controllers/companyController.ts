@@ -90,6 +90,46 @@ const companyController = {
       });
     }
   },
+  updateCompany: async (
+    id: number,
+    name: string,
+    address: string,
+    city: string,
+    country: string,
+    description: string,
+    apprenticeNumber: number,
+    opco: string,
+  ) => {
+    if (!id) {
+      logger.error("compagny_id est requis");
+      return ControllerError.INVALID_PARAMS({ message: "compagny_id est requis" });
+    }
+    try {
+      const compagny = await db.company.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: name,
+          address: address,
+          city: city,
+          country: country,
+          description: description,
+          apprenticeNumber: apprenticeNumber,
+          opco: opco,
+        },
+      });
+      return ControllerSuccess.SUCCESS({
+        message: "Compte compagny modifié avec succès",
+        data: compagny,
+      });
+    } catch (error) {
+      logger.error("Error updating company: ", error);
+      return ControllerError.INTERNAL({
+        message: "Erreur lors de la modification de l'entreprise",
+      });
+    }
+  },
 };
 
 export default companyController;

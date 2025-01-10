@@ -1,7 +1,4 @@
 import express from "express";
-
-const router = express.Router();
-
 import diaryController from "../controllers/diaryController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
@@ -9,6 +6,8 @@ import logger from "../utils/logger";
 import authMiddleware from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
 import userService from "../services/user.service";
+
+const router = express.Router();
 
 router.post(
   "/user/:id",

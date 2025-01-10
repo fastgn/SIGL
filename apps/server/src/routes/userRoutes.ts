@@ -1,7 +1,4 @@
-import express from "express";
-import { Request, Response } from "express";
-const router = express.Router();
-
+import express, { Request, Response } from "express";
 import userController from "../controllers/userController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
@@ -9,6 +6,8 @@ import logger from "../utils/logger";
 import authMiddleware, { CustomRequestUser } from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
 import userService from "../services/user.service";
+
+const router = express.Router();
 
 router.post(
   "/",
@@ -81,6 +80,38 @@ router.get(
       logger.info("Récupération du nombre d'utilisateurs par rôle");
       const result = await userController.getCountForRole();
       logger.info("Nombre d'utilisateurs par rôle récupéré");
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get(
+  "/tutors",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req: Request, res: Response) => {
+    try {
+      logger.info(`Récupération des tuteurs`);
+      const result = await userController.getAllTutors();
+      logger.info(`Tuteurs récupérés`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get(
+  "/mentors",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req: Request, res: Response) => {
+    try {
+      logger.info(`Récupération des mentors`);
+      const result = await userController.getAllMentors();
+      logger.info(`Mentors récupérés`);
       reply(res, result);
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
@@ -175,6 +206,77 @@ router.get("/roles/:id/", authMiddleware(), async (req: Request, res: Response) 
     logger.info(`Récupération des rôles de l'utilisateur ${id}`);
     const result = await userController.getRoles(id);
     logger.info(`Rôles de l'utilisateur ${id} récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
+router.patch(
+  "/:id/tutors",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const body = req.body;
+      logger.info(`Modification des tuteurs de l'apprenti ${id}`);
+      const result = await userController.updateTutors(
+        id,
+        body.educationalTutorId,
+        body.apprenticeMentorId,
+      );
+      logger.info(`Tuteurs de l'apprenti ${id} modifiés`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.patch(
+  "/:id/company",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const body = req.body;
+      logger.info(`Modification de l'entreprise de l'apprenti ${id}`);
+      const result = await userController.updateCompany(id, body.companyId);
+      logger.info(`Entreprise de l'apprenti ${id} modifiée`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.patch(
+  "/:id/post",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const body = req.body;
+      logger.info(`Modification du poste de l'apprenti ${id}`);
+      const result = await userController.updatePost(id, body.poste);
+      logger.info(`Poste de l'apprenti ${id} modifié`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get("/apprentice/:id", authMiddleware(), async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    logger.info(`Récupération de l'apprenti ${id}`);
+    const result = await userController.getApprentice(id);
+    logger.info(`Apprenti ${id} récupéré`);
     reply(res, result);
   } catch (error: any) {
     logger.error(`Erreur serveur : ${error.message}`);

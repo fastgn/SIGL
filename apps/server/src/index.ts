@@ -1,11 +1,29 @@
 import env from "./services/env.service";
 import logger from "./utils/logger";
-import express, { Request, Response, NextFunction } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors, { CorsOptions } from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { ReqContext } from "./providers/req-context";
+// Routes
+import authRoutes from "./routes/authRoutes";
+import diaryRoutes from "./routes/diaryRoutes";
+import userRoutes from "./routes/userRoutes";
+import eventRoutes from "./routes/eventRoutes";
+import deliverableRoutes from "./routes/deliverableRoutes";
+import noteRoutes from "./routes/noteRoutes";
+import compagnyAccountRoute from "./routes/compagnyAccountRoute";
+import companyRoutes from "./routes/companyRoutes";
+import meetingRoutes from "./routes/meetingRoutes";
+import tutorRoutes from "./routes/tutorRoutes";
+// Stream /files to Azure Blob Storage
+import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
+// Swagger
+import swaggerConfig from "./swagger/swaggerConfig";
+import groupRoutes from "./routes/groupRoutes";
+import { BlobServiceClient } from "@azure/storage-blob";
+import biannualEvaluationRoutes from "./routes/biannualEvaluationRoutes";
 
 const app = express();
 const port = env.get.PORT;
@@ -48,18 +66,6 @@ app.use((req, _, next) => {
   next();
 });
 
-// Routes
-import authRoutes from "./routes/authRoutes";
-import diaryRoutes from "./routes/diaryRoutes";
-import userRoutes from "./routes/userRoutes";
-import eventRoutes from "./routes/eventRoutes";
-import deliverableRoutes from "./routes/deliverableRoutes";
-import noteRoutes from "./routes/noteRoutes";
-import compagnyAccountRoute from "./routes/compagnyAccountRoute";
-import companyRoutes from "./routes/companyRoutes";
-import meetingRoutes from "./routes/meetingRoutes";
-import tutorRoutes from "./routes/tutorRoutes";
-
 app.use("/auth", authRoutes);
 app.use("/diary", diaryRoutes);
 app.use("/user", userRoutes);
@@ -72,9 +78,6 @@ app.use("/company", companyRoutes);
 app.use("/meeting", meetingRoutes);
 app.use("/biannualEvaluations", biannualEvaluationRoutes);
 app.use("/tutor", tutorRoutes);
-
-// Stream /files to Azure Blob Storage
-import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
 
 app.get("/file/:blobName", async (req: Request, res: Response) => {
   const containerName = CONTAINER_NAME;
@@ -100,11 +103,6 @@ app.get("/file/:blobName", async (req: Request, res: Response) => {
   }
 });
 
-// Swagger
-import swaggerConfig from "./swagger/swaggerConfig";
-import groupRoutes from "./routes/groupRoutes";
-import { BlobServiceClient } from "@azure/storage-blob";
-import biannualEvaluationRoutes from "./routes/biannualEvaluationRoutes";
 app.use("/api-docs", swaggerConfig);
 
 app.get("/", (_req: Request, res: Response) => {

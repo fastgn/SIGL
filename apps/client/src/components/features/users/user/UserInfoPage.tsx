@@ -12,10 +12,11 @@ import { useUser } from "@/contexts/UserContext";
 import api from "@/services/api.service";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { DiarySchema, EnumUserRole } from "@sigl/types";
-import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { z } from "zod";
+import { useEffect, useState } from "react";
+import { ApprenticeRoleInfo } from "@/components/features/users/user/apprenticeRoleInfo.tsx";
+import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
+import z from "zod";
 
 export type GroupSchemaType = z.infer<typeof DiarySchema.getData>;
 
@@ -115,6 +116,15 @@ export const UserDetailsPage = () => {
       const diaryReq = res.data.data as GroupSchemaType;
       setDiary(diaryReq);
     });
+  };
+
+  const getRoleInfo = () => {
+    switch (editedUser?.role[0]) {
+      case EnumUserRole.APPRENTICE:
+        return <ApprenticeRoleInfo id={editedUser.id} />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -258,11 +268,7 @@ export const UserDetailsPage = () => {
                 </Bloc>
               </div>
 
-              <div className="flex-auto">
-                {editedUser.role.map((role) => (
-                  <Bloc title={`Rôle: ${role}`} actions={undefined} isOpenable key={role}></Bloc>
-                ))}
-              </div>
+              {getRoleInfo()}
             </div>
           ) : (
             <UpdateIcon className="h-4 w-4 animate-spin" />

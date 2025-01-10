@@ -1,10 +1,10 @@
 import express from "express";
-const router = express.Router();
-
 import authController from "../controllers/authController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import logger from "../utils/logger";
+
+const router = express.Router();
 
 router.post("/login", async (req, res) => {
   try {

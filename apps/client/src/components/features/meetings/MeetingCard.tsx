@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { MeetingSchemaType } from "./MeetingPage";
 import { Timer, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
