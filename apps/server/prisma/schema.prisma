@@ -199,9 +199,9 @@ model TrainingDiary {
   description        String?
   apprentice   Apprentice    @relation(fields: [apprenticeId], references: [id], onDelete: Cascade)
   apprenticeId Int           @unique
-  notes        Note[]
-  delivrables  Deliverable[]
-  BiannualEvaluation BiannualEvaluation[]
+  notes              Note[]
+  biannualEvaluation BiannualEvaluation[]
+  delivrable         Deliverable[]
 }
 
 model CompanyAccount {

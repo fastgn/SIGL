@@ -9,8 +9,15 @@ const getData = z.object({
     skillEvaluations: z.array(SkillEvaluationSchema.getData),
 });
 
+const sendData = z.object({
+    semester: z.nativeEnum(EnumSemester),
+    trainingDiaryId: z.number(),
+    skillEvaluations: z.array(SkillEvaluationSchema.sendData),
+});
+
 const BiannualEvaluationSchema = {
     getData,
+    sendData,
 };
 
 export { BiannualEvaluationSchema };

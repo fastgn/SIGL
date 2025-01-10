@@ -151,4 +151,17 @@ router.get("/:id/groups", authMiddleware(), async (req: CustomRequestUser, res: 
   }
 });
 
+router.get("/roles/:id/", authMiddleware(), async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    logger.info(`Récupération des rôles de l'utilisateur ${id}`);
+    const result = await userController.getRoles(id);
+    logger.info(`Rôles de l'utilisateur ${id} récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
 export default router;

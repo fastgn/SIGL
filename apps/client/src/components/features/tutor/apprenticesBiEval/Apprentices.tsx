@@ -1,0 +1,56 @@
+import Bloc from "@/components/common/bloc/bloc";
+import api from "@/services/api.service.ts";
+import { isBefore } from "@sigl/types";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { ApprenticeSchemaType } from "../HomePage";
+import { BiEvalForm } from "./BiEvalForm";
+import {
+  BiannualEvaluation,
+  BiEvalType,
+} from "../../apprentice/biannualEvaluation/BiannualEvaluation";
+
+export const ApprenticesData = (id: number) => {
+  const [apprentices, setApprentices] = useState<ApprenticeSchemaType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchApprentices = async () => {
+    try {
+      const response = await api.get(`/tutor/apprentices/${id}`);
+      setApprentices(response.data.data);
+    } catch (error) {
+      toast.error("Erreur lors de la récupération des apprentis");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchApprentices();
+  }, []);
+
+  if (loading) {
+    return <p>Chargement...</p>;
+  }
+
+  const getAction = (apprenticeId: number) => {
+    return <BiEvalForm apprenticeId={apprenticeId} />;
+  };
+
+  return apprentices.map((apprentice: ApprenticeSchemaType) => (
+    <Bloc
+      key={apprentice.id}
+      title={`${apprentice.user.firstName} ${apprentice.user.lastName}`}
+      actions={getAction(apprentice.user.id)}
+      isOpenable={true}
+    >
+      {apprentice.trainingDiary.biannualEvaluation
+        .sort((a, b) => isBefore(a.semester, b.semester))
+        .map((biannualEvaluation: BiEvalType) => (
+          <div key={biannualEvaluation.id} className="flex flex-col gap-4">
+            <BiannualEvaluation biannualEvaluation={biannualEvaluation} />
+          </div>
+        ))}
+    </Bloc>
+  ));
+};

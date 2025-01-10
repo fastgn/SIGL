@@ -9,3 +9,5 @@ export * from "./diary.schema";
 export * from "./biannualEvaluation.schema";
 export * from "./skill.schema";
 export * from "./skillEvaluation.schema";
+export * from "./trainingDiary.schema";
+export * from "./apprentice.schema";
