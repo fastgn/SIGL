@@ -138,6 +138,8 @@ export const BiEvalForm = ({ apprenticeId }: { apprenticeId: number }) => {
     );
 
     form.reset();
+    // TODO: Find a better way to refresh the page
+    window.location.reload();
   };
 
   const onExit = () => {
