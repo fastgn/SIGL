@@ -1,5 +1,5 @@
 import { useUser } from "@/contexts/UserContext";
-import { MeetingSchema } from "@sigl/types";
+import { EnumUserRole, MeetingSchema } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import api from "@/services/api.service";
@@ -14,7 +14,7 @@ import { AddMeetingDialog } from "./dialogs/AddMeetingDialog";
 export type MeetingSchemaType = z.infer<typeof MeetingSchema.getData>;
 
 export const MeetingPage = () => {
-  const { id } = useUser();
+  const { id, roles } = useUser();
 
   const [meetings, setMeetings] = useState([] as MeetingSchemaType[]);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +64,11 @@ export const MeetingPage = () => {
   };
 
   useEffect(() => {
-    fetchMeetingsAdmin().finally(() => setIsLoading(false));
+    if (roles[0] === EnumUserRole.ADMIN || roles[0] === EnumUserRole.APPRENTICE_COORDINATOR) {
+      fetchMeetingsAdmin().finally(() => setIsLoading(false));
+    } else {
+      fetchMeetingsUser().finally(() => setIsLoading(false));
+    }
   }, []);
 
   const onDeleteMeeting = (id: number) => {

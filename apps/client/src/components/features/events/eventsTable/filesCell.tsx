@@ -1,13 +1,12 @@
 import { Badge } from "@/components/ui/badge";
-import { EventFileSchemaType, EventSchemaType } from "../EventsPage";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { t } from "i18next";
-import { toast } from "sonner";
-import { getErrorInformation } from "@/utilities/http";
 import api from "@/services/api.service.ts";
 import env from "@/services/env.service.ts";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { getErrorInformation } from "@/utilities/http";
+import { t } from "i18next";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { EventFileSchemaType, EventSchemaType } from "../EventsPage";
 
 interface FilesCellProps {
   files: EventFileSchemaType[];
