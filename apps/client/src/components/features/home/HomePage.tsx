@@ -1,52 +1,33 @@
 import { Banner } from "@/components/common/banner/Banner.tsx";
-import { DraggableCard } from "@/components/common/cards/DraggableCard";
 
-import { useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TotalUserCard } from "./admin/TotalUserCard";
-import { TotalUserRoleCard } from "./admin/TotalUserRoleCard";
 import { useUser } from "@/contexts/UserContext";
+import { EnumUserRole } from "@sigl/types";
+import { ApprenticeHomePage } from "../apprentice/HomePage";
+import { TutorHomePage } from "../tutor/HomePage";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const HomePage = () => {
-  const [cards, setCards] = useState([
-    { id: "1", title: "Nombre d'utilisateurs", component: TotalUserCard },
-    { id: "2", title: "Nombre d'utilisateurs par rôle", component: TotalUserRoleCard },
-  ]);
-  const { isAdmin } = useUser();
+  const { roles } = useUser();
 
-  const moveCard = (fromIndex: number, toIndex: number) => {
-    const updatedCards = [...cards];
-    const [movedCard] = updatedCards.splice(fromIndex, 1);
-    updatedCards.splice(toIndex, 0, movedCard);
-    setCards(updatedCards);
+  const getHomeContent = () => {
+    switch (roles[0]) {
+      case EnumUserRole.ADMIN:
+        return <h2>Admin</h2>;
+      case EnumUserRole.APPRENTICE:
+        return <ApprenticeHomePage />;
+      case EnumUserRole.EDUCATIONAL_TUTOR:
+        return <TutorHomePage />;
+      default:
+        return <h2>Page non trouvée</h2>;
+    }
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        <Banner />
-
-        <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
-          <h1 className="text-3xl font-bold">Acceuil</h1>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "16px",
-              alignItems: "stretch",
-            }}
-          >
-            {isAdmin &&
-              cards.map((card, index) => (
-                <DraggableCard key={card.id} index={index} moveCard={moveCard} title={card.title}>
-                  {card.component()}
-                </DraggableCard>
-              ))}
-          </div>
-        </div>
-      </div>
-    </DndProvider>
+    <div className="flex flex-col h-screen">
+      <Banner />
+      <ScrollArea className="w-full overflow-x-auto">
+        <div className="flex flex-col gap-5 px-16 py-12">{getHomeContent()}</div>
+      </ScrollArea>
+    </div>
   );
 };

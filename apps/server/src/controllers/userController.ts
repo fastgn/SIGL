@@ -363,6 +363,35 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+
+  getRoles: async (id: number): Promise<ControllerResponse> => {
+    try {
+      const user = await db.user.findUnique({
+        include: {
+          apprentice: true,
+          apprenticeCoordinator: true,
+          apprenticeMentor: true,
+          curriculumManager: true,
+          educationalTutor: true,
+          teacher: true,
+          admin: true,
+        },
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      const roles = userService.getRoles(user);
+      return ControllerSuccess.SUCCESS({ data: roles });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
 };
 
 export default userController;

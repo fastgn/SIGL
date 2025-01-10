@@ -78,5 +78,20 @@
       "delete": "Évènement supprimé avec succès"
     }
   },
-  "groups": {}
+  "groups": {},
+  "semesters": {
+    "semester_5": "Semestre 5",
+    "semester_6": "Semestre 6",
+    "semester_7": "Semestre 7",
+    "semester_8": "Semestre 8",
+    "semester_9": "Semestre 9",
+    "semester_10": "Semestre 10"
+  },
+  "skills": {
+    "status": {
+      "in_progress": "En cours",
+      "covered": "Validé",
+      "not_covered": "Non abordé"
+    }
+  }
 }

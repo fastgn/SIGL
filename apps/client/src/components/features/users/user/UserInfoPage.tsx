@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
+import { Banner } from "@/components/common/banner/Banner";
+import Bloc from "@/components/common/bloc/bloc";
+import { FormChangePassword } from "@/components/features/users/user/FormChangePassword";
+import { UserTypeReq } from "@/components/features/users/UsersPage";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Banner } from "@/components/common/banner/Banner";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import api from "@/services/api.service";
-import { UserTypeReq } from "@/components/features/users/UsersPage";
-import { UpdateIcon } from "@radix-ui/react-icons";
-import { useUser } from "@/contexts/UserContext";
-import { FormChangePassword } from "@/components/features/users/user/FormChangePassword";
-import Bloc from "@/components/common/bloc/bloc";
-import { z } from "zod";
-import { DiarySchema, EnumUserRole } from "@sigl/types";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useUser } from "@/contexts/UserContext";
+import api from "@/services/api.service";
+import { UpdateIcon } from "@radix-ui/react-icons";
+import { DiarySchema, EnumUserRole } from "@sigl/types";
+import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { z } from "zod";
 
 export type GroupSchemaType = z.infer<typeof DiarySchema.getData>;
 
@@ -126,31 +126,24 @@ export const UserDetailsPage = () => {
             <h1 className="text-3xl font-bold">Edition d'utilisateur</h1>
             {user?.role.includes(EnumUserRole.APPRENTICE) &&
               (diary ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant={"add"}
-                        onClick={() => navigate(`/users/${id}/training-diary`)}
-                      >
-                        Journal de formation
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>"Acceder au journal de formation"</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={"add"} onClick={() => navigate(`/users/${id}/training-diary`)}>
+                      Journal de formation
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Acceder au journal de formation</TooltipContent>
+                </Tooltip>
               ) : (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant={"add"} onClick={createDiary}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Journal de formation
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>"Ajouter un nouveau journal de formation"</TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant={"add"} onClick={createDiary}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Journal de formation
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Ajouter un nouveau journal de formation </TooltipContent>
+                </Tooltip>
               ))}
           </div>
           {user && editedUser ? (

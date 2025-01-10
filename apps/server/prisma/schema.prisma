@@ -195,12 +195,13 @@ model EventFile {
 }
 
 model TrainingDiary {
-  id           Int           @id @default(autoincrement())
-  description  String?
+  id                 Int                  @id @default(autoincrement())
+  description        String?
   apprentice   Apprentice    @relation(fields: [apprenticeId], references: [id], onDelete: Cascade)
   apprenticeId Int           @unique
-  notes        Note[]
-  delivrables  Deliverable[]
+  notes              Note[]
+  biannualEvaluation BiannualEvaluation[]
+  delivrable         Deliverable[]
 }
 
 model CompanyAccount {
@@ -239,4 +240,35 @@ model EmailTemplate {
   body      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id                 Int               @id @default(autoincrement())
+  code               String            @unique
+  name               String            @unique
+  description        String            @unique
+  inProgressSemester String?
+  obtainedSemester   String
+  skillEvaluations   SkillEvaluation[]
+}
+
+model SkillEvaluation {
+  id                   Int                @id @default(autoincrement())
+  status               String
+  comment              String
+  skillId              Int
+  skill                Skill              @relation(fields: [skillId], references: [id])
+  biannualEvaluationId Int
+  biannualEvaluation   BiannualEvaluation @relation(fields: [biannualEvaluationId], references: [id], onDelete: Cascade)
+
+  @@unique([skillId, biannualEvaluationId])
+}
+
+model BiannualEvaluation {
+  id               Int               @id @default(autoincrement())
+  semester         String
+  createdAt        DateTime          @default(now())
+  trainingDiaryId  Int
+  trainingDiary    TrainingDiary     @relation(fields: [trainingDiaryId], references: [id], onDelete: Cascade)
+  skillEvaluations SkillEvaluation[]
 }

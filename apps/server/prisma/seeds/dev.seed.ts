@@ -596,6 +596,124 @@ async function main() {
     },
   });
 
+  // Création des compétences
+  const skills = [
+    {
+      code: "C1",
+      name: "Diagnostiquer",
+      description:
+        "C1.1 Diagnostiquer un système numérique existant en vue de le faire évoluer \nC1.2 Diagnostiquer un système numérique pour identifier une anomalie \nC1.3 Diagnostiquer un système numérique en vue de corriger / pallier une anomalie \nC1.4 Diagnostiquer un système numérique en vue de le maintenir, durablement, en état de fonctionnement",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C2",
+      name: "Concevoir",
+      description:
+        "C2.1 Analyser et construire un cahier des charges\nC2.2 Concevoir l'architecture fonctionnelle et/ou structurelle d'un système numérique répondant au cahier des charges, en prenant en compte des contraintes de développement durable\nC2.3 Concevoir un système numérique en choisissant des technologies adaptées au besoin défini, compte-tenu de l'état de l'art, des moyens de l'entreprise et dans un souci de performance / efficacité, en prenant en compte des contraintes de développement durable\nC2.4 Concevoir des systèmes numériques à travers de la modélisation et de la simulation",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C3",
+      name: "Produire",
+      description:
+        "C3.1 Produire un prototype de système numérique\nC3.2 Produire un sys.num capable de respecter des contraintes réglementaires, techniques, environnementales et de durée de vie",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C4",
+      name: "Valider",
+      description:
+        "C4.1 Valider le bon fonctionnement d'un système numérique en proposant une démarche visant à identifier l'absence de dysfonctionnement\nC4.2 Valider l'adéquation d'une solution avec le cahier des charges",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C5",
+      name: "Piloter",
+      description:
+        "C5.1 Piloter un projet en assurant la projection et le suivi des actions et du budget\nC5.2 Piloter un projet en manageant une équipe projet pluridisciplinaire et internationale, en prenant en compte les aspects techniques, humains et économiques",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C6",
+      name: "S'adapter (se former)",
+      description:
+        "C6.1 S'adapter à de nouvelles méthodes/techniques/technologies identifiées comme pouvant être utiles à concevoir des systèmes numériques\nC6.2 S'adapter à des contraintes organisationnelles, environnementales ou humaines\nC6.3 Anticiper les innovations et les évolutions, assurer une veille\nC6.4 Identifier la nécessité de se former sur de nouvelles méthodes, techniques ou technologies",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C7",
+      name: "Communiquer (Transmettre)",
+      description:
+        "C7.1 Communiquer avec des spécialistes comme avec des non-spécialistes en français et en anglais\nC7.2 Animer et convaincre",
+      inProgressSemester: "S7",
+      obtainedSemester: "S10",
+    },
+    {
+      code: "C8",
+      name: "Spécifique à l'entreprise et non requis au diplôme ESEO, connaissance métiers de la santé, normes et législation associées, …",
+      description: "RGPD, ...",
+      inProgressSemester: null,
+      obtainedSemester: "S10",
+    },
+  ];
+
+  for (const skill of skills) {
+    await db.skill.create({ data: skill });
+  }
+
+  // Insertion d'évalutaions semestrielles
+  await db.biannualEvaluation.create({
+    data: {
+      semester: "S5",
+      trainingDiary: {
+        connect: {
+          id: 1,
+        },
+      },
+    },
+  });
+
+  // Insertion d'évaluations de compétences
+  await db.skillEvaluation.create({
+    data: {
+      skill: {
+        connect: {
+          id: 1,
+        },
+      },
+      status: "in_progress",
+      comment: "Avance dans cette compétence",
+      biannualEvaluation: {
+        connect: {
+          id: 1,
+        },
+      },
+    },
+  });
+
+  await db.skillEvaluation.create({
+    data: {
+      skill: {
+        connect: {
+          id: 2,
+        },
+      },
+      status: "covered",
+      comment: "Très bonne évolution",
+      biannualEvaluation: {
+        connect: {
+          id: 1,
+        },
+      },
+    },
+  });
+
   console.log("Base de données initialisée.");
 }
 

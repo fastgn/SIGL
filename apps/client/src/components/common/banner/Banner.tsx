@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AvatarIcon } from "@radix-ui/react-icons";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,15 +14,39 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
+import { EnumUserRole } from "@sigl/types";
+import api from "@/services/api.service";
+import { getErrorInformation } from "@/utilities/http";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 export const Banner = () => {
+  const { t } = useTranslation();
   const { setToken } = useAuth();
-  const { isAdmin, id, clear } = useUser();
+  const { isAdmin, id, clear, roles, setRoles } = useUser();
 
   const profileRef = useRef<SVGSVGElement>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (id && roles.length === 0) {
+      api.get("/user/roles/" + id).then((res) => {
+        switch (res.status) {
+          case 200:
+          case 201:
+            setRoles(res.data.data);
+            break;
+          default: {
+            const error = getErrorInformation(res.status);
+            toast.error(error?.description || t("globals.errors.connection"));
+            break;
+          }
+        }
+      });
+    }
+  }, []);
 
   const navItems = [
     {
@@ -48,6 +72,13 @@ export const Banner = () => {
       name: "Accueil",
       link: "/home",
     },
+  ];
+
+  const navItemsApprentice = [
+    {
+      name: "Accueil",
+      link: "/home",
+    },
     {
       name: "Mes fichiers",
       link: "/myfiles",
@@ -67,7 +98,19 @@ export const Banner = () => {
   const logout = () => {
     setToken(null);
     clear();
+    setRoles([]);
     navigate("/login");
+  };
+
+  const getNavItems = () => {
+    switch (roles[0]) {
+      case EnumUserRole.ADMIN:
+        return navItems;
+      case EnumUserRole.APPRENTICE:
+        return navItemsApprentice;
+      default:
+        return navItemsUser;
+    }
   };
 
   return (
@@ -82,25 +125,23 @@ export const Banner = () => {
           {isAdmin && <h6 className="text-xs leading-3">Admin</h6>}
         </Link>
         <div className="flex flex-row gap-6 items-center">
-          {isAdmin
-            ? navItems.map((item) => (
-                <Button
-                  variant={isSelected(item.link) ? "admin" : "adminUnselected"}
-                  key={item.name}
-                  onClick={() => navigate(item.link)}
-                >
-                  {item.name}
-                </Button>
-              ))
-            : navItemsUser.map((item) => (
-                <Button
-                  variant={isSelected(item.link) ? "user" : "userUnselected"}
-                  key={item.name}
-                  onClick={() => navigate(item.link)}
-                >
-                  {item.name}
-                </Button>
-              ))}
+          {getNavItems().map((item) => (
+            <Button
+              variant={
+                isSelected(item.link)
+                  ? isAdmin
+                    ? "admin"
+                    : "user"
+                  : isAdmin
+                    ? "adminUnselected"
+                    : "userUnselected"
+              }
+              key={item.name}
+              onClick={() => navigate(item.link)}
+            >
+              {item.name}
+            </Button>
+          ))}
         </div>
         <div className="flex flex-grow"></div>
         <DropdownMenu>

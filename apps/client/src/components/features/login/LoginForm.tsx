@@ -24,7 +24,7 @@ const LoginForm = () => {
   const [alertTitle, setAlertTitle] = useState<string | null>(null);
   const [alertDescription, setAlertDescription] = useState<string | null>(null);
   const [remember, setRemember] = useState(false);
-  const { setIsAdmin, setId, updateIsAdminAndId } = useUser();
+  const { updateIsAdminAndId } = useUser();
 
   useEffect(() => {
     if (token) {

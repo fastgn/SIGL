@@ -1425,5 +1425,151 @@
         }
       ]
     }
+  },
+  "/tutors/apprentices/{id}": {
+    "get": {
+      "summary": "Récupération des apprentis d'un tuteur",
+      "tags": ["Tutor"],
+      "description": "Permet à un utilisateur de récupérer la liste des apprentis d'un tuteur",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du tuteur"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération des apprentis d'un tuteur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Apprentice"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/biannualEvaluations/trainingDiary/:trainingDiaryId": {
+    "get": {
+      "summary": "Récupération des evaluations semestrielles d'un journal",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un utilisateur de récupérer la liste des evaluations semestrielles d'un journal",
+      "parameters": [
+        {
+          "name": "trainingDiaryId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du journal"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération des evaluations semestrielles d'un journal",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BiannualEvaluation"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/biannualEvaluations": {
+    "post": {
+      "summary": "Création d'une evaluation semestrielle",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un tuteur de créer une evaluation semestrielle",
+      "requestBody": {
+        "description": "Evaluation semestrielle",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BiannualEvaluation"
+            }
+          }
+        },
+        "required": true
+      },
+      "responses": {
+        "201": {
+          "description": "Evaluation semestrielle créée",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BiannualEvaluation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Modification d'une evaluation semestrielle",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un tuteur de modifier une evaluation semestrielle",
+      "requestBody": {
+        "description": "Evaluation semestrielle",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BiannualEvaluation"
+            }
+          }
+        },
+        "required": true
+      },
+      "responses": {
+        "200": {
+          "description": "Evaluation semestrielle modifiée",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BiannualEvaluation"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/skills": {
+    "get": {
+      "summary": "Récupération des skills",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un utilisateur de récupérer la liste des skills",
+      "responses": {
+        "200": {
+          "description": "Récupération des skills",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Skill"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
