@@ -28,25 +28,20 @@ type FilesShemaType = z.infer<typeof GroupFileSchema.getData>;
 export const GroupCard = ({
   group,
   onDeleteGroup,
+  users,
 }: {
   group: GroupSchemaType;
   onDeleteGroup: (id: number) => void;
+  users: UserShemaType[];
 }) => {
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
-  const [users, setUsers] = useState<UserShemaType[]>([]);
+  const [usersFiltered, setUsersFiltered] = useState<UserShemaType[]>(users);
   const [files, setFiles] = useState<FilesShemaType[]>(group.files || []);
   const [groupUsers, setGroupUsers] = useState<UserShemaType[]>(group.users || []);
 
   useEffect(() => {
-    api
-      .get("/user")
-      .then((res) => {
-        setUsers(res.data.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+    setUsersFiltered(users);
+  }, [users]);
 
   const handleDeleteConfirm = () => {
     if (groupToDelete !== null) {
@@ -92,10 +87,10 @@ export const GroupCard = ({
       <div className="flex flex-col justify-between items-center self-stretch">
         <UserGroupDialog
           group={group}
-          users={users}
+          users={usersFiltered}
           groupUsers={groupUsers}
           setGroupUsers={setGroupUsers}
-          setUsers={setUsers}
+          setUsers={setUsersFiltered}
         />
 
         <FileGroupDialog group={group} files={files} setFiles={setFiles} />

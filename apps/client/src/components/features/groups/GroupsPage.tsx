@@ -4,19 +4,23 @@ import { GroupForm } from "@/components/features/groups/group/GroupForm";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import api from "@/services/api.service";
 import { getErrorInformation } from "@/utilities/http";
-import { GroupSchema } from "@sigl/types";
+import { GroupSchema, UserSchema } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { GroupCard } from "./GroupCard";
+import { UpdateIcon } from "@radix-ui/react-icons";
 
 export type GroupSchemaType = z.infer<typeof GroupSchema.getData>;
+type UserShemaType = z.infer<typeof UserSchema.getData>;
 
 export const GroupsPage = () => {
   const [groups, setGroups] = useState([] as GroupSchemaType[]);
   const [filteredGroups, setFilteredGroups] = useState([] as GroupSchemaType[]);
   const [searchTerm, setSearchTerm] = useState<string | null>();
   const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
+  const [users, setUsers] = useState([] as UserShemaType[]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleAddGroup = (newGroup: GroupSchemaType) => {
     setGroups((prevGroups) => [...prevGroups, newGroup]);
@@ -44,8 +48,35 @@ export const GroupsPage = () => {
     );
   };
 
+  const fetchUsers = async () => {
+    api.get("/user").then(
+      (res) => {
+        switch (res.status) {
+          case 200:
+          case 201:
+            setUsers(res.data.data);
+            break;
+          default: {
+            const error = getErrorInformation(res.status);
+            toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+            break;
+          }
+        }
+      },
+      (err) => {
+        const error = getErrorInformation(err.status);
+        toast.error(error?.description || "Une erreur s'est produite lors de la connexion.");
+      },
+    );
+  };
+
+  const fetchAll = async () => {
+    fetchGroups();
+    fetchUsers();
+  };
+
   useEffect(() => {
-    fetchGroups().then();
+    fetchAll().finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -90,34 +121,45 @@ export const GroupsPage = () => {
   return (
     <div className="flex flex-col h-screen">
       <Banner />
-      <ScrollArea className="w-full overflow-x-auto ">
-        <div className="flex flex-col gap-5 px-16 py-12">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-3xl font-bold">Groupes</h1>
-            <GroupForm
-              onAddGroup={handleAddGroup}
-              isOpen={isGroupFormOpen}
-              onOpenChange={(value) => {
-                setIsGroupFormOpen(value);
-              }}
-            />
-          </div>
-          <div className="w-full">
-            <SearchBar
-              searchTerm={searchTerm || ""}
-              onSearchChange={setSearchTerm}
-              clearSearch={() => {
-                setSearchTerm(null);
-              }}
-            />
-          </div>
-          <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
-            {filteredGroups.map((group) => (
-              <GroupCard key={group.id} group={group} onDeleteGroup={handleDeleteGroup} />
-            ))}
-          </div>
+      {isLoading ? (
+        <div className="w-full flex justify-center items-center">
+          <UpdateIcon className="h-10 w-10 animate-spin" />
         </div>
-      </ScrollArea>
+      ) : (
+        <ScrollArea className="w-full overflow-x-auto ">
+          <div className="flex flex-col gap-5 px-16 py-12">
+            <div className="flex flex-row justify-between">
+              <h1 className="text-3xl font-bold">Groupes</h1>
+              <GroupForm
+                onAddGroup={handleAddGroup}
+                isOpen={isGroupFormOpen}
+                onOpenChange={(value) => {
+                  setIsGroupFormOpen(value);
+                }}
+              />
+            </div>
+            <div className="w-full">
+              <SearchBar
+                searchTerm={searchTerm || ""}
+                onSearchChange={setSearchTerm}
+                clearSearch={() => {
+                  setSearchTerm(null);
+                }}
+              />
+            </div>
+            <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
+              {filteredGroups.map((group) => (
+                <GroupCard
+                  key={group.id}
+                  group={group}
+                  onDeleteGroup={handleDeleteGroup}
+                  users={users}
+                />
+              ))}
+            </div>
+          </div>
+        </ScrollArea>
+      )}
     </div>
   );
 };
