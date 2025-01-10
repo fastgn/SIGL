@@ -19,7 +19,7 @@ import api from "@/services/api.service.ts";
 import { toast } from "sonner";
 import { getErrorInformation } from "@/utilities/utils";
 import { UpdateIcon } from "@radix-ui/react-icons";
-import { EventSchema, MeetingSchema, UserSchema } from "@sigl/types";
+import { EnumUserRole, EventSchema, MeetingSchema, UserSchema } from "@sigl/types";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
 import MultiSelect from "@/components/ui/multi-select";
@@ -39,7 +39,7 @@ export const AddMeetingDialog = ({
 }: {
   onAddMeeting: (meeting: MeetingSchemaType) => void;
 }) => {
-  const { id } = useUser();
+  const { id, roles } = useUser();
 
   const [submitting, setSubmitting] = useState(false);
   const [isOpen, onOpenChange] = useState(false);
@@ -103,15 +103,29 @@ export const AddMeetingDialog = ({
       setSubmitting(false);
       return;
     }
-
     const juryInt = jury.map((j) => parseInt(j, 10));
+
     if (!presenter || presenter.length === 0) {
       toast.error("Veuillez choisir un présentateur");
       setSubmitting(false);
       return;
     }
-
     const presenterInt = presenter.map((p) => parseInt(p, 10));
+
+    if (
+      !roles.includes(EnumUserRole.ADMIN) ||
+      !roles.includes(EnumUserRole.APPRENTICE_COORDINATOR) ||
+      id === null ||
+      !presenterInt.includes(id) ||
+      !juryInt.includes(id)
+    ) {
+      toast.error(
+        "Vous n'avez pas les droits pour ajouter une réunion dont vous ne faites pas partie.",
+      );
+      setSubmitting(false);
+      return;
+    }
+
     const eventInt = event && event.length > 0 ? event.map((e) => parseInt(e, 10)) : null;
     const dateISO = date.toISOString();
 
@@ -123,8 +137,6 @@ export const AddMeetingDialog = ({
       presenter: presenterInt,
       events: eventInt,
     };
-
-    console.log(data);
 
     api
       .post("/meeting", data)
@@ -193,7 +205,6 @@ export const AddMeetingDialog = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <Textarea
-                    required
                     {...field}
                     disabled={submitting}
                     onChange={(e) => setDescription(e.target.value)}
