@@ -3,7 +3,7 @@ import api from "@/services/api.service.ts";
 import { isBefore } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ApprenticeSchemaType } from "../HomePage";
+import { ApprenticeSchemaType } from "../MyApprenticePage";
 import { BiEvalForm } from "./BiEvalForm";
 import {
   BiannualEvaluation,

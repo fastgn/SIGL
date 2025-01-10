@@ -2,8 +2,6 @@ import { Banner } from "@/components/common/banner/Banner.tsx";
 
 import { useUser } from "@/contexts/UserContext";
 import { EnumUserRole } from "@sigl/types";
-import { ApprenticeHomePage } from "../apprentice/HomePage";
-import { TutorHomePage } from "../tutor/HomePage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const HomePage = () => {
@@ -14,9 +12,9 @@ export const HomePage = () => {
       case EnumUserRole.ADMIN:
         return <h2>Admin</h2>;
       case EnumUserRole.APPRENTICE:
-        return <ApprenticeHomePage />;
+        return <h2>Apprenti</h2>;
       case EnumUserRole.EDUCATIONAL_TUTOR:
-        return <TutorHomePage />;
+        return <h2>Tuteur pédagogique</h2>;
       default:
         return <h2>Page non trouvée</h2>;
     }

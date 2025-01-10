@@ -54,6 +54,10 @@ export const Banner = () => {
       link: "/home",
     },
     {
+      name: "Mes fichiers",
+      link: "/myfiles",
+    },
+    {
       name: "Utilisateurs",
       link: "/users",
     },
@@ -75,6 +79,33 @@ export const Banner = () => {
     {
       name: "Accueil",
       link: "/home",
+    },
+    {
+      name: "Mes fichiers",
+      link: "/myfiles",
+    },
+    {
+      name: "Réunions",
+      link: "/meetings",
+    },
+  ];
+
+  const navItemsTutor = [
+    {
+      name: "Accueil",
+      link: "/home",
+    },
+    {
+      name: "Mes fichiers",
+      link: "/myfiles",
+    },
+    {
+      name: "Réunions",
+      link: "/meetings",
+    },
+    {
+      name: "Mes apprentis",
+      link: "/myApprentice",
     },
   ];
 
@@ -99,6 +130,10 @@ export const Banner = () => {
       name: "Réunions",
       link: "/meetings",
     },
+    {
+      name: "Évaluation",
+      link: "/evaluation",
+    },
   ];
 
   const isSelected = (link: string) => location.pathname.startsWith(link);
@@ -113,9 +148,12 @@ export const Banner = () => {
   const getNavItems = () => {
     switch (roles[0]) {
       case EnumUserRole.ADMIN:
+      case EnumUserRole.APPRENTICE_COORDINATOR:
         return navItems;
       case EnumUserRole.APPRENTICE:
         return navItemsApprentice;
+      case EnumUserRole.EDUCATIONAL_TUTOR:
+        return navItemsTutor;
       default:
         return navItemsUser;
     }
