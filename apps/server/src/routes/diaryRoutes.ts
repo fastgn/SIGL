@@ -58,7 +58,8 @@ router.get("/user/:id", authMiddleware(), async (req, res) => {
     if (
       req.context.user?.id !== parseInt(id) &&
       !roles.includes(EnumUserRole.ADMIN) &&
-      !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR)
+      !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
+      !roles.includes(EnumUserRole.APPRENTICE)
     ) {
       return reply(res, ControllerError.UNAUTHORIZED());
     }

@@ -5,7 +5,13 @@ import { z } from "zod";
 
 export type BiEvalType = z.infer<typeof BiannualEvaluationSchema.getData>;
 
-export const BiannualEvaluation = ({ biannualEvaluation }: { biannualEvaluation: BiEvalType }) => {
+export const BiannualEvaluation = ({
+  biannualEvaluation,
+  isSemesterShown = true,
+}: {
+  biannualEvaluation: BiEvalType;
+  isSemesterShown?: boolean;
+}) => {
   const { t } = useTranslation();
 
   const getColor = (status: EnumSkillStatus) => {
@@ -23,9 +29,11 @@ export const BiannualEvaluation = ({ biannualEvaluation }: { biannualEvaluation:
 
   return (
     <div>
-      <strong className="text-lg">
-        {t(`semesters.${biannualEvaluation.semester.toLowerCase()}`)}
-      </strong>
+      {isSemesterShown && (
+        <strong className="text-lg">
+          {t(`semesters.${biannualEvaluation.semester.toLowerCase()}`)}
+        </strong>
+      )}
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr>

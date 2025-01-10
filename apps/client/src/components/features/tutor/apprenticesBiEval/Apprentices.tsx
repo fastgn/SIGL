@@ -9,6 +9,7 @@ import {
   BiannualEvaluation,
   BiEvalType,
 } from "../../apprentice/biannualEvaluation/BiannualEvaluation";
+import { UpdateIcon } from "@radix-ui/react-icons";
 
 export const ApprenticesData = (id: number) => {
   const [apprentices, setApprentices] = useState<ApprenticeSchemaType[]>([]);
@@ -30,7 +31,11 @@ export const ApprenticesData = (id: number) => {
   }, []);
 
   if (loading) {
-    return <p>Chargement...</p>;
+    return (
+      <div className="w-full flex justify-center items-center">
+        <UpdateIcon className="h-10 w-10 animate-spin" />
+      </div>
+    );
   }
 
   const getAction = (apprenticeId: number) => {
