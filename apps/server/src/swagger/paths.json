@@ -1426,7 +1426,7 @@
       ]
     }
   },
-  "/tutors/apprentices/{id}": {
+  "/tutor/apprentices/{id}": {
     "get": {
       "summary": "Récupération des apprentis d'un tuteur",
       "tags": ["Tutor"],

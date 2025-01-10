@@ -37,7 +37,7 @@ export const ApprenticesData = (id: number) => {
     return <BiEvalForm apprenticeId={apprenticeId} />;
   };
 
-  return apprentices.map((apprentice: ApprenticeSchemaType) => (
+  return apprentices?.map((apprentice: ApprenticeSchemaType) => (
     <Bloc
       key={apprentice.id}
       title={`${apprentice.user.firstName} ${apprentice.user.lastName}`}

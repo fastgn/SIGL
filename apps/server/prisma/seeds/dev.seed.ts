@@ -30,7 +30,11 @@ async function main() {
       gender: "female",
       phone: "6666666666",
       apprentice: {
-        create: {},
+        create: {
+          trainingDiary: {
+            create: {},
+          },
+        },
       },
     },
   });
@@ -670,7 +674,7 @@ async function main() {
   // Insertion d'évalutaions semestrielles
   await db.biannualEvaluation.create({
     data: {
-      semester: "S5",
+      semester: "semester_5",
       trainingDiary: {
         connect: {
           id: 1,
@@ -679,40 +683,93 @@ async function main() {
     },
   });
 
-  // Insertion d'évaluations de compétences
-  await db.skillEvaluation.create({
-    data: {
+  const skillEvaluations = [
+    {
+      status: "in_progress",
+      comment: "Avance dans cette compétence",
       skill: {
         connect: {
           id: 1,
         },
       },
-      status: "in_progress",
-      comment: "Avance dans cette compétence",
-      biannualEvaluation: {
-        connect: {
-          id: 1,
-        },
-      },
     },
-  });
-
-  await db.skillEvaluation.create({
-    data: {
+    {
+      status: "covered",
+      comment: "Très bonne évolution",
       skill: {
         connect: {
           id: 2,
         },
       },
-      status: "covered",
-      comment: "Très bonne évolution",
-      biannualEvaluation: {
+    },
+    {
+      status: "in_progress",
+      comment: "Avance dans cette compétence",
+      skill: {
         connect: {
-          id: 1,
+          id: 3,
         },
       },
     },
-  });
+    {
+      status: "covered",
+      comment: "Très bonne évolution",
+      skill: {
+        connect: {
+          id: 4,
+        },
+      },
+    },
+    {
+      status: "not_covered",
+      comment: "Avance dans cette compétence",
+      skill: {
+        connect: {
+          id: 5,
+        },
+      },
+    },
+    {
+      status: "covered",
+      comment: "Très bonne évolution",
+      skill: {
+        connect: {
+          id: 6,
+        },
+      },
+    },
+    {
+      status: "in_progress",
+      comment: "Avance dans cette compétence",
+      skill: {
+        connect: {
+          id: 7,
+        },
+      },
+    },
+    {
+      status: "not_covered",
+      comment: "Très bonne évolution",
+      skill: {
+        connect: {
+          id: 8,
+        },
+      },
+    },
+  ];
+
+  for (const skillEvaluation of skillEvaluations) {
+    await db.skillEvaluation.create({
+      data: {
+        ...skillEvaluation,
+        biannualEvaluation: {
+          connect: {
+            id: 1,
+          },
+        },
+      },
+    });
+  }
 
   console.log("Base de données initialisée.");
 }

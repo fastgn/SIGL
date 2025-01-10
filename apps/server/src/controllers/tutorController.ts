@@ -16,7 +16,7 @@ const tutorController = {
           userId,
         },
         include: {
-          apprentice: {
+          apprentices: {
             include: {
               user: {
                 select: {
@@ -54,7 +54,7 @@ const tutorController = {
         return ControllerError.NOT_FOUND();
       }
 
-      return ControllerSuccess.SUCCESS({ data: educationalTutor.apprentice });
+      return ControllerSuccess.SUCCESS({ data: educationalTutor.apprentices });
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
       return ControllerError.INTERNAL();
