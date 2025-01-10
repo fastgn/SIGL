@@ -1,6 +1,4 @@
 import express, { Request, Response } from "express";
-const router = express.Router();
-
 import deliverableController from "../controllers/deliverableController";
 
 import { reply } from "../utils/http";
@@ -12,13 +10,8 @@ import userController from "../controllers/userController";
 import userService from "../services/user.service";
 import { User } from "@prisma/client";
 import { EnumUserRole } from "@sigl/types";
-import userController from "../controllers/userController";
-import authMiddleware from "../middleware/authMiddleware";
-import { fileMiddleware } from "../middleware/fileMiddleware";
-import userService from "../services/user.service";
-import { ControllerError } from "../utils/controller";
-import { reply } from "../utils/http";
-import logger from "../utils/logger";
+
+const router = express.Router();
 
 router.post("/", authMiddleware(), fileMiddleware, async (req: Request, res: Response) => {
   try {

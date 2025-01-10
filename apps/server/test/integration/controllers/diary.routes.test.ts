@@ -5,7 +5,6 @@ import prisma from "../../helpers/prisma";
 import { faker } from "@faker-js/faker";
 import passwordUtils from "../../../src/services/password.service";
 import authController from "../../../src/controllers/authController";
-import { logger } from "@azure/storage-blob";
 
 describe("/diary/user/:id", async () => {
   describe("[GET] /diary/user/:id", () => {

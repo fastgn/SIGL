@@ -1,5 +1,5 @@
 import * as React from "react";
-import { NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
+import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import type { ElementDimensions } from "../hooks/use-drag-resize";
 import { useDragResize } from "../hooks/use-drag-resize";
 import { ResizeHandle } from "./resize-handle";

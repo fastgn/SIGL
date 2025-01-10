@@ -4,6 +4,7 @@ import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import logger from "../utils/logger";
 import authMiddleware from "../middleware/authMiddleware";
+
 const router = express.Router();
 
 router.post("/", authMiddleware(), async (req, res) => {

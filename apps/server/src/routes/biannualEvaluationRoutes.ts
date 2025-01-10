@@ -5,6 +5,7 @@ import { ControllerError } from "../utils/controller";
 import { reply } from "../utils/http";
 import authMiddleware from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
+
 const router = express.Router();
 
 router.get(

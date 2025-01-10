@@ -1,4 +1,4 @@
-import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
 
 import { ChartConfig, ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { EnumSkillStatus, numberToSkill, skillToNumber } from "@sigl/types";

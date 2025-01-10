@@ -1,11 +1,10 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { httpStatusCodes } from "./http-status-codes";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-import { httpStatusCodes } from "./http-status-codes";
 
 export function getErrorInformation(code: string | number) {
   if (typeof code === "number") {

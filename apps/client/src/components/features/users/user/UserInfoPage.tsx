@@ -15,8 +15,8 @@ import { DiarySchema, EnumUserRole } from "@sigl/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ApprenticeRoleInfo } from "@/components/features/users/user/apprenticeRoleInfo.tsx";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
+import z from "zod";
 
 export type GroupSchemaType = z.infer<typeof DiarySchema.getData>;
 

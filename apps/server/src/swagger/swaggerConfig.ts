@@ -2,13 +2,13 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 import express from "express";
-const router = express.Router();
-
 import env from "../services/env.service";
 
 import tags from "./tags.json";
 import schemas from "./schemas.json";
 import paths from "./paths.json";
+
+const router = express.Router();
 
 const swaggerSpec = swaggerJsDoc({
   definition: {

@@ -1,6 +1,5 @@
 import { db } from "../../src/providers/db";
 import password from "../../src/services/password.service";
-import { EnumUserRole } from "@sigl/types";
 
 async function main() {
   console.log("Initialisation de la base de données...");
@@ -54,47 +53,214 @@ async function main() {
       },
     },
   });
+  // Apprenti avec un journal de formation
   await db.user.create({
     data: {
-      lastName: "Cholet",
-      firstName: "Coraline",
-      birthDate: new Date("1990-01-01"),
+      lastName: "Julie",
+      firstName: "Meulin",
+      birthDate: new Date("1998-05-23"),
       active: true,
-      email: "coraline@fastgn.com",
-      password: await password.crypt("root"),
-      gender: "female",
+      email: "julie.meulin@eseo.fr",
+      password: await password.crypt("password"),
+      gender: "male",
       phone: "1234567890",
-      curriculumManager: {
-        create: {},
-      }
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 1",
+                  content: `note <h1 class="heading-node">Première semaine en entreprise 📚</h1><p class="text-node">Cette première semaine en entreprise a été à la fois intense et enrichissante. Dès mon arrivée, j’ai été accueilli par l’équipe technique qui m’a présenté les locaux, les outils de travail et surtout les projets en cours. J’ai rapidement compris que l’environnement ici est à la fois dynamique et collaboratif</p><p class="text-node">Les premiers jours ont été consacrés à l’installation de mon environnement de développement : configuration des outils comme <strong>Git</strong>, l’IDE principal et les différents logiciels nécessaires au projet.</p><p class="text-node">Mon tuteur m’a guidé à chaque étape, en prenant le temps d’expliquer le workflow utilisé dans l’équipe, notamment les bonnes pratiques en matière de versionnement et de revue de code.</p><p class="text-node"><span style="color: var(--mt-accent-red)"><u>Voici un exemple de commande que j’ai utilisée :</u></span></p><pre class="block-node"><code>git commit -m "Changement de version de Node"</code></pre><p class="text-node"></p><p class="text-node">J’ai également participé à ma première réunion <strong>stand-up</strong> quotidienne où chacun présente ses avancées et ses objectifs pour la journée. C’était impressionnant de voir la fluidité de la communication dans l’équipe et cela m’a permis de mieux comprendre comment chaque membre contribue au projet global.</p><p class="text-node">En fin de semaine, j’ai commencé à travailler sur ma première tâche concrète : corriger un bug mineur et ajouter une petite fonctionnalité. Même si cela m’a pris plus de temps que prévu, j’ai appris énormément, notamment sur le débogage et l’importance de lire attentivement le code existant.</p><p class="text-node">Pour résumer, cette première semaine m’a montré que le métier de développeur ne se limite pas à écrire du code : il s’agit aussi de travailler en équipe, de comprendre les besoins du projet et de rester curieux pour progresser. Je me sens déjà plus confiant et motivé pour la suite de cette aventure. 🚀</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
     },
-    });
-  await db.user.create({
-    data: {
-      lastName: "Balkany",
-      firstName: "Patrique",
-      birthDate: new Date("1990-01-01"),
-      active: true,
-      email: "balkany@fastgn.com",
-      password: await password.crypt("root"),
-      gender: "male",
-      phone: "1234567891",
-      educationalTutor: {
-        create: {},
-      }
-    }
   });
-  await db.user.create({
-    data: {
-      lastName: "Mentor",
-      firstName: "Mentor",
-      birthDate: new Date("1990-01-01"),
+
+  const groups = [
+    { name: "Pointcaré", description: "Promotion 2022/2025", color: "blue" },
+    { name: "Newton", description: "Promotion 2021/2024", color: "green" },
+    { name: "Galilée", description: "Promotion 2020/2023", color: "red" },
+    { name: "Curie", description: "Promotion 2019/2022", color: "purple" },
+    { name: "Tesla", description: "Promotion 2023/2026", color: "orange" },
+    { name: "Edison", description: "Promotion 2024/2027", color: "sky" },
+    { name: "Kepler", description: "Promotion 2025/2028", color: "yellow" },
+    { name: "Delmotte", description: "", color: "pink" },
+    { name: "Fleming", description: "", color: "black" },
+    { name: "Hopfield", description: "", color: "brown" },
+  ];
+
+  for (const group of groups) {
+    await db.group.create({ data: group });
+  }
+
+  const events = [
+    {
+      type: "s6_report",
+      description: "Rapport projet simplifé",
+      endDate: new Date("2025-12-15"),
+      groups: [1, 3],
+    },
+    {
+      type: "s6_report",
+      description: "Synthèse S6",
+      endDate: new Date("2023-11-20"),
+      groups: [2, 8],
+    },
+    {
+      type: "s7_report",
+      description: "Synthèse S7",
+      endDate: new Date("2025-10-10"),
+      groups: [4, 6],
+    },
+    {
+      type: "ping_pre_report",
+      description: "Rapport avant projet",
+      endDate: new Date("2024-09-05"),
+      groups: [5, 7],
+    },
+    {
+      type: "ping_pre_report",
+      description: "Diaporama de soutenance",
+      endDate: new Date("2023-08-25"),
+      groups: [1, 9],
+    },
+    {
+      type: "ping_pre_report",
+      description: "Confidentialité",
+      endDate: new Date("2023-07-18"),
+      groups: [3, 6],
+    },
+    {
+      type: "s8_report",
+      description: "Rapport de synthèse S8",
+      endDate: new Date("2024-06-22"),
+      groups: [2, 8, 9],
+    },
+    {
+      type: "ping_mi_report",
+      description: "Rapport de mi projet",
+      endDate: new Date("2023-05-13"),
+      groups: [4, 5, 7],
+    },
+    {
+      type: "ping_report",
+      description: "Rapport de fin de projet",
+      endDate: new Date("2023-04-30"),
+      groups: [1, 3, 6],
+    },
+    {
+      type: "s5_report",
+      description: "Synthèse S5",
+      endDate: new Date("2023-03-11"),
+      groups: [2, 8],
+    },
+  ];
+
+  const users = [
+    {
+      lastName: "Smith",
+      firstName: "Emma",
+      birthDate: new Date("1993-04-05"),
       active: true,
-      email: "mentor@fastgn.com",
-      password: await password.crypt("root"),
+      email: "emma@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "1111111111",
+      groups: {
+        connect: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Johnson",
+      firstName: "Liam",
+      birthDate: new Date("1994-05-06"),
+      active: true,
+      email: "liam@domain.com",
+      password: await password.crypt("password"),
       gender: "male",
-      phone: "1234567892",
-      apprenticeMentor: {
+      phone: "2222222222",
+      groups: {
+        connect: [{ id: 4 }, { id: 5 }, { id: 6 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 1",
+                  content: `<h1 class="heading-node">Première semaine en entreprise</h1><p class="text-node">La première semaine en entreprise a été intense et enrichissante</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      lastName: "Williams",
+      firstName: "Olivia",
+      birthDate: new Date("1995-06-07"),
+      active: true,
+      email: "olivia@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "3333333333",
+      groups: {
+        connect: [{ id: 7 }, { id: 8 }, { id: 9 }],
+      },
+      teacher: {
+        create: {},
+      },
+    },
+    {
+      lastName: "Brown",
+      firstName: "Noah",
+      birthDate: new Date("1996-07-08"),
+      active: true,
+      email: "noah@domain.com",
+      password: await password.crypt("password"),
+      gender: "male",
+      phone: "4444444444",
+      groups: {
+        connect: [{ id: 1 }, { id: 4 }, { id: 7 }],
+      },
+      apprentice: {
+        create: {
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 2",
+                  content: `<h1 class="heading-node">Deuxième semaine en entreprise</h1><p class="text-node">La deuxième semaine en entreprise a été un peu plus difficile que la première</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      lastName: "Jones",
+      firstName: "Ava",
+      birthDate: new Date("1997-08-09"),
+      active: true,
+      email: "ava@domain.com",
+      password: await password.crypt("password"),
+      gender: "female",
+      phone: "5555555555",
+      groups: {
+        connect: [{ id: 2 }, { id: 5 }, { id: 8 }],
+      },
+      teacher: {
         create: {},
       },
     },
