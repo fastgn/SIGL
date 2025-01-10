@@ -38,7 +38,7 @@ export const UserDetailsPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<User | null>(null);
   const [diary, setDiary] = useState<GroupSchemaType | null>(null);
-  const { isAdmin } = useUser();
+  const { isAdmin, roles } = useUser();
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -151,7 +151,11 @@ export const UserDetailsPage = () => {
               <div className="w-3/5">
                 <Bloc
                   title="Informations utilisateur"
-                  actions={userInfoActions}
+                  actions={
+                    isAdmin || roles[0] === EnumUserRole.APPRENTICE_COORDINATOR
+                      ? userInfoActions
+                      : undefined
+                  }
                   defaultOpen
                   isOpenable
                 >
