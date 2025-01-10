@@ -87,4 +87,32 @@ router.get(
   },
 );
 
+router.patch(
+  "/:id",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, address, city, country, description, apprenticeNumber, opco } = req.body;
+      logger.info(`Modification de l'entreprise`);
+      const result = await companyController.updateCompany(
+        parseInt(id),
+        name,
+        address,
+        city,
+        country,
+        description,
+        apprenticeNumber,
+        opco,
+      );
+      logger.info(`Entreprise modifiée`);
+
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
 export default router;

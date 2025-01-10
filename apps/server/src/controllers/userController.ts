@@ -343,7 +343,158 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+  updateTutors: async (
+    id: number,
+    educationalTutorId: number,
+    apprenticeMentorId: number,
+  ): Promise<ControllerResponse> => {
+    try {
+      const apprenticeExists = await db.apprentice.findUnique({
+        where: { userId: id },
+      });
 
+      const tutor = await db.educationalTutor.findUnique({
+        where: { userId: educationalTutorId },
+      });
+
+      const mentor = await db.apprenticeMentor.findUnique({
+        where: { userId: apprenticeMentorId },
+      });
+
+      if (!apprenticeExists || !tutor || !mentor) {
+        logger.error(`Apprentice with id ${id} not found or tutor or mentor not found`);
+        return ControllerError.NOT_FOUND({
+          message: `Apprentice with id ${id} not found`,
+        });
+      }
+
+      const apprentice = await db.apprentice.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          educationalTutorId: tutor.id,
+          apprenticeMentorId: mentor.id,
+        },
+      });
+
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getApprentice: async (id: number): Promise<ControllerResponse> => {
+    try {
+      const apprentice = await db.apprentice.findUnique({
+        where: {
+          userId: id,
+        },
+        include: {
+          company: true,
+          educationalTutor: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+          apprenticeMentor: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!apprentice) {
+        logger.error(`Apprentice with id ${id} not found`);
+        return ControllerError.NOT_FOUND({
+          message: `Apprentice with id ${id} not found`,
+        });
+      }
+      logger.info(`donné apprenti :  ${apprentice}`);
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getAllTutors: async (): Promise<ControllerResponse> => {
+    try {
+      const tutors = await db.educationalTutor.findMany({
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: tutors });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getAllMentors: async (): Promise<ControllerResponse> => {
+    try {
+      const mentors = await db.apprenticeMentor.findMany({
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: mentors });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  updatePost: async (id: number, poste: string): Promise<ControllerResponse> => {
+    try {
+      const apprentice = await db.apprentice.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          poste: poste,
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  updateCompany: async (id: number, companyId: number): Promise<ControllerResponse> => {
+    try {
+      const apprentice = await db.apprentice.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          companyId: companyId,
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
   getFromTrainingDiary: async (trainingDiaryId: number): Promise<ControllerResponse> => {
     try {
       const trainingDiary = await db.trainingDiary.findUnique({
