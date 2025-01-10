@@ -40,40 +40,38 @@ export const FilesCell = ({ files, event, removeFiles }: FilesCellProps) => {
   };
 
   return (
-    <ScrollArea className="w-full">
-      <div className="flex flex-row gap-3">
-        {files.length !== 0 ? (
-          files.map((file) => (
-            <Badge
-              key={file.name}
-              variant="outline"
-              className="text-nowrap p-0 pl-2 border-gray-400 shadow-1"
+    <div className="flex flex-row gap-3 overflow-x-auto py-1">
+      {files.length !== 0 ? (
+        files.map((file) => (
+          <Badge
+            key={file.name}
+            variant="outline"
+            className="text-nowrap p-0 pl-2 border-gray-400 shadow-1"
+          >
+            <a
+              href={env.get.API_URL + "/file/" + file.blobName}
+              target="_blank"
+              rel="noreferrer"
+              download
             >
-              <a
-                href={env.get.API_URL + "/file/" + file.blobName}
-                target="_blank"
-                rel="noreferrer"
-                download
+              {file.name}
+              <Button
+                variant="empty"
+                className="text-red-600 hover:text-red-600/80 p-0 h-6 ml-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  deleteFile(file);
+                }}
               >
-                {file.name}
-                <Button
-                  variant="empty"
-                  className="text-red-600 hover:text-red-600/80 p-0 h-6 ml-1"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    deleteFile(file);
-                  }}
-                >
-                  <Trash2 className="h-3" />
-                </Button>
-              </a>
-            </Badge>
-          ))
-        ) : (
-          <p className="text-gray-300">{t("events.table.noFiles")}</p>
-        )}
-      </div>
-    </ScrollArea>
+                <Trash2 className="h-3" />
+              </Button>
+            </a>
+          </Badge>
+        ))
+      ) : (
+        <p className="text-gray-300">{t("events.table.noFiles")}</p>
+      )}
+    </div>
   );
 };
