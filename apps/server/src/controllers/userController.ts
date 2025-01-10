@@ -100,6 +100,43 @@ const userController = {
     }
   },
 
+  update: async (
+    id: number,
+    payload: z.infer<typeof UserSchema.create>,
+  ): Promise<ControllerResponse> => {
+    try {
+      let form;
+      // Validate the input data
+      try {
+        const { role, ...rest } = payload;
+        form = UserSchema.create.omit({ role: true }).parse(rest);
+      } catch (e: any) {
+        logger.error("Invalid params", payload, "\n error : \n", e.errors);
+        return ControllerError.INVALID_PARAMS();
+      }
+
+      const user = await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          birthDate: form.birthDate,
+        },
+      });
+
+      // Retirer le mot de passe de la réponse
+      const userWithoutPassword = removePassword(user);
+      return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+
   get: async (id: number): Promise<ControllerResponse> => {
     try {
       if (!id || isNaN(id)) {

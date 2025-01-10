@@ -82,7 +82,7 @@ export const UserDetailsPage = () => {
   const handleSave = () => {
     setUser(editedUser);
     setIsEditing(false);
-    // In a real application, you would send the updated user data to your API here
+    api.put(`/user/${id}`, editedUser);
   };
 
   const handleCancel = () => {
@@ -224,8 +224,8 @@ export const UserDetailsPage = () => {
                         name="role"
                         value={editedUser.role}
                         onChange={handleInputChange}
-                        readOnly={!isEditing}
-                        className={!isEditing ? noEditFields : ""}
+                        readOnly={true}
+                        className={noEditFields}
                       />
                     </div>
                     <div className="space-y-2">

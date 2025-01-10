@@ -39,6 +39,24 @@ router.get("/", authMiddleware(), async (_req: Request, res: Response) => {
   }
 });
 
+router.put(
+  "/:id",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      logger.info(`Modification de l'utilisateur ${id}`);
+      const body = req.body;
+      const result = await userController.update(id, body);
+      logger.info(`Utilisateur ${id} modifié`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
 router.get(
   "/count",
   authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),

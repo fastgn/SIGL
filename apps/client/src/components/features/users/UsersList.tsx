@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { UserType } from "@/components/features/users/UsersPage";
+import { useTranslation } from "react-i18next";
 
 interface UserCardListProps {
   users: UserType[];
@@ -26,6 +27,7 @@ interface UserCardListProps {
 }
 
 export const UsersList = ({ users, onDeleteUser, onRequestRefresh }: UserCardListProps) => {
+  const { t } = useTranslation();
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
 
   const handleDeleteConfirm = () => {
@@ -72,7 +74,7 @@ export const UsersList = ({ users, onDeleteUser, onRequestRefresh }: UserCardLis
             <CardContent>
               <CardTitle className="text-lg font-semibold leading-7">{user.name}</CardTitle>
               <p className="text-sm">{user.email}</p>
-              <p className="text-sm text-muted-foreground">{user.roles}</p>
+              <p className="text-sm text-muted-foreground">{t(`globals.roles.${user.roles}`)}</p>
             </CardContent>
           </div>
           <div className="flex flex-col justify-between items-center self-stretch">

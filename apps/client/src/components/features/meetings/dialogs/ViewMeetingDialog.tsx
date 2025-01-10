@@ -47,7 +47,7 @@ export const ViewMeetingDialog = ({ meeting }: { meeting: MeetingSchemaType }) =
         <ScrollArea className="max-h-40 w-full">
           <div className="flex flex-col items-start gap-3">
             {meeting.presenter.map((p) => (
-              <div className="flex items-center gap-3">
+              <div key={p.lastName + p.firstName} className="flex items-center gap-3">
                 <Avatar className="h-9 w-9">
                   <AvatarImage
                     src={`https://api.dicebear.com/6.x/initials/svg?seed=${p.firstName + p.lastName}`}
@@ -72,7 +72,7 @@ export const ViewMeetingDialog = ({ meeting }: { meeting: MeetingSchemaType }) =
         <ScrollArea className="max-h-40">
           <div className="flex flex-col items-start gap-3">
             {meeting.jury.map((j) => (
-              <div className="flex items-center gap-3">
+              <div key={j.firstName + j.lastName} className="flex items-center gap-3">
                 <Avatar className="h-9 w-9">
                   <AvatarImage
                     src={`https://api.dicebear.com/6.x/initials/svg?seed=${j.firstName + j.lastName}`}
