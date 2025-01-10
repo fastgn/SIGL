@@ -34,5 +34,9 @@
   {
     "name": "Notes",
     "description": "Operations sur les notes"
+  },
+  {
+    "name": "Meeting",
+    "description": "Operations sur les réunions"
   }
 ]

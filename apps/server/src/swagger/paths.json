@@ -516,6 +516,32 @@
       }
     }
   },
+  "/events/user/{id}": {
+    "get": {
+      "summary": "Récupération des événements d'un utilisateur",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de récupérer les événements auxquels il est inscrit.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de l'utilisateur."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Liste des événements de l'utilisateur récupérée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
+    }
+  },
   "/note": {
     "post": {
       "summary": "Création d'une note",
@@ -1424,6 +1450,157 @@
           "bearerAuth": []
         }
       ]
+    }
+  },
+  "/meeting/": {
+    "post": {
+      "summary": "Create a meeting",
+      "description": "Create a new meeting with the provided details.",
+      "tags": ["Meeting"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Title of the meeting."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the meeting."
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date and time of the meeting."
+                },
+                "presenter": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "List of user IDs of the participants."
+                },
+                "jury": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "List of user IDs of the jury."
+                },
+                "events": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "List of event IDs of the meeting."
+                }
+              },
+              "required": ["title", "description", "date", "presenter", "jury"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Meeting created successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "get": {
+      "summary": "Get all meetings",
+      "description": "Retrieve a list of all meetings.",
+      "tags": ["Meeting"],
+      "responses": {
+        "200": {
+          "description": "List of meetings retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/meeting/{id}": {
+    "get": {
+      "summary": "Get a specific meeting",
+      "description": "Retrieve details of a specific meeting by ID.",
+      "tags": ["Meeting"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the meeting to retrieve.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Meeting retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete a meeting",
+      "description": "Delete an existing meeting by ID.",
+      "tags": ["Meeting"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the meeting to delete.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Meeting deleted successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/meeting/user/{id}": {
+    "get": {
+      "summary": "Get all meetings of a user",
+      "description": "Retrieve a list of all meetings of a user by ID.",
+      "tags": ["Meeting"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the user to retrieve meetings.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of meetings retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
     }
   },
   "/tutor/apprentices/{id}": {

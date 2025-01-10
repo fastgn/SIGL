@@ -115,6 +115,51 @@ const eventController = {
     }
   },
 
+  getEventsByUser: async (userId: number) => {
+    try {
+      const user = await db.user.findFirst({
+        where: { id: userId },
+        include: {
+          groups: true,
+        },
+      });
+
+      if (!user) {
+        logger.error(`Utilisateur introuvable pour ID: ${userId}`);
+        return ControllerError.USER_NOT_FOUND({ message: "L'utilisateur n'existe pas" });
+      }
+
+      const groups = user.groups;
+      if (!groups) {
+        logger.error(`Aucun groupe associé à l'utilisateur ID: ${userId}`);
+        return ControllerError.GROUP_NOT_FOUND({ message: "L'utilisateur n'a pas de groupe" });
+      }
+
+      const groupIds = user.groups.map((group) => group.id);
+
+      const events = await db.event.findMany({
+        where: {
+          groups: {
+            some: { id: { in: groupIds } },
+          },
+        },
+        include: {
+          files: true,
+        },
+      });
+
+      return ControllerSuccess.SUCCESS({
+        message: "Évènements récupérés avec succès",
+        data: events,
+      });
+    } catch (error: any) {
+      logger.error(`Erreur dans getEventsByUser: ${error.message}`);
+      return ControllerError.INTERNAL({
+        message: "Erreur serveur lors de la récupération des évènements",
+      });
+    }
+  },
+
   createEvent: async (description: string, endDate: Date, type: string) => {
     const event = await db.event.create({
       data: {
