@@ -57,6 +57,7 @@ import deliverableRoutes from "./routes/deliverableRoutes";
 import noteRoutes from "./routes/noteRoutes";
 import compagnyAccountRoute from "./routes/compagnyAccountRoute";
 import companyRoutes from "./routes/companyRoutes";
+import meetingRoutes from "./routes/meetingRoutes";
 import tutorRoutes from "./routes/tutorRoutes";
 
 app.use("/auth", authRoutes);
@@ -68,6 +69,7 @@ app.use("/note", noteRoutes);
 app.use("/compagnyAccount", compagnyAccountRoute);
 app.use("/deliverables", deliverableRoutes);
 app.use("/company", companyRoutes);
+app.use("/meeting", meetingRoutes);
 app.use("/biannualEvaluations", biannualEvaluationRoutes);
 app.use("/tutor", tutorRoutes);
 

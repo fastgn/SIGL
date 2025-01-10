@@ -20,6 +20,7 @@ import { AdminProvider } from "./contexts/UserContext";
 import { TrainingDiaryPage } from "./components/features/users/user/trainingDiary/TrainingDiaryPage";
 import "./translations/i18n";
 import { MyFilesPage } from "./components/features/myFiles/MyFilesPage";
+import { MeetingPage } from "./components/features/meetings/MeetingPage";
 
 env.init();
 api.init(env.get.API_URL);
@@ -48,6 +49,7 @@ createRoot(document.getElementById("root")!).render(
                 element={<ProtectedRoute component={DeliverablePage} />}
               />
               <Route path="/myfiles" element={<ProtectedRoute component={MyFilesPage} />} />
+              <Route path="/meetings" element={<ProtectedRoute component={MeetingPage} />} />
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="*" element={<Navigate to="/home" />} />
             </Routes>

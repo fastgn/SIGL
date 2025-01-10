@@ -7,6 +7,7 @@ import { useUser } from "@/contexts/UserContext.tsx";
 import { toast } from "sonner";
 import { DeliverableCard } from "./DeliverableCard";
 import { getErrorInformation } from "@/utilities/http";
+import { UpdateIcon } from "@radix-ui/react-icons";
 
 type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
@@ -56,7 +57,9 @@ export const DeliverablePage = () => {
         <h1 className="text-3xl font-bold">Livrables</h1>
 
         {isLoading ? (
-          <p className="text-gray-500">Chargement des événements...</p>
+          <div className="w-full flex justify-center items-center">
+            <UpdateIcon className="h-10 w-10 animate-spin" />
+          </div>
         ) : events.length > 0 ? (
           <div className="w-full">
             <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">

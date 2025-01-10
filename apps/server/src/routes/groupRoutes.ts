@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import authMiddleware from "../middleware/authMiddleware";
 import logger from "../utils/logger";
-import eventController from "../controllers/eventController";
 import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import { groupController } from "../controllers/groupController";

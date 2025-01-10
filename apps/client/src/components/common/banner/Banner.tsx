@@ -65,6 +65,10 @@ export const Banner = () => {
       name: "Évènements",
       link: "/events",
     },
+    {
+      name: "Réunions",
+      link: "/meetings",
+    },
   ];
 
   const navItemsUser = [
@@ -90,6 +94,10 @@ export const Banner = () => {
     {
       name: "Notes",
       link: "/notes",
+    },
+    {
+      name: "Réunions",
+      link: "/meetings",
     },
   ];
 
