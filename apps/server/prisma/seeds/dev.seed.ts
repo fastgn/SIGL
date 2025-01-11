@@ -19,6 +19,35 @@ async function main() {
       },
     },
   });
+  // Entreprises
+  await db.company.create({
+    data: {
+      name: "ElastiqueSearch",
+      description: "Entreprise spécialisée dans le développement de moteurs de recherche",
+      address: "10 rue du dix",
+      apprenticeNumber: 0,
+      city: "Paris",
+    },
+  });
+  await db.company.create({
+    data: {
+      name: "La boucherie de Gefrey",
+      description: "Boucherie traditionnelle",
+      address: "La boutique en bas là",
+      apprenticeNumber: 0,
+      city: "Quimper",
+    },
+  });
+  await db.company.create({
+    data: {
+      name: "EA Guingamp",
+      description: "En avant Guingamp!",
+      address: "Stade de Guingamp",
+      apprenticeNumber: 0,
+      city: "Guingamp",
+    },
+  });
+
   await db.user.create({
     data: {
       lastName: "Akerman",
@@ -31,6 +60,11 @@ async function main() {
       phone: "6666666666",
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 3,
+            },
+          },
           trainingDiary: {
             create: {},
           },
@@ -66,6 +100,11 @@ async function main() {
       phone: "1234567890",
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 3,
+            },
+          },
           trainingDiary: {
             create: {
               notes: {
@@ -192,6 +231,11 @@ async function main() {
       },
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 1,
+            },
+          },
           trainingDiary: {
             create: {
               notes: {
@@ -235,6 +279,11 @@ async function main() {
       },
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 2,
+            },
+          },
           trainingDiary: {
             create: {
               notes: {
@@ -278,6 +327,11 @@ async function main() {
       },
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 2,
+            },
+          },
           trainingDiary: {
             create: {
               notes: {
@@ -331,6 +385,11 @@ async function main() {
       },
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 2,
+            },
+          },
           trainingDiary: {
             create: {
               notes: {
@@ -374,6 +433,11 @@ async function main() {
       },
       apprentice: {
         create: {
+          company: {
+            connect: {
+              id: 2,
+            },
+          },
           trainingDiary: {
             create: {
               notes: {
@@ -767,6 +831,23 @@ async function main() {
             id: 1,
           },
         },
+      },
+    });
+  }
+  //pour chaque entreprise, compter le nombre d'apprentie et mettre à jour ApprenticeNumber
+  const companies = await db.company.findMany();
+  for (const company of companies) {
+    const NbApprentices = await db.apprentice.count({
+      where: {
+        companyId: company.id,
+      },
+    });
+    await db.company.update({
+      where: {
+        id: company.id,
+      },
+      data: {
+        apprenticeNumber: NbApprentices,
       },
     });
   }
