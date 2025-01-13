@@ -9,6 +9,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./components/features/login/LoginPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
+import "./styles/grid.css";
+import "./styles/resize.css";
 import api from "./services/api.service";
 import env from "./services/env.service";
 import { HomePage } from "./components/features/home/HomePage";
@@ -19,6 +21,12 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { AdminProvider } from "./contexts/UserContext";
 import { TrainingDiaryPage } from "./components/features/users/user/trainingDiary/TrainingDiaryPage";
 import "./translations/i18n";
+import { MyFilesPage } from "./components/features/myFiles/MyFilesPage";
+import { MeetingPage } from "./components/features/meetings/MeetingPage";
+import { EvalutionPage } from "./components/features/apprentice/EvaluationPage";
+import { MyApprenticePage } from "./components/features/tutor/MyApprenticePage";
+import { CompaniesPage } from "./components/features/companies/CompaniesPage";
+import { DiaryPage } from "./components/features/diary/DiaryPage";
 
 env.init();
 api.init(env.get.API_URL);
@@ -46,6 +54,15 @@ createRoot(document.getElementById("root")!).render(
                 path="/deliverables"
                 element={<ProtectedRoute component={DeliverablePage} />}
               />
+              <Route path="/myfiles" element={<ProtectedRoute component={MyFilesPage} />} />
+              <Route path="/meetings" element={<ProtectedRoute component={MeetingPage} />} />
+              <Route path="/evaluation" element={<ProtectedRoute component={EvalutionPage} />} />
+              <Route
+                path="/myApprentice"
+                element={<ProtectedRoute component={MyApprenticePage} />}
+              />
+              <Route path="/companies" element={<ProtectedRoute component={CompaniesPage} />} />
+              <Route path="/diary/:id" element={<ProtectedRoute component={DiaryPage} />} />
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="*" element={<Navigate to="/home" />} />
             </Routes>

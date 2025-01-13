@@ -17,11 +17,28 @@
       "s8_report": "Rapport S8",
       "ping_pre_report": "Rapport pré PING",
       "ping_mi_report": "Rapport avancement PING",
-      "ping_report": "Rapport PING"
+      "ping_report": "Rapport PING",
+      "other": "Autre",
+      "educational_tutor": "$t(globals.roles.educational_tutor)",
+      "apprentice": "$t(globals.roles.apprentice)",
+      "apprentice_mentor": "$t(globals.roles.apprentice_mentor)",
+      "apprentice_coordinator": "$t(globals.roles.apprentice_coordinator)",
+      "teacher": "$t(globals.roles.teacher)",
+      "curiculum_manager": "$t(globals.roles.curiculum_manager)",
+      "admin": "$t(globals.roles.admin)"
     },
     "sortOptions": {
       "acs": "Croissant",
       "desc": "Décroissant"
+    },
+    "roles": {
+      "educational_tutor": "Tuteur pédagogique",
+      "apprentice": "Apprenti",
+      "apprentice_mentor": "Maître d'apprentissage",
+      "apprentice_coordinator": "Coordinateur d'apprentissage",
+      "teacher": "Enseignant",
+      "curiculum_manager": "Responsable de formation",
+      "admin": "Administrateur"
     }
   },
   "home": {},
@@ -70,5 +87,20 @@
       "delete": "Évènement supprimé avec succès"
     }
   },
-  "groups": {}
+  "groups": {},
+  "semesters": {
+    "semester_5": "Semestre 5",
+    "semester_6": "Semestre 6",
+    "semester_7": "Semestre 7",
+    "semester_8": "Semestre 8",
+    "semester_9": "Semestre 9",
+    "semester_10": "Semestre 10"
+  },
+  "skills": {
+    "status": {
+      "in_progress": "En cours",
+      "covered": "Validé",
+      "not_covered": "Non abordé"
+    }
+  }
 }

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Input } from "./input";
 
 type Option = { label: string; value: string };
 
@@ -35,7 +36,12 @@ const MultiSelect = ({
 
   const handleSelectChange = (value: string) => {
     if (!selectedItems.includes(value)) {
-      setSelectedItems((prev) => [...prev, value]);
+      setSelectedItems((prev) => {
+        if (!prev) {
+          return [value];
+        }
+        return [...prev, value];
+      });
     } else {
       const referencedArray = [...selectedItems];
       const indexOfItemToBeRemoved = referencedArray.indexOf(value);
@@ -78,7 +84,7 @@ const MultiSelect = ({
             >
               <div className="text-sm font-normal">
                 {selectedItems.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex gap-2 flex-wrap h-6 overflow-hidden">
                     {selectedItems.map((selectedValue) => {
                       const selectedLabel =
                         values.find((option) => option.value === selectedValue)?.label ||
@@ -108,11 +114,11 @@ const MultiSelect = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent
           style={{ width: dropdownWidth }}
-          className="w-full"
+          className="w-full max-h-60 overflow-y-auto"
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
-          <div className="p-2">
-            <input
+          <div className="sticky -top-1 bg-white z-10 p-2 border-b">
+            <Input
               type="text"
               placeholder="Search..."
               value={searchValue}
@@ -122,16 +128,18 @@ const MultiSelect = ({
             />
           </div>
 
-          {filteredOptions.map((value, index) => (
-            <DropdownMenuCheckboxItem
-              onSelect={(e) => e.preventDefault()}
-              key={index}
-              checked={isOptionSelected(value.value)}
-              onCheckedChange={() => handleSelectChange(value.value)}
-            >
-              {value.label}
-            </DropdownMenuCheckboxItem>
-          ))}
+          <div>
+            {filteredOptions.map((value, index) => (
+              <DropdownMenuCheckboxItem
+                onSelect={(e) => e.preventDefault()}
+                key={index}
+                checked={isOptionSelected(value.value)}
+                onCheckedChange={() => handleSelectChange(value.value)}
+              >
+                {value.label}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -190,7 +190,7 @@ export const EventForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(eventObject ? onUpdate : onSubmit)}
-            className="relative grid gap-6 py-4"
+            className="flex flex-col gap-3"
           >
             <FormField
               control={form.control}

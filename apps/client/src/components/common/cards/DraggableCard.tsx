@@ -1,4 +1,3 @@
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useDrag, useDrop } from "react-dnd";
 
 const ItemType = "CARD";

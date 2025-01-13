@@ -56,77 +56,264 @@
       }
     }
   },
-  "/user/count": {
-    "get": {
-      "summary": "Récupération du nombre total d'utilisateurs",
+  "/user": {
+    "post": {
+      "summary": "Créer un nouvel utilisateur",
       "tags": ["User"],
-      "description": "Permet à un admin de récupérer le nombre total d'utilisateurs",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "role": "APPRENTICE"
+              }
+            }
+          }
+        }
+      },
       "responses": {
         "200": {
-          "description": "Récupération du nombre total d'utilisateurs",
+          "description": "Utilisateur créé avec succès",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
-                  "data": {
-                    "type": "integer",
-                    "description": "Nombre total d'utilisateurs"
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john.doe@example.com",
+                  "role": "APPRENTICE"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    },
+    "get": {
+      "summary": "Récupérer tous les utilisateurs",
+      "tags": ["User"],
+      "responses": {
+        "200": {
+          "description": "Liste des utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john.doe@example.com",
+                    "role": "ADMIN"
                   }
                 }
               }
             }
           }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/user/{id}": {
+    "get": {
+      "summary": "Récupérer un utilisateur spécifique",
+      "tags": ["User"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Informations de l'utilisateur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john.doe@example.com",
+                  "role": "APPRENTICE"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    },
+    "put": {
+      "summary": "Mettre à jour un utilisateur",
+      "tags": ["User"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "Jane Doe",
+                "email": "jane.doe@example.com",
+                "role": "ADMIN"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Utilisateur mis à jour avec succès",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "id": 1,
+                  "name": "Jane Doe",
+                  "email": "jane.doe@example.com",
+                  "role": "ADMIN"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Supprimer un utilisateur",
+      "tags": ["User"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Utilisateur supprimé avec succès"
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/user/count": {
+    "get": {
+      "summary": "Récupérer le nombre total d'utilisateurs",
+      "tags": ["User"],
+      "responses": {
+        "200": {
+          "description": "Nombre total d'utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "count": 150
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/user": {
+    "get": {
+      "summary": "Obtenir la liste de tous les utilisateurs",
+      "tags": ["User"],
+      "responses": {
+        "200": {
+          "description": "Liste des utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john.doe@example.com",
+                    "role": "ADMIN"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
         }
       }
     }
   },
   "/user/count/role": {
     "get": {
-      "summary": "Récupération du nombre total d'utilisateurs par role",
+      "summary": "Récupérer le nombre d'utilisateurs par rôle",
       "tags": ["User"],
-      "description": "Permet à un admin de récupérer le nombre total d'utilisateurs par role",
       "responses": {
         "200": {
-          "description": "Récupération du nombre total d'utilisateurs par role",
+          "description": "Nombre d'utilisateurs par rôle",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
-                  "data": {
-                    "type": "object",
-                    "description": "Nombre total d'utilisateurs par role",
-                    "properties": {
-                      "apprentice": { "type": "integer", "description": "Nombre d'apprenti" },
-                      "apprentice_coordinator": {
-                        "type": "integer",
-                        "description": "Nombre de coordinateur d'apprenti"
-                      },
-                      "apprentice_mentor": {
-                        "type": "integer",
-                        "description": "Nombre de mentor d'apprenti"
-                      },
-                      "curiculum_manager": {
-                        "type": "integer",
-                        "description": "Nombre de gestionnaire de cursus"
-                      },
-                      "educational_tutor": {
-                        "type": "integer",
-                        "description": "Nombre de tuteur pédagogique"
-                      },
-                      "teacher": { "type": "integer", "description": "Nombre de professeur" },
-                      "admin": { "type": "integer", "description": "Nombre d'admin" }
-                    }
-                  }
+                "example": {
+                  "ADMIN": 10,
+                  "APPRENTICE": 120,
+                  "APPRENTICE_COORDINATOR": 20
                 }
               }
             }
           }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
         }
       }
     }
@@ -302,34 +489,267 @@
     }
   },
   "/events": {
+    "get": {
+      "summary": "Récupération des événements",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de récupérer la liste des événements",
+      "responses": {
+        "200": {
+          "description": "Liste des événements récupérée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
+    },
     "post": {
       "summary": "Création d'un événement",
       "tags": ["Event"],
-      "description": "Permet à un admin de créer un événement"
+      "description": "Permet à un admin ou coordinateur d'apprentissage de créer un événement.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "groups": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              },
+              "required": ["description", "endDate", "type"]
+            }
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "put": {
+        "summary": "Modification d'un événement",
+        "tags": ["Event"],
+        "description": "Permet à un admin ou coordinateur d'apprentissage de modifier un événement existant.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Identifiant de l'événement à modifier."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de l'événement à modifier."
+        }
+      },
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "groups": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              },
+              "required": ["description", "endDate", "type"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Événement modifié avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
     },
     "delete": {
       "summary": "Suppression d'un événement",
       "tags": ["Event"],
-      "description": "Permet à un admin de supprimer un événement"
-    },
+      "description": "Permet à un admin ou coordinateur d'apprentissage de supprimer un événement.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de l'événement à supprimer."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Événement supprimé avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
+    }
+  },
+  "/events/diary/{id}": {
     "get": {
-      "summary": "Récupération des événements",
+      "summary": "Récupération des événements d'un journal",
       "tags": ["Event"],
-      "description": "Permet à un utilisateur de récupérer la liste des événements"
-    },
-    "put": {
-      "summary": "Modification d'un événement",
+      "description": "Permet à un utilisateur de récupérer les événements associés à un journal spécifique.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant du journal."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Liste des événements du journal récupérée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
+    }
+  },
+  "/events/user/{id}": {
+    "get": {
+      "summary": "Récupération des événements d'un utilisateur",
       "tags": ["Event"],
-      "description": "Permet à un admin de modifier un événement"
+      "description": "Permet à un utilisateur de récupérer les événements auxquels il est inscrit.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de l'utilisateur."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Liste des événements de l'utilisateur récupérée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
     }
   },
   "/note": {
     "post": {
       "summary": "Création d'une note",
-      "tags": ["Notes"],
-      "description": "Permet à un utilisateur de créer une note",
+      "tags": ["Note"],
+      "description": "Permet à un utilisateur connecté de créer une note.",
       "requestBody": {
         "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": ["title", "content"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Note créée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
+    },
+    "get": {
+      "summary": "Récupération des notes",
+      "tags": ["Note"],
+      "description": "Permet à un utilisateur connecté de récupérer toutes ses notes.",
+      "responses": {
+        "200": {
+          "description": "Liste des notes récupérée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      }
+    }
+  },
+  "/note/{noteId}": {
+    "patch": {
+      "summary": "Mise à jour d'une note",
+      "tags": ["Note"],
+      "description": "Permet à un utilisateur connecté de mettre à jour une de ses notes.",
+      "parameters": [
+        {
+          "name": "noteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de la note à mettre à jour."
+        }
+      ],
+      "requestBody": {
+        "required": false,
         "content": {
           "application/json": {
             "schema": {
@@ -348,45 +768,17 @@
       },
       "responses": {
         "200": {
-          "description": "Note créée avec succès",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "integer"
-                  },
-                  "title": {
-                    "type": "string"
-                  },
-                  "content": {
-                    "type": "string"
-                  },
-                  "creationDate": {
-                    "type": "string"
-                  },
-                  "updateDate": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
+          "description": "Note mise à jour avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
         }
       }
     },
-    "get": {
-      "summary": "Récupération des notes de l'utilisateur",
-      "tags": ["Notes"],
-      "description": "Permet à un utilisateur de récupérer la liste de ses notes"
-    }
-  },
-  "/note/{noteId}": {
     "delete": {
       "summary": "Suppression d'une note",
-      "tags": ["Notes"],
-      "description": "Permet à un utilisateur de supprimer une note",
+      "tags": ["Note"],
+      "description": "Permet à un utilisateur connecté de supprimer une de ses notes.",
       "parameters": [
         {
           "name": "noteId",
@@ -395,50 +787,24 @@
           "schema": {
             "type": "integer"
           },
-          "description": "ID de la note"
-        }
-      ]
-    },
-    "patch": {
-      "summary": "Modification d'une note",
-      "tags": ["Notes"],
-      "description": "Permet à un utilisateur de modifier une note",
-      "parameters": [
-        {
-          "name": "noteId",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "integer"
-          },
-          "description": "ID de la note"
+          "description": "Identifiant de la note à supprimer."
         }
       ],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string"
-                },
-                "content": {
-                  "type": "string"
-                }
-              }
-            }
-          }
+      "responses": {
+        "200": {
+          "description": "Note supprimée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
         }
       }
     }
   },
-  "/events/diary/{id}": {
+  "/events/{id}/file": {
     "get": {
-      "summary": "Récupération des événements d'un journal",
-      "tags": ["Event", "Diary"],
-      "description": "Permet à un utilisateur de récupérer la liste des événements d'un journal",
+      "summary": "Récupération du fichier d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de récupérer le fichier d'un événement",
       "parameters": [
         {
           "name": "id",
@@ -447,29 +813,93 @@
           "schema": {
             "type": "integer"
           },
-          "description": "ID du journal"
+          "description": "ID de l'événement"
         }
       ],
       "responses": {
         "200": {
-          "description": "Récupération des événements d'un journal",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
-                  "data": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Event"
-                    }
-                  }
+          "description": "Récupération du fichier d'un événement"
+        }
+      }
+    },
+    "post": {
+      "summary": "Ajout d'un fichier à un événement",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur d'ajouter un fichier à un événement",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'événement"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "required": true,
+                  "description": "Nom du fichier"
+                },
+                "comment": {
+                  "type": "string",
+                  "required": false,
+                  "description": "Commentaire du fichier"
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "required": true,
+                  "description": "Fichier de l'événement"
                 }
               }
             }
           }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Ajout d'un fichier à un événement"
+        }
+      }
+    }
+  },
+  "/events/{id}/file/{fileId}": {
+    "delete": {
+      "summary": "Suppression d'un fichier d'un événement",
+      "tags": ["Event"],
+      "description": "Permet à un utilisateur de supprimer un fichier d'un événement",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID de l'événement"
+        },
+        {
+          "name": "fileId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du fichier"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Suppression d'un fichier d'un événement"
         }
       }
     }
@@ -487,7 +917,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "type": "array",
                     "items": {
@@ -539,8 +972,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" }
+                  "status": {
+                    "type": "integer",
+                    "description": "Status du succes de la requete"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  }
                 }
               }
             }
@@ -592,7 +1031,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "message": { "type": "string", "description": "Message de la requete" }
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  }
                 }
               }
             }
@@ -642,7 +1084,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "$ref": "#/components/schemas/Group"
                   }
@@ -650,6 +1095,110 @@
               }
             }
           }
+        }
+      }
+    }
+  },
+  "/groups/{id}/file": {
+    "get": {
+      "summary": "Récupération du fichier d'un groupe",
+      "tags": ["Group"],
+      "description": "Permet à un utilisateur de récupérer le fichier d'un groupe",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du groupe"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération du fichier d'un groupe"
+        }
+      }
+    },
+    "post": {
+      "summary": "Ajout d'un fichier à un groupe",
+      "tags": ["Group"],
+      "description": "Permet à un utilisateur d'ajouter un fichier à un groupe",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du groupe"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "required": true,
+                  "description": "Nom du fichier"
+                },
+                "comment": {
+                  "type": "string",
+                  "required": false,
+                  "description": "Commentaire du fichier"
+                },
+                "file": {
+                  "type": "string",
+                  "format": "binary",
+                  "required": true,
+                  "description": "Fichier du groupe"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Ajout d'un fichier à un groupe"
+        }
+      }
+    }
+  },
+  "/groups/{id}/file/{fileId}": {
+    "delete": {
+      "summary": "Suppression d'un fichier d'un groupe",
+      "tags": ["Group"],
+      "description": "Permet à un utilisateur de supprimer un fichier d'un groupe",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du groupe"
+        },
+        {
+          "name": "fileId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du fichier"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Suppression d'un fichier d'un groupe"
         }
       }
     }
@@ -700,15 +1249,30 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "status": {
+                    "type": "integer",
+                    "description": "Status du succes de la requete"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "type": "object",
                     "description": "Données de la requete",
                     "properties": {
-                      "id": { "type": "integer", "description": "Id du livrable" },
-                      "comment": { "type": "string", "description": "Commentaire du livrable" },
-                      "file": { "type": "string", "description": "Fichier du livrable" },
+                      "id": {
+                        "type": "integer",
+                        "description": "Id du livrable"
+                      },
+                      "comment": {
+                        "type": "string",
+                        "description": "Commentaire du livrable"
+                      },
+                      "file": {
+                        "type": "string",
+                        "description": "Fichier du livrable"
+                      },
                       "diaryId": {
                         "type": "integer",
                         "description": "Id du journal lié au livrable"
@@ -760,8 +1324,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "status": { "type": "integer", "description": "Status du succes de la requete" },
-                  "message": { "type": "string", "description": "Message de la requete" },
+                  "status": {
+                    "type": "integer",
+                    "description": "Status du succes de la requete"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Message de la requete"
+                  },
                   "data": {
                     "type": "array",
                     "items": {
@@ -772,6 +1342,844 @@
               }
             }
           }
+        }
+      }
+    }
+  },
+  "/company/": {
+    "post": {
+      "summary": "Create a company",
+      "description": "Create a new company with the provided details.",
+      "tags": ["Company"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the company."
+                },
+                "address": {
+                  "type": "string",
+                  "description": "Address of the company."
+                },
+                "city": {
+                  "type": "string",
+                  "description": "City where the company is located."
+                },
+                "country": {
+                  "type": "string",
+                  "description": "Country where the company is located."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the company."
+                },
+                "apprenticeNumber": {
+                  "type": "integer",
+                  "description": "Number of apprentices in the company."
+                },
+                "opco": {
+                  "type": "string",
+                  "description": "OPCO of the company."
+                }
+              },
+              "required": [
+                "name",
+                "address",
+                "city",
+                "country",
+                "description",
+                "apprenticeNumber",
+                "opco"
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Company created successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "get": {
+      "summary": "Get all companies",
+      "description": "Retrieve a list of all companies.",
+      "tags": ["Company"],
+      "responses": {
+        "200": {
+          "description": "List of companies retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/company/{company_id}": {
+    "get": {
+      "summary": "Get a specific company",
+      "description": "Retrieve details of a specific company by ID.",
+      "tags": ["Company"],
+      "parameters": [
+        {
+          "name": "company_id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the company to retrieve.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Company retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete a company",
+      "description": "Delete an existing company by ID.",
+      "tags": ["Company"],
+      "parameters": [
+        {
+          "name": "company_id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the company to delete.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Company deleted successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/compagnyAccount/compagny/{compagny_id}/user/{user_id}": {
+    "post": {
+      "summary": "Création d'un compte compagnie",
+      "tags": ["Company Account"],
+      "description": "Permet à un administrateur ou coordinateur apprenti de créer un compte compagnie pour un utilisateur donné.",
+      "parameters": [
+        {
+          "name": "compagny_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de la compagnie."
+        },
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de l'utilisateur."
+        }
+      ],
+      "responses": {
+        "201": {
+          "description": "Compte compagnie créé avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ]
+    }
+  },
+  "/compagnyAccount/user/{user_id}": {
+    "delete": {
+      "summary": "Suppression d'un compte compagnie",
+      "tags": ["Company Account"],
+      "description": "Permet à un administrateur ou coordinateur apprenti de supprimer un compte compagnie pour un utilisateur donné.",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de l'utilisateur."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Compte compagnie supprimé avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ]
+    }
+  },
+  "/compagnyAccount": {
+    "get": {
+      "summary": "Récupération des comptes compagnie",
+      "tags": ["Company Account"],
+      "description": "Permet à un administrateur ou coordinateur apprenti de récupérer tous les comptes compagnie.",
+      "responses": {
+        "200": {
+          "description": "Liste des comptes compagnie récupérée avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ]
+    }
+  },
+  "/compagnyAccount/compagny/{compagny_id}": {
+    "get": {
+      "summary": "Récupération d'un compte compagnie",
+      "tags": ["Company Account"],
+      "description": "Permet à un administrateur ou coordinateur apprenti de récupérer les informations d'un compte compagnie spécifique.",
+      "parameters": [
+        {
+          "name": "compagny_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "Identifiant de la compagnie."
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Compte compagnie récupéré avec succès."
+        },
+        "500": {
+          "description": "Erreur interne du serveur."
+        }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ]
+    }
+  },
+  "/meeting/": {
+    "post": {
+      "summary": "Create a meeting",
+      "description": "Create a new meeting with the provided details.",
+      "tags": ["Meeting"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Title of the meeting."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the meeting."
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date and time of the meeting."
+                },
+                "presenter": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "List of user IDs of the participants."
+                },
+                "jury": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "List of user IDs of the jury."
+                },
+                "events": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "List of event IDs of the meeting."
+                }
+              },
+              "required": ["title", "description", "date", "presenter", "jury"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Meeting created successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "get": {
+      "summary": "Get all meetings",
+      "description": "Retrieve a list of all meetings.",
+      "tags": ["Meeting"],
+      "responses": {
+        "200": {
+          "description": "List of meetings retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/meeting/{id}": {
+    "get": {
+      "summary": "Get a specific meeting",
+      "description": "Retrieve details of a specific meeting by ID.",
+      "tags": ["Meeting"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the meeting to retrieve.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Meeting retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete a meeting",
+      "description": "Delete an existing meeting by ID.",
+      "tags": ["Meeting"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the meeting to delete.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Meeting deleted successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/meeting/user/{id}": {
+    "get": {
+      "summary": "Get all meetings of a user",
+      "description": "Retrieve a list of all meetings of a user by ID.",
+      "tags": ["Meeting"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the user to retrieve meetings.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of meetings retrieved successfully."
+        },
+        "500": {
+          "description": "Internal server error."
+        }
+      }
+    }
+  },
+  "/tutor/apprentices/{id}": {
+    "get": {
+      "summary": "Récupération des apprentis d'un tuteur",
+      "tags": ["Tutor"],
+      "description": "Permet à un utilisateur de récupérer la liste des apprentis d'un tuteur",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du tuteur"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération des apprentis d'un tuteur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Apprentice"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/biannualEvaluations/trainingDiary/:trainingDiaryId": {
+    "get": {
+      "summary": "Récupération des evaluations semestrielles d'un journal",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un utilisateur de récupérer la liste des evaluations semestrielles d'un journal",
+      "parameters": [
+        {
+          "name": "trainingDiaryId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "ID du journal"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Récupération des evaluations semestrielles d'un journal",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BiannualEvaluation"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/biannualEvaluations": {
+    "post": {
+      "summary": "Création d'une evaluation semestrielle",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un tuteur de créer une evaluation semestrielle",
+      "requestBody": {
+        "description": "Evaluation semestrielle",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BiannualEvaluation"
+            }
+          }
+        },
+        "required": true
+      },
+      "responses": {
+        "201": {
+          "description": "Evaluation semestrielle créée",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BiannualEvaluation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Modification d'une evaluation semestrielle",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un tuteur de modifier une evaluation semestrielle",
+      "requestBody": {
+        "description": "Evaluation semestrielle",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BiannualEvaluation"
+            }
+          }
+        },
+        "required": true
+      },
+      "responses": {
+        "200": {
+          "description": "Evaluation semestrielle modifiée",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BiannualEvaluation"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/skills": {
+    "get": {
+      "summary": "Récupération des skills",
+      "tags": ["BiannualEvaluation"],
+      "description": "Permet à un utilisateur de récupérer la liste des skills",
+      "responses": {
+        "200": {
+          "description": "Récupération des skills",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Skill"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/dashboard/users/count": {
+    "get": {
+      "summary": "Obtenir le nombre total d'utilisateurs",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre total d'utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "example": 123
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/users/count/role": {
+    "get": {
+      "summary": "Obtenir le nombre d'utilisateurs par rôle",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre d'utilisateurs par rôle",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "ADMIN": 5,
+                  "APPRENTICE": 50,
+                  "APPRENTICE_COORDINATOR": 10
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/notes/{userId}": {
+    "get": {
+      "summary": "Obtenir les dernières notes d'un utilisateur",
+      "tags": ["Dashboard"],
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "nbNote",
+          "in": "query",
+          "required": false,
+          "description": "Nombre de notes à récupérer (par défaut 10)",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Les dernières notes de l'utilisateur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "noteId": 1,
+                    "content": "Exemple de note",
+                    "createdAt": "2025-01-10T12:34:56Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/events/{userId}": {
+    "get": {
+      "summary": "Obtenir les prochains événements d'un utilisateur",
+      "tags": ["Dashboard"],
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "maxEvent",
+          "in": "query",
+          "required": false,
+          "description": "Nombre maximum d'événements à récupérer (par défaut 10)",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Les prochains événements de l'utilisateur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "eventId": 1,
+                    "title": "Réunion de projet",
+                    "date": "2025-01-15T14:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/groups": {
+    "get": {
+      "summary": "Obtenir le nombre d'apprentis par groupe",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre d'apprentis par groupe",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "groupe1": 50,
+                  "groupe2": 60
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/apprentices/promotion": {
+    "get": {
+      "summary": "Obtenir le nombre d'apprentis par promotion",
+      "parameters": [
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "description": "Nombre maximum de promotions à récupérer (par défaut 10)",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre d'apprentis par promotion",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "promotion1": 50,
+                  "promotion2": 60
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/deliverable/event/{eventId}": {
+    "get": {
+      "summary": "Obtenir les livrables par événement",
+      "tags": ["Dashboard"],
+      "parameters": [
+        {
+          "name": "eventId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'événement pour lequel récupérer les livrables",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Les livrables associés à l'événement",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "deliverableId": 1,
+                    "title": "Livrable 1",
+                    "description": "Description du livrable",
+                    "dueDate": "2025-01-15T12:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/deliverable/event": {
+    "get": {
+      "summary": "Obtenir le nombre de livrables par événement",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Les livrables associés à chaque événement",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "eventId1": [
+                    {
+                      "deliverableId": 1,
+                      "title": "Livrable 1",
+                      "description": "Description du livrable",
+                      "dueDate": "2025-01-15T12:00:00Z"
+                    }
+                  ],
+                  "eventId2": [
+                    {
+                      "deliverableId": 2,
+                      "title": "Livrable 2",
+                      "description": "Description du livrable",
+                      "dueDate": "2025-01-15T12:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
         }
       }
     }

@@ -7,8 +7,8 @@ import { ToolbarButton } from "../toolbar-button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";

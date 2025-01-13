@@ -20,8 +20,8 @@ class ApiService {
       },
       // Code executé pour chaque erreur
       (error) => {
-        // Si nous ne sommes pas autorisé
-        if (error.response?.status === 401) {
+        // Si nous ne sommes pas autorisé et que nous ne sommes pas déjà sur la page de connexion
+        if (error.response?.status === 401 && !window.location.href.includes("/login")) {
           this.clearToken();
           window.location.href = "/login";
         }

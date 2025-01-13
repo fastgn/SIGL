@@ -1,5 +1,6 @@
 import "@/components/ui/minimal-tiptap/styles/index.css";
 import * as React from "react";
+import { useImperativeHandle } from "react";
 
 import { LinkBubbleMenu } from "@/components/ui/minimal-tiptap/components/bubble-menu/link-bubble-menu";
 import { MeasuredContainer } from "@/components/ui/minimal-tiptap/components/measured-container";
@@ -15,7 +16,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/utilities/style";
 import type { Content, Editor } from "@tiptap/react";
 import { EditorContent } from "@tiptap/react";
-import { useImperativeHandle } from "react";
 
 export interface MinimalTiptapProps extends Omit<UseMinimalTiptapEditorProps, "onUpdate"> {
   value?: Content;
@@ -66,45 +66,48 @@ const Toolbar = ({ editor }: { editor: Editor }) => (
 
 export interface ApprenticeNoteEditorRef {
   editor: Editor;
-  // updateVariable: (newValue: string) => void;
 }
 
-export const ApprenticeNoteEditor = React.forwardRef<ApprenticeNoteEditorRef, MinimalTiptapProps>(
-  ({ value, onChange, className, editorContentClassName, ...props }, ref) => {
-    const editor = useMinimalTiptapEditor({
-      value,
-      onUpdate: onChange,
-      ...props,
-    });
+export const ApprenticeNoteEditor = React.forwardRef<
+  ApprenticeNoteEditorRef,
+  MinimalTiptapProps & {
+    readonly?: boolean;
+  }
+>(({ value, onChange, className, readonly, editorContentClassName, ...props }, ref) => {
+  const editor = useMinimalTiptapEditor({
+    value,
+    onUpdate: onChange,
+    ...props,
+    editable: !readonly,
+  });
 
-    useImperativeHandle(ref, () => ({
-      editor: editor!,
-    }));
+  useImperativeHandle(ref, () => ({
+    editor: editor!,
+  }));
 
-    if (!editor) return null;
+  if (!editor) return null;
 
-    return (
-      <MeasuredContainer
-        as="div"
-        name="editor"
-        className={cn(
-          "flex h-auto min-h-72 w-full flex-col border border-input focus-within:border-primary border-none outline-none",
-          className,
-        )}
-      >
-        <Toolbar editor={editor} />
-        <ScrollArea className="h-full">
-          <EditorContent
-            editor={editor}
-            className={cn("minimal-tiptap-editor", editorContentClassName)}
-          />
-        </ScrollArea>
+  return (
+    <MeasuredContainer
+      as="div"
+      name="editor"
+      className={cn(
+        "flex h-auto min-h-72 w-full flex-col border border-input focus-within:border-primary border-none outline-none",
+        className,
+      )}
+    >
+      {!readonly && <Toolbar editor={editor} />}
+      <ScrollArea className="h-full">
+        <EditorContent
+          editor={editor}
+          className={cn("minimal-tiptap-editor", editorContentClassName)}
+        />
+      </ScrollArea>
 
-        <LinkBubbleMenu editor={editor} />
-      </MeasuredContainer>
-    );
-  },
-);
+      <LinkBubbleMenu editor={editor} />
+    </MeasuredContainer>
+  );
+});
 
 ApprenticeNoteEditor.displayName = "ApprenticeNoteEditor";
 

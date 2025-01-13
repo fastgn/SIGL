@@ -1,0 +1,238 @@
+@startuml
+hide circle
+
+entity User {
+  * id: Int <<PK>>
+  --
+  lastName: String
+  firstName: String
+  birthDate: DateTime
+  gender: String
+  email: String <<Unique>>
+  password: String
+  phone: String
+  active: Boolean
+  creationDate: DateTime
+  updateDate: DateTime
+}
+
+entity Group {
+  * id: Int <<PK>>
+  --
+  name: String
+  description: String
+  color: String
+}
+
+entity GroupFile {
+  * id: Int <<PK>>
+  --
+  name: String
+  comment: String
+  blobName: String
+  createdAt: DateTime
+}
+
+entity FormationCenter {
+  * id: Int <<PK>>
+  --
+  name: String
+  address: String
+  city: String
+  country: String
+  studentNumber: Int
+  description: String
+  field: String
+}
+
+entity EducationalTutor {
+  * id: Int <<PK>>
+  --
+}
+
+entity Apprentice {
+  * id: Int <<PK>>
+  --
+  promotion: String
+  poste: String
+}
+
+entity ApprenticeMentor {
+  * id: Int <<PK>>
+  --
+  poste: String
+}
+
+entity Teacher {
+  * id: Int <<PK>>
+  --
+  startDate: DateTime
+  endDate: DateTime
+}
+
+entity CurriculumManager {
+  * id: Int <<PK>>
+  --
+  dateDebut: DateTime
+  dateFin: DateTime
+}
+
+entity ApprenticeCoordinator {
+  * id: Int <<PK>>
+  --
+  dateDebut: DateTime
+  dateFin: DateTime
+}
+
+entity Admin {
+  * idAdmin: Int <<PK>>
+  --
+}
+
+entity Company {
+  * id: Int <<PK>>
+  --
+  name: String
+  address: String
+  city: String
+  country: String
+  description: String
+  apprenticeNumber: Int
+}
+
+entity Event {
+  * id: Int <<PK>>
+  --
+  type: String
+  description: String
+  endDate: DateTime
+}
+
+entity Meeting {
+  * id: Int <<PK>>
+  --
+  title: String
+  description: String
+  date: DateTime
+  createdAt: DateTime
+}
+
+entity TrainingDiary {
+  * id: Int <<PK>>
+  --
+  description: String
+}
+
+entity Deliverable {
+  * id: Int <<PK>>
+  --
+  comment: String
+  blobName: String
+  createdAt: DateTime
+}
+
+entity Note {
+  * id: Int <<PK>>
+  --
+  title: String
+  content: String
+  creationDate: DateTime
+  updateDate: DateTime
+}
+
+entity Speciality {
+  * id: Int <<PK>>
+  --
+  name: String
+}
+
+entity EmailTemplate {
+  * id: Int <<PK>>
+  --
+  name: String <<Unique>>
+  subject: String
+  body: String
+}
+
+entity Skill {
+  * id: Int <<PK>>
+  --
+  code: String <<Unique>>
+  name: String <<Unique>>
+  description: String <<Unique>>
+  inProgressSemester: String
+  obtainedSemester: String
+}
+
+entity SkillEvaluation {
+  * id: Int <<PK>>
+  --
+  status: String
+  comment: String
+}
+
+entity EventFile {
+  * id: Int <<PK>>
+  --
+  name: String
+  comment: String
+  blobName: String
+  createdAt: DateTime
+}
+
+entity BiannualEvaluation {
+  * id: Int <<PK>>
+  --
+  semester: String
+  createdAt: DateTime
+}
+
+entity CompanyAccount {
+  * id: Int <<PK>>
+  --
+  userId: Int <<Unique>>
+  companyId: Int <<Unique>>
+}
+
+' Relations pour User
+User ||--o| EducationalTutor : educationalTutor
+User ||--o| Apprentice : apprentice
+User ||--o| ApprenticeMentor : apprenticeMentor
+User ||--o| Teacher : teacher
+User ||--o| CurriculumManager : curriculumManager
+User ||--o| ApprenticeCoordinator : apprenticeCoordinator
+User ||--o| Admin : admin
+User ||--o| CompanyAccount : companyAccount
+User ||--o{ Group : groups
+User ||--o{ Meeting : presenterMeetings
+User ||--o{ Meeting : juryMeetings
+
+' Relations entre les autres modèles
+Group ||--o{ GroupFile : files
+Group ||--o{ Event : events
+FormationCenter ||--o{ ApprenticeCoordinator : apprenticeCoordinators
+FormationCenter ||--o{ CurriculumManager : curriculumManagers
+EducationalTutor ||--o{ Apprentice : apprentices
+Apprentice ||--o| Company : company
+Apprentice ||--o| EducationalTutor : educationalTutor
+Apprentice ||--o| ApprenticeMentor : apprenticeMentor
+Apprentice ||--o| TrainingDiary : trainingDiary
+ApprenticeMentor ||--o{ Apprentice : apprentices
+Company ||--o{ Apprentice : apprentices
+Company ||--o{ ApprenticeMentor : apprenticeMentors
+Company ||--o{ Speciality : specialities
+Company ||--o{ CompanyAccount : companyAccounts
+Event ||--o{ Group : groups
+Event ||--o{ Deliverable : delivrables
+Event ||--o{ EventFile : files
+Event ||--o{ Meeting : meetings
+TrainingDiary ||--o{ Deliverable : delivrables
+TrainingDiary ||--o{ Note : notes
+TrainingDiary ||--o{ BiannualEvaluation : biannualEvaluations
+Speciality ||--o{ Teacher : teachers
+Speciality ||--o{ Company : companies
+Skill ||--o{ SkillEvaluation : skillEvaluations
+BiannualEvaluation ||--o{ SkillEvaluation : skillEvaluations
+BiannualEvaluation ||--o| TrainingDiary : trainingDiary
+
+@enduml

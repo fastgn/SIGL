@@ -1,3 +1,4 @@
+import { EnumUserRole } from "@sigl/types";
 import React, {
   createContext,
   Dispatch,
@@ -11,6 +12,8 @@ import React, {
 export interface UserContextType {
   isAdmin: boolean | null;
   setIsAdmin: Dispatch<SetStateAction<boolean>>;
+  roles: EnumUserRole[];
+  setRoles: Dispatch<SetStateAction<EnumUserRole[]>>;
   id: number | null;
   setId: Dispatch<SetStateAction<number>>;
   updateIsAdminAndId: (isAdmin: boolean, id: number) => void;
@@ -65,8 +68,12 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     getStorage().removeItem("id");
   };
 
+  const [roles, setRoles] = useState<EnumUserRole[]>([]);
+
   return (
-    <UserContext.Provider value={{ isAdmin, setIsAdmin, id, setId, updateIsAdminAndId, clear }}>
+    <UserContext.Provider
+      value={{ isAdmin, setIsAdmin, id, setId, updateIsAdminAndId, clear, roles, setRoles }}
+    >
       {children}
     </UserContext.Provider>
   );

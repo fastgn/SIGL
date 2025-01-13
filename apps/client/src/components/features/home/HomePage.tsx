@@ -1,52 +1,63 @@
-import { Banner } from "@/components/common/banner/Banner.tsx";
-import { DraggableCard } from "@/components/common/cards/DraggableCard";
-
-import { useState } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TotalUserCard } from "./admin/TotalUserCard";
-import { TotalUserRoleCard } from "./admin/TotalUserRoleCard";
+import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@/contexts/UserContext";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { EnumUserRole, UserSchema } from "@sigl/types";
+
+import { Responsive, WidthProvider } from "react-grid-layout";
+import { NextEvent } from "./tiles/NextEvent";
+import api from "@/services/api.service";
+import { z } from "zod";
+import { AdminDashboard } from "./dashboards/AdminDashboard";
+import { ApprenticeDashboard } from "./dashboards/ApprenticeDashboard";
+import { TutorDashboard } from "./dashboards/TutorDashboard";
+
+type UserSchemaType = z.infer<typeof UserSchema.getData>;
+
+export const ResponsiveGridLayout = WidthProvider(Responsive);
+
+export const getSavedLayouts = (key: string) => {
+  if (typeof window !== "undefined") {
+    const savedLayouts = localStorage.getItem(key);
+    return savedLayouts ? JSON.parse(savedLayouts) : null;
+  }
+  return null;
+};
+
+export const saveLayouts = (key: string, layouts: any) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(key, JSON.stringify(layouts));
+  }
+};
 
 export const HomePage = () => {
-  const [cards, setCards] = useState([
-    { id: "1", title: "Nombre d'utilisateurs", component: TotalUserCard },
-    { id: "2", title: "Nombre d'utilisateurs par rôle", component: TotalUserRoleCard },
-  ]);
-  const { isAdmin } = useUser();
+  const { roles, id } = useUser();
 
-  const moveCard = (fromIndex: number, toIndex: number) => {
-    const updatedCards = [...cards];
-    const [movedCard] = updatedCards.splice(fromIndex, 1);
-    updatedCards.splice(toIndex, 0, movedCard);
-    setCards(updatedCards);
+  const [user, setUser] = useState(null as UserSchemaType | null);
+
+  useEffect(() => {
+    if (!id) return;
+    api.get(`/user/${id}`).then((response) => {
+      setUser(response.data.data);
+    });
+  }, [id]);
+
+  const getHomeContent = () => {
+    switch (roles[0]) {
+      case EnumUserRole.ADMIN:
+      case EnumUserRole.APPRENTICE_COORDINATOR:
+        return <AdminDashboard />;
+
+      case EnumUserRole.APPRENTICE:
+        return <ApprenticeDashboard />;
+
+      case EnumUserRole.EDUCATIONAL_TUTOR:
+      case EnumUserRole.APPRENTICE_MENTOR:
+        return <TutorDashboard />;
+
+      default:
+        return <h2>Vous n'avez pas de dashboard.</h2>;
+    }
   };
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-        <Banner />
-
-        <div style={{ padding: "24px 32px", flex: 1, display: "flex", flexDirection: "column" }}>
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px" }}>Bienvenue</h1>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "16px",
-              alignItems: "stretch",
-            }}
-          >
-            {isAdmin &&
-              cards.map((card, index) => (
-                <DraggableCard key={card.id} index={index} moveCard={moveCard} title={card.title}>
-                  {card.component()}
-                </DraggableCard>
-              ))}
-          </div>
-        </div>
-      </div>
-    </DndProvider>
-  );
+  return <BasicPage title={`Bienvenue ${user?.firstName}`}>{getHomeContent()}</BasicPage>;
 };

@@ -8,6 +8,7 @@ import logger from "../utils/logger";
 import { removePassword } from "../utils/user";
 import userService, { UserWithRoles } from "../services/user.service";
 import { emailService } from "../services/email.service";
+import deliverableController from "./deliverableController";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -16,8 +17,8 @@ const userController = {
       // Validate the input data
       try {
         form = UserSchema.create.parse(payload);
-      } catch {
-        logger.error("Invalid params");
+      } catch (e: any) {
+        logger.error("Invalid params", payload, "\n error : \n", e.errors);
         return ControllerError.INVALID_PARAMS();
       }
 
@@ -87,12 +88,47 @@ const userController = {
       };
       // send email with password here
       try {
-        await emailService.sendEmailWithTemplate(form.email, "account_created", variables);
-        console.log("Email sent successfully");
+        await emailService.sendEmailWithTemplate(form.email, "ACCOUNT_CREATION", variables);
       } catch (error) {
         console.error("Failed to send email:", error);
-        // Handle the error appropriately, e.g., notify the user, retry, etc.
       }
+      // Retirer le mot de passe de la réponse
+      const userWithoutPassword = removePassword(user);
+      return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  update: async (
+    id: number,
+    payload: z.infer<typeof UserSchema.create>,
+  ): Promise<ControllerResponse> => {
+    try {
+      let form;
+      // Validate the input data
+      try {
+        const { role, ...rest } = payload;
+        form = UserSchema.create.omit({ role: true }).parse(rest);
+      } catch (e: any) {
+        logger.error("Invalid params", payload, "\n error : \n", e.errors);
+        return ControllerError.INVALID_PARAMS();
+      }
+
+      const user = await db.user.update({
+        where: {
+          id,
+        },
+        data: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          birthDate: form.birthDate,
+        },
+      });
+
       // Retirer le mot de passe de la réponse
       const userWithoutPassword = removePassword(user);
       return ControllerSuccess.SUCCESS({ data: userWithoutPassword });
@@ -110,7 +146,11 @@ const userController = {
       }
       const user: UserWithRoles | null = await db.user.findUnique({
         include: {
-          apprentice: true,
+          apprentice: {
+            include: {
+              trainingDiary: true,
+            },
+          },
           apprenticeCoordinator: true,
           apprenticeMentor: true,
           curriculumManager: true,
@@ -149,9 +189,16 @@ const userController = {
           curriculumManager: true,
           educationalTutor: true,
           teacher: true,
+          admin: true,
         },
       });
-      const usersWithoutPassword = users.map(removePassword);
+
+      const UsersWithRoles = users.map((user) => {
+        const finalUser: any = user;
+        finalUser.roles = userService.getRoles(user);
+        return finalUser;
+      });
+      const usersWithoutPassword = UsersWithRoles.map(removePassword);
       return ControllerSuccess.SUCCESS({ data: usersWithoutPassword });
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
@@ -209,23 +256,42 @@ const userController = {
 
   delete: async (id: number): Promise<ControllerResponse> => {
     let user;
+
     try {
+      const relatedDeliverable = await db.deliverable.findMany({
+        where: {
+          trainingDiary: {
+            apprentice: {
+              userId: id,
+            },
+          },
+        },
+      });
+      if (relatedDeliverable) {
+        for (const deliverable of relatedDeliverable) {
+          await deliverableController.deleteDeliverable(deliverable.id);
+        }
+        logger.info("Tous les fichiers relatifs à l'utilisateurs ont été supprimés");
+      } else {
+        logger.info("Aucun livrable trouvé");
+      }
       user = await db.user.delete({
         where: {
           id,
         },
       });
+      if (!user) {
+        logger.error("User not found");
+        return ControllerError.NOT_FOUND();
+      }
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
-      return ControllerError.INTERNAL();
+      return ControllerError.INTERNAL({ message: error.message });
     }
-
-    if (!user) {
-      logger.error("User not found");
-      return ControllerError.NOT_FOUND();
-    }
-
-    return ControllerSuccess.SUCCESS({ data: user });
+    return ControllerSuccess.SUCCESS({
+      message: "Suppression de toutes les données de l'utilisateur effectué avec succès",
+      data: user,
+    });
   },
 
   updatePasswordAdmin: async (
@@ -301,7 +367,158 @@ const userController = {
       return ControllerError.INTERNAL();
     }
   },
+  updateTutors: async (
+    id: number,
+    educationalTutorId: number,
+    apprenticeMentorId: number,
+  ): Promise<ControllerResponse> => {
+    try {
+      const apprenticeExists = await db.apprentice.findUnique({
+        where: { userId: id },
+      });
 
+      const tutor = await db.educationalTutor.findUnique({
+        where: { userId: educationalTutorId },
+      });
+
+      const mentor = await db.apprenticeMentor.findUnique({
+        where: { userId: apprenticeMentorId },
+      });
+
+      if (!apprenticeExists || !tutor || !mentor) {
+        logger.error(`Apprentice with id ${id} not found or tutor or mentor not found`);
+        return ControllerError.NOT_FOUND({
+          message: `Apprentice with id ${id} not found`,
+        });
+      }
+
+      const apprentice = await db.apprentice.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          educationalTutorId: tutor.id,
+          apprenticeMentorId: mentor.id,
+        },
+      });
+
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getApprentice: async (id: number): Promise<ControllerResponse> => {
+    try {
+      const apprentice = await db.apprentice.findUnique({
+        where: {
+          userId: id,
+        },
+        include: {
+          company: true,
+          educationalTutor: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+          apprenticeMentor: {
+            include: {
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!apprentice) {
+        logger.error(`Apprentice with id ${id} not found`);
+        return ControllerError.NOT_FOUND({
+          message: `Apprentice with id ${id} not found`,
+        });
+      }
+      logger.info(`donné apprenti :  ${apprentice}`);
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getAllTutors: async (): Promise<ControllerResponse> => {
+    try {
+      const tutors = await db.educationalTutor.findMany({
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: tutors });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  getAllMentors: async (): Promise<ControllerResponse> => {
+    try {
+      const mentors = await db.apprenticeMentor.findMany({
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: mentors });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  updatePost: async (id: number, poste: string): Promise<ControllerResponse> => {
+    try {
+      const apprentice = await db.apprentice.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          poste: poste,
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
+  updateCompany: async (id: number, companyId: number): Promise<ControllerResponse> => {
+    try {
+      const apprentice = await db.apprentice.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          companyId: companyId,
+        },
+      });
+      return ControllerSuccess.SUCCESS({ data: apprentice });
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      return ControllerError.INTERNAL();
+    }
+  },
   getFromTrainingDiary: async (trainingDiaryId: number): Promise<ControllerResponse> => {
     try {
       const trainingDiary = await db.trainingDiary.findUnique({
@@ -327,6 +544,61 @@ const userController = {
       }
 
       return ControllerSuccess.SUCCESS({ data: user });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  getFiles: async (id: number): Promise<ControllerResponse> => {
+    try {
+      const user = await db.user.findUnique({
+        include: {
+          groups: {
+            include: {
+              files: true,
+            },
+          },
+        },
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      return ControllerSuccess.SUCCESS({ data: user.groups });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  getRoles: async (id: number): Promise<ControllerResponse> => {
+    try {
+      const user = await db.user.findUnique({
+        include: {
+          apprentice: true,
+          apprenticeCoordinator: true,
+          apprenticeMentor: true,
+          curriculumManager: true,
+          educationalTutor: true,
+          teacher: true,
+          admin: true,
+        },
+        where: {
+          id,
+        },
+      });
+
+      if (!user) {
+        return ControllerError.NOT_FOUND();
+      }
+
+      const roles = userService.getRoles(user);
+      return ControllerSuccess.SUCCESS({ data: roles });
     } catch (error: any) {
       console.error(error);
       return ControllerError.INTERNAL();

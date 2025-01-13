@@ -1,6 +1,4 @@
 import express, { Request, Response } from "express";
-const router = express.Router();
-
 import deliverableController from "../controllers/deliverableController";
 
 import { reply } from "../utils/http";
@@ -9,15 +7,37 @@ import logger from "../utils/logger";
 import authMiddleware from "../middleware/authMiddleware";
 import { fileMiddleware } from "../middleware/fileMiddleware";
 import userController from "../controllers/userController";
-import userService, { UserWithRoles } from "../services/user.service";
+import userService from "../services/user.service";
 import { User } from "@prisma/client";
 import { EnumUserRole } from "@sigl/types";
 
+const router = express.Router();
+
 router.post("/", authMiddleware(), fileMiddleware, async (req: Request, res: Response) => {
   try {
+    const { comment, eventId, trainingDiaryId, blobName } = req.body;
     logger.info(`Création du livrable`);
-    const result = await deliverableController.createDeliverable(req, res);
+    const result = await deliverableController.createDeliverable(
+      comment,
+      eventId,
+      trainingDiaryId,
+      blobName,
+    );
     logger.info(`Livrable créé`);
+
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
+router.delete("/:id", authMiddleware(), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    logger.info(`Suppression du livrable ${id}`);
+    const result = await deliverableController.deleteDeliverable(parseInt(id));
+    logger.info(`Livrable supprimé`);
 
     reply(res, result);
   } catch (error: any) {
@@ -49,7 +69,12 @@ router.get(
       }
       const roles = userService.getRoles(currentUser);
 
-      if (currentUser.id !== user.id && !roles.includes(EnumUserRole.ADMIN)) {
+      if (
+        currentUser.id !== user.id &&
+        !roles.includes(EnumUserRole.ADMIN) &&
+        !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
+        !roles.includes(EnumUserRole.APPRENTICE_MENTOR)
+      ) {
         logger.error("Utilisateur non autorisé");
         return reply(res, ControllerError.UNAUTHORIZED());
       }

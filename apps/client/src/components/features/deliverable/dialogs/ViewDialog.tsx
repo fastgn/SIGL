@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { EventSchemaType } from "../../events/EventsPage";
 import { Button } from "@/components/ui/button";
-import { Eye, Timer } from "lucide-react";
+import { Eye, File, Timer } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import api from "@/services/api.service.ts";
@@ -20,6 +20,7 @@ import { z } from "zod";
 import { DeliverableSchema } from "@sigl/types";
 import { DeliverablesCard } from "../cards/DeliverablesCard";
 import { useTranslation } from "react-i18next";
+import env from "@/services/env.service.ts";
 
 export type DeliverableSchemaType = z.infer<typeof DeliverableSchema.getData>;
 
@@ -28,11 +29,13 @@ export const ViewDialog = ({
   deliverables,
   setDeliverables,
   trainingDiaryId,
+  readonly,
 }: {
   event: EventSchemaType;
   deliverables: DeliverableSchemaType[];
   setDeliverables: (deliverables: DeliverableSchemaType[]) => void;
   trainingDiaryId: number;
+  readonly?: boolean;
 }) => {
   const { t } = useTranslation();
   const [endDate, setEndDate] = useState<Date>(new Date(event.endDate));
@@ -84,19 +87,26 @@ export const ViewDialog = ({
                 variant={"link"}
                 size={"sm"}
                 key={file.id}
-                onClick={() => window.open(file.url)}
+                onClick={() => window.open(env.get.API_URL + "/file/" + file.blobName)}
               >
+                <File className="size-3 mr-2" />
                 {file.name}
               </Button>
             ))
           ) : (
-            <p>Aucun fichier associé</p>
+            <p className="text-sm text-gray-500">Aucun fichier associé</p>
           )}
         </DialogFooter>
         <Separator />
         <ScrollArea className="flex flex-col gap-3">
           {deliverables.map((deliverable) => (
-            <DeliverablesCard key={deliverable.id} deliverable={deliverable} />
+            <DeliverablesCard
+              key={deliverable.id}
+              deliverable={deliverable}
+              deliverables={deliverables}
+              setDeliverables={setDeliverables}
+              readonly={readonly}
+            />
           ))}
         </ScrollArea>
       </DialogContent>

@@ -32,6 +32,36 @@ export const ControllerError: {
       data,
     };
   },
+
+  // Custom errors for events
+  DIARY_NOT_FOUND: ({ message, data } = {}) => {
+    return {
+      status: 460,
+      message: message || "Diary not found",
+      data,
+    };
+  },
+  APPRENTICE_NOT_FOUND: ({ message, data } = {}) => {
+    return {
+      status: 461,
+      message: message || "Apprentice not found",
+      data,
+    };
+  },
+  USER_NOT_FOUND: ({ message, data } = {}) => {
+    return {
+      status: 462,
+      message: message || "User not found",
+      data,
+    };
+  },
+  GROUP_NOT_FOUND: ({ message, data } = {}) => {
+    return {
+      status: 463,
+      message: message || "Group not found",
+      data,
+    };
+  },
 };
 
 export const ControllerSuccess: {

@@ -22,5 +22,25 @@
   {
     "name": "Deliverable",
     "description": "Operations sur les livrables"
+  },
+  {
+    "name": "Company Account",
+    "description": "Operations sur les comptes d'entreprise"
+  },
+  {
+    "name": "Company",
+    "description": "Operations sur les informations des entreprises"
+  },
+  {
+    "name": "Notes",
+    "description": "Operations sur les notes"
+  },
+  {
+    "name": "Meeting",
+    "description": "Operations sur les réunions"
+  },
+  {
+    "name": "Dashboard",
+    "description": "Operations pour récupérer les données du tableau de bord"
   }
 ]

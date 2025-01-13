@@ -1,3 +1,4 @@
+import { deleteFileFromBlob } from "../middleware/fileMiddleware";
 import { db } from "../providers/db";
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import logger from "../utils/logger";
@@ -21,6 +22,7 @@ export const groupController = {
             updateDate: true,
           },
         },
+        files: true,
       },
     });
 
@@ -166,6 +168,24 @@ export const groupController = {
   },
 
   deleteGroup: async (id: number) => {
+    const groupFiles = await db.groupFile.findMany({
+      where: {
+        groupId: id,
+      },
+    });
+
+    if (groupFiles) {
+      groupFiles.forEach((groupFile) => {
+        deleteFileFromBlob(groupFile.blobName);
+      });
+    }
+
+    await db.groupFile.deleteMany({
+      where: {
+        groupId: id,
+      },
+    });
+
     const group = await db.group.deleteMany({
       where: {
         id: id,
@@ -178,5 +198,98 @@ export const groupController = {
     }
 
     return ControllerSuccess.SUCCESS({ message: "Groupe supprimé avec succès", data: group });
+  },
+
+  getFilesFromGroup: async (groupId: number) => {
+    const group = await db.group.findFirst({
+      where: {
+        id: groupId,
+      },
+      include: {
+        files: true,
+      },
+    });
+
+    if (!group) {
+      logger.error("Le groupe n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "Le groupe n'existe pas" });
+    }
+
+    return ControllerSuccess.SUCCESS({
+      message: "Fichiers récupérés avec succès",
+      data: group.files,
+    });
+  },
+
+  addFileToGroup: async (name: string, comment: string, blobName: string, groupId: number) => {
+    const group = await db.group.findFirst({
+      where: {
+        id: groupId,
+      },
+    });
+
+    if (!group) {
+      logger.error("Le groupe n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "Le groupe n'existe pas" });
+    }
+
+    const groupFile = await db.groupFile.create({
+      data: {
+        name: name,
+        comment: comment,
+        blobName: blobName,
+        group: {
+          connect: {
+            id: groupId,
+          },
+        },
+      },
+    });
+
+    if (!groupFile) {
+      logger.error("Erreur lors de l'ajout du fichier au groupe");
+      return ControllerError.INTERNAL({
+        message: "Erreur lors de l'ajout du fichier au groupe",
+      });
+    }
+
+    return ControllerSuccess.SUCCESS({
+      message: "Fichier ajouté au groupe avec succès",
+      data: groupFile,
+    });
+  },
+
+  deleteFileFromGroup: async (groupId: number, fileId: number) => {
+    const group = await db.groupFile.findFirst({
+      where: {
+        id: fileId,
+        groupId: groupId,
+      },
+    });
+
+    if (!group) {
+      logger.error("Le groupe n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "Le groupe n'existe pas" });
+    }
+
+    const groupFile = await db.groupFile.delete({
+      where: {
+        id: fileId,
+      },
+    });
+
+    if (!groupFile) {
+      logger.error("Erreur lors de la suppression du fichier du groupe");
+      return ControllerError.INTERNAL({
+        message: "Erreur lors de la suppression du fichier du groupe",
+      });
+    }
+
+    deleteFileFromBlob(groupFile.blobName);
+
+    return ControllerSuccess.SUCCESS({
+      message: "Fichier supprimé du groupe avec succès",
+      data: groupFile,
+    });
   },
 };

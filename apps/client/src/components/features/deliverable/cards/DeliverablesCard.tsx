@@ -1,11 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
-import { Eye } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import { DeliverableSchemaType } from "../dialogs/ViewDialog";
-import env from "@/services/env.service.ts";
 import { useEffect, useState } from "react";
+import env from "@/services/env.service.ts";
+import { toast } from "sonner";
+import { getErrorInformation } from "@/utilities/http";
+import api from "@/services/api.service";
 
-export const DeliverablesCard = ({ deliverable }: { deliverable: DeliverableSchemaType }) => {
+interface DeliverablProps {
+  deliverable: DeliverableSchemaType;
+  deliverables: DeliverableSchemaType[];
+  setDeliverables: (deliverables: DeliverableSchemaType[]) => void;
+  readonly?: boolean;
+}
+
+export const DeliverablesCard = ({
+  deliverable,
+  deliverables,
+  setDeliverables,
+  readonly,
+}: DeliverablProps) => {
   const [blobName, setBlobName] = useState<string>("");
 
   useEffect(() => {
@@ -13,6 +28,19 @@ export const DeliverablesCard = ({ deliverable }: { deliverable: DeliverableSche
       setBlobName(deliverable.blobName);
     }
   }, [deliverable.blobName]);
+
+  const deleteDeliverable = async (deliverable: DeliverableSchemaType) => {
+    if (readonly) return;
+    try {
+      await api.delete("/deliverables/" + deliverable.id);
+      const newDeliverables = deliverables.filter((d) => d.id !== deliverable.id);
+      setDeliverables(newDeliverables);
+      toast.success("Deliverable deleted successfully");
+    } catch (error: any) {
+      const errorInformation = getErrorInformation(error);
+      toast.error(errorInformation.description);
+    }
+  };
 
   return (
     <Card key={deliverable.id} className="pt-5 w-full rounded-2xl bg-white shadow-0">
@@ -23,13 +51,20 @@ export const DeliverablesCard = ({ deliverable }: { deliverable: DeliverableSche
             {new Date(deliverable.createdAt).toLocaleDateString()}
           </CardDescription>
         </div>
-        <Button
-          variant="user"
-          size="sm"
-          onClick={() => window.open(env.get.API_URL + "/file/" + blobName)}
-        >
-          <Eye className="h-4 w-4" />
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="user"
+            size="sm"
+            onClick={() => window.open(env.get.API_URL + "/file/" + blobName)}
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+          {!readonly && (
+            <Button variant="destructive" size="sm" onClick={() => deleteDeliverable(deliverable)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

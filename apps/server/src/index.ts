@@ -1,6 +1,6 @@
 import env from "./services/env.service";
 import logger from "./utils/logger";
-import express, { Request, Response, NextFunction } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors, { CorsOptions } from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -13,12 +13,19 @@ import userRoutes from "./routes/userRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import deliverableRoutes from "./routes/deliverableRoutes";
 import noteRoutes from "./routes/noteRoutes";
-import groupRoutes from "./routes/groupRoutes";
+import compagnyAccountRoute from "./routes/compagnyAccountRoute";
+import companyRoutes from "./routes/companyRoutes";
+import meetingRoutes from "./routes/meetingRoutes";
+import tutorRoutes from "./routes/tutorRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
+import mentorRoutes from "./routes/mentorRoutes";
 // Stream /files to Azure Blob Storage
 import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
 // Swagger
 import swaggerConfig from "./swagger/swaggerConfig";
+import groupRoutes from "./routes/groupRoutes";
 import { BlobServiceClient } from "@azure/storage-blob";
+import biannualEvaluationRoutes from "./routes/biannualEvaluationRoutes";
 
 const app = express();
 const port = env.get.PORT;
@@ -67,7 +74,14 @@ app.use("/user", userRoutes);
 app.use("/groups", groupRoutes);
 app.use("/events", eventRoutes);
 app.use("/note", noteRoutes);
+app.use("/compagnyAccount", compagnyAccountRoute);
 app.use("/deliverables", deliverableRoutes);
+app.use("/company", companyRoutes);
+app.use("/meeting", meetingRoutes);
+app.use("/biannualEvaluations", biannualEvaluationRoutes);
+app.use("/tutor", tutorRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/mentor", mentorRoutes);
 
 app.get("/file/:blobName", async (req: Request, res: Response) => {
   const containerName = CONTAINER_NAME;
@@ -119,3 +133,5 @@ app.listen(port, async () => {
   console.log(`[*] Server is running at http://localhost:${port}`);
   logger.info(`[*] Server is running on port ${port}`);
 });
+
+export default app;

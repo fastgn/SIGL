@@ -4,6 +4,7 @@ import { reply } from "../utils/http";
 import { ControllerError } from "../utils/controller";
 import logger from "../utils/logger";
 import authMiddleware from "../middleware/authMiddleware";
+
 const router = express.Router();
 
 router.post("/", authMiddleware(), async (req, res) => {
@@ -24,6 +25,19 @@ router.get("/", authMiddleware(), async (req, res) => {
   try {
     const user = req.context.user!;
     const result = await noteController.getAllFromUser(user.id, user);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
+// Récupérer toutes les notes de l'utilisateur en paramètre
+router.get("/:userId", authMiddleware(), async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = req.context.user!;
+    const result = await noteController.getAllFromUser(parseInt(userId), user);
     reply(res, result);
   } catch (error: any) {
     logger.error(`Erreur serveur : ${error.message}`);

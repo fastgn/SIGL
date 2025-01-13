@@ -24,7 +24,7 @@ const LoginForm = () => {
   const [alertTitle, setAlertTitle] = useState<string | null>(null);
   const [alertDescription, setAlertDescription] = useState<string | null>(null);
   const [remember, setRemember] = useState(false);
-  const { setIsAdmin, setId, updateIsAdminAndId } = useUser();
+  const { updateIsAdminAndId } = useUser();
 
   useEffect(() => {
     if (token) {
@@ -45,7 +45,6 @@ const LoginForm = () => {
     api.post("/auth/login", data).then(
       (res) => {
         const user = res.data.data.user as UserTypeReq;
-        console.log(user);
         switch (res.status) {
           case 200:
             setToken(res.data.data.token, remember);
@@ -147,8 +146,7 @@ const LoginForm = () => {
               Se souvenir de moi
             </Label>
           </div>
-
-          <Button type="submit" variant="user" className="w-40">
+          <Button type="submit" variant="user" className="w-full">
             Se connecter
           </Button>
         </form>

@@ -20,7 +20,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Form, FormField, FormItem, FormControl, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/utilities/style";
@@ -69,7 +69,7 @@ export const AddUserSheet = ({ onAdd }: { onAdd: () => void }) => {
   };
 
   return (
-    <SheetContent>
+    <SheetContent className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="relative grid gap-6 py-4">
           <SheetHeader>

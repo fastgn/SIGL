@@ -1,22 +1,21 @@
 import * as React from "react";
-import type { Editor } from "@tiptap/react";
-import type { Content, UseEditorOptions } from "@tiptap/react";
-import { StarterKit } from "@tiptap/starter-kit";
+import type { Content, Editor, UseEditorOptions } from "@tiptap/react";
 import { useEditor } from "@tiptap/react";
+import { StarterKit } from "@tiptap/starter-kit";
 import { Typography } from "@tiptap/extension-typography";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import {
-  Link,
-  Image,
-  HorizontalRule,
   CodeBlockLowlight,
-  Selection,
   Color,
-  UnsetAllMarks,
-  ResetMarksOnEnter,
   FileHandler,
+  HorizontalRule,
+  Image,
+  Link,
+  ResetMarksOnEnter,
+  Selection,
+  UnsetAllMarks,
 } from "../extensions";
 import { cn } from "@/utilities/style";
 import { fileToBase64, getOutput, randomId } from "../utils";

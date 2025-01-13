@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { FileSchema } from "./file.schema";
+import { EventFileSchema } from "./eventFile.schema";
 import { GroupSchema } from "./group.schema";
+import { DeliverableSchema } from "./deliverable.schema";
 
 /**
  * Schéma de validation pour la création d'un event
@@ -11,7 +12,8 @@ const getData = z.object({
   description: z.string(),
   endDate: z.coerce.date(),
   groups: z.array(GroupSchema.getData),
-  files: z.array(FileSchema.getData),
+  files: z.array(EventFileSchema.getData),
+  delivrables: z.array(DeliverableSchema.getData).optional(),
 });
 
 const EventSchema = {

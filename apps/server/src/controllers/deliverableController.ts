@@ -1,14 +1,16 @@
-import { Request, Response } from "express";
-
-import { ControllerError, ControllerSuccess } from "../utils/controller";
-import logger from "../utils/logger";
+import { deleteFileFromBlob } from "../middleware/fileMiddleware";
 import { db } from "../providers/db";
 import { ControllerResponse } from "../types/controller";
+import { ControllerError, ControllerSuccess } from "../utils/controller";
+import logger from "../utils/logger";
 
 const deliverableController = {
-  createDeliverable: async (req: Request, res: Response): Promise<ControllerResponse> => {
-    const { comment, eventId, trainingDiaryId, blobName } = req.body;
-
+  createDeliverable: async (
+    comment: string,
+    eventId: string,
+    trainingDiaryId: string,
+    blobName: string,
+  ): Promise<ControllerResponse> => {
     if (!eventId) {
       logger.error("eventId est requis");
       return ControllerError.INVALID_PARAMS({ message: "eventId est requis" });
@@ -103,6 +105,39 @@ const deliverableController = {
     }
 
     return ControllerSuccess.SUCCESS({ message: "Livrable créé avec succès", data: deliverable });
+  },
+
+  deleteDeliverable: async (id: number): Promise<ControllerResponse> => {
+    if (!id) {
+      logger.error("id est requis");
+      return ControllerError.INVALID_PARAMS({ message: "id est requis" });
+    }
+
+    const deliverable = await db.deliverable.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!deliverable) {
+      logger.error("Le livrable n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "Le livrable n'existe pas" });
+    }
+
+    const deletedDeliverable = await db.deliverable.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!deletedDeliverable) {
+      logger.error("Erreur lors de la suppression du livrable");
+      return ControllerError.INTERNAL({ message: "Erreur lors de la suppression du livrable" });
+    }
+
+    deleteFileFromBlob(deliverable.blobName);
+
+    return ControllerSuccess.SUCCESS({ message: "Livrable supprimé avec succès" });
   },
 
   getDeliverables: async (

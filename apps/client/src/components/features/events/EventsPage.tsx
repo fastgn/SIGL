@@ -4,15 +4,19 @@ import { getColumns } from "@/components/features/events/eventsTable/getColumns"
 import { EventForm } from "@/components/features/events/event/EventForm";
 import { SearchBar } from "@/components/common/searchBar/SearchBar";
 import { useCallback, useEffect, useState } from "react";
-import { EnumEventType, EnumSortOption, EventSchema } from "@sigl/types";
+import { EnumEventType, EnumSortOption, EventFileSchema, EventSchema } from "@sigl/types";
 import api from "@/services/api.service";
 import z from "zod";
 import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { useTranslation } from "react-i18next";
+import { FileForm } from "./event/FileForm";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { DeliverablesDialog } from "./event/DeliverablesDialog";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
+export type EventFileSchemaType = z.infer<typeof EventFileSchema.getData>;
 
 export const EventsPage = () => {
   const { t } = useTranslation();
@@ -23,6 +27,9 @@ export const EventsPage = () => {
   const [listFilter, setListFilter] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
+  const [isFileFormOpen, setIsFileFormOpen] = useState(false);
+  const [isViewDeliverablesOpen, setIsViewDeliverablesOpen] = useState(false);
+
   const [selectedEvent, setSelectedEvent] = useState<EventSchemaType | null>(null);
 
   const handleAddEvent = (newEvent: EventSchemaType) => {
@@ -127,42 +134,95 @@ export const EventsPage = () => {
     setIsEventFormOpen(true);
   }, []);
 
+  const onAddFiles = useCallback((eventObject: EventSchemaType) => {
+    setSelectedEvent(eventObject);
+    setIsFileFormOpen(true);
+  }, []);
+
+  const onViewDeliverables = useCallback((eventObject: EventSchemaType) => {
+    setSelectedEvent(eventObject);
+    setIsViewDeliverablesOpen(true);
+  }, []);
+
+  const addFile = (file: EventFileSchemaType) => {
+    if (!selectedEvent) {
+      return;
+    }
+    const updatedEvents = filteredEvents.map((e) => {
+      if (e.id === selectedEvent.id) {
+        return { ...e, files: [...e.files, file] };
+      }
+      return e;
+    });
+    setFilteredEvents(updatedEvents);
+  };
+
+  const removeFiles = (event: EventSchemaType, file: EventFileSchemaType) => {
+    const updatedEvents = filteredEvents.map((e) => {
+      if (e.id === event.id) {
+        return { ...e, files: e.files.filter((f) => f.id !== file.id) };
+      }
+      return e;
+    });
+    setFilteredEvents(updatedEvents);
+  };
+
   return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto ">
-        <div className="flex flex-col gap-5 px-16 py-12">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-3xl font-bold">{t("events.title")}</h1>
-            <EventForm
-              onAddEvent={handleAddEvent}
-              onUpdateEvent={handleUpdateEvent}
-              isOpen={isEventFormOpen}
-              onOpenChange={(value) => {
-                setIsEventFormOpen(value);
-                if (!value) {
-                  setSelectedEvent(null);
-                }
-              }}
-              eventObject={selectedEvent}
-            />
-          </div>
-          <SearchBar
-            searchTerm={searchTerm || ""}
-            onSearchChange={setSearchTerm}
-            filters={filters}
-            setSelectedFilter={setListFilter}
-            sortOptions={sortOptions}
-            setSelectedSortOption={setSortOption}
-            clearSearch={() => {
-              setSearchTerm(null);
-              setListFilter(null);
-              setSortOption(null);
-            }}
-          />
-          <EventsTable columns={getColumns({ onDelete, onEdit })} data={filteredEvents} />
-        </div>
-      </ScrollArea>
-    </div>
+    <BasicPage
+      title={t("events.title")}
+      extraComponent={
+        <EventForm
+          onAddEvent={handleAddEvent}
+          onUpdateEvent={handleUpdateEvent}
+          isOpen={isEventFormOpen}
+          onOpenChange={(value) => {
+            setIsEventFormOpen(value);
+            if (!value) {
+              setSelectedEvent(null);
+            }
+          }}
+          eventObject={selectedEvent}
+        />
+      }
+    >
+      <FileForm
+        addFile={addFile}
+        isOpen={isFileFormOpen}
+        onOpenChange={(value) => {
+          setIsFileFormOpen(value);
+          if (!value) {
+            setSelectedEvent(null);
+          }
+        }}
+        selectedEvent={selectedEvent}
+      />
+      <DeliverablesDialog
+        selectedEvent={selectedEvent}
+        isOpen={isViewDeliverablesOpen}
+        onOpenChange={(value) => {
+          setIsViewDeliverablesOpen(value);
+          if (!value) {
+            setSelectedEvent(null);
+          }
+        }}
+      />
+      <SearchBar
+        searchTerm={searchTerm || ""}
+        onSearchChange={setSearchTerm}
+        filters={filters}
+        setSelectedFilter={setListFilter}
+        sortOptions={sortOptions}
+        setSelectedSortOption={setSortOption}
+        clearSearch={() => {
+          setSearchTerm(null);
+          setListFilter(null);
+          setSortOption(null);
+        }}
+      />
+      <EventsTable
+        columns={getColumns({ onDelete, onEdit, onAddFiles, onViewDeliverables, removeFiles })}
+        data={filteredEvents}
+      />
+    </BasicPage>
   );
 };
