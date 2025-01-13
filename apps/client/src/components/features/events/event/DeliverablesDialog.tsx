@@ -1,7 +1,5 @@
-import { DeliverableSchema, UserSchema } from "@sigl/types";
-import { z } from "zod";
-import { EventSchemaType } from "../EventsPage";
-import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,19 +7,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Eye, X } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import env from "@/services/env.service";
-import { Button } from "@/components/ui/button";
+import { DeliverableSchema, UserSchema } from "@sigl/types";
+import { Eye, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { EventSchemaType } from "../EventsPage";
 
 interface DeliverablesDialogProps {
   selectedEvent: EventSchemaType | null;

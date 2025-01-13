@@ -1,14 +1,13 @@
-import { Banner } from "@/components/common/banner/Banner";
-import { EventSchema } from "@sigl/types";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-import api from "@/services/api.service.ts";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 import { useUser } from "@/contexts/UserContext.tsx";
-import { toast } from "sonner";
-import { DeliverableCard } from "./DeliverableCard";
+import api from "@/services/api.service.ts";
 import { getErrorInformation } from "@/utilities/http";
 import { UpdateIcon } from "@radix-ui/react-icons";
-import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { EventSchema } from "@sigl/types";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
+import { DeliverableCard } from "./DeliverableCard";
 
 type EventSchemaType = z.infer<typeof EventSchema.getData>;
 

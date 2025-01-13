@@ -1,16 +1,14 @@
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 import { useUser } from "@/contexts/UserContext";
-import { EnumUserRole, MeetingSchema } from "@sigl/types";
-import { useEffect, useState } from "react";
-import { z } from "zod";
 import api from "@/services/api.service";
 import { getErrorInformation } from "@/utilities/http";
-import { toast } from "sonner";
-import { Banner } from "@/components/common/banner/Banner";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { EnumUserRole, MeetingSchema } from "@sigl/types";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 import { MeetingCard } from "./MeetingCard";
 import { AddMeetingDialog } from "./dialogs/AddMeetingDialog";
-import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type MeetingSchemaType = z.infer<typeof MeetingSchema.getData>;
 

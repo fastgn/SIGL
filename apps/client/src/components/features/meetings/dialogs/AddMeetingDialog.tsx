@@ -113,11 +113,11 @@ export const AddMeetingDialog = ({
     const presenterInt = presenter.map((p) => parseInt(p, 10));
 
     if (
-      !roles.includes(EnumUserRole.ADMIN) &&
-      !roles.includes(EnumUserRole.APPRENTICE_COORDINATOR) &&
-      id === null &&
-      !presenterInt.includes(id) &&
-      !juryInt.includes(id)
+      ((!roles.includes(EnumUserRole.ADMIN) ||
+        !roles.includes(EnumUserRole.APPRENTICE_COORDINATOR)) &&
+        !presenterInt.includes(id!) &&
+        !juryInt.includes(id!)) ||
+      id === null
     ) {
       toast.error(
         "Vous n'avez pas les droits pour ajouter une réunion dont vous ne faites pas partie.",

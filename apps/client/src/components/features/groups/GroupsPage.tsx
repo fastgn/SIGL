@@ -1,16 +1,14 @@
-import { Banner } from "@/components/common/banner/Banner";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 import { SearchBar } from "@/components/common/searchBar/SearchBar";
 import { GroupForm } from "@/components/features/groups/group/GroupForm";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import api from "@/services/api.service";
 import { getErrorInformation } from "@/utilities/http";
+import { UpdateIcon } from "@radix-ui/react-icons";
 import { GroupSchema, UserSchema } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { GroupCard } from "./GroupCard";
-import { UpdateIcon } from "@radix-ui/react-icons";
-import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type GroupSchemaType = z.infer<typeof GroupSchema.getData>;
 type UserShemaType = z.infer<typeof UserSchema.getData>;
