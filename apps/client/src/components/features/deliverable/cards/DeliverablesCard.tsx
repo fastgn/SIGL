@@ -12,12 +12,14 @@ interface DeliverablProps {
   deliverable: DeliverableSchemaType;
   deliverables: DeliverableSchemaType[];
   setDeliverables: (deliverables: DeliverableSchemaType[]) => void;
+  readonly?: boolean;
 }
 
 export const DeliverablesCard = ({
   deliverable,
   deliverables,
   setDeliverables,
+  readonly,
 }: DeliverablProps) => {
   const [blobName, setBlobName] = useState<string>("");
 
@@ -28,6 +30,7 @@ export const DeliverablesCard = ({
   }, [deliverable.blobName]);
 
   const deleteDeliverable = async (deliverable: DeliverableSchemaType) => {
+    if (readonly) return;
     try {
       await api.delete("/deliverables/" + deliverable.id);
       const newDeliverables = deliverables.filter((d) => d.id !== deliverable.id);
@@ -56,9 +59,11 @@ export const DeliverablesCard = ({
           >
             <Eye className="h-4 w-4" />
           </Button>
-          <Button variant="destructive" size="sm" onClick={() => deleteDeliverable(deliverable)}>
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          {!readonly && (
+            <Button variant="destructive" size="sm" onClick={() => deleteDeliverable(deliverable)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

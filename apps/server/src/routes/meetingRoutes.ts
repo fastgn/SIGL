@@ -54,7 +54,6 @@ router.get("/user/:id", authMiddleware(), async (req, res) => {
 
 router.post("/", authMiddleware(), async (req, res) => {
   try {
-    console.log(req.body);
     const { title, description, date, presenter, jury, events } = req.body;
 
     if (!req.context.user) {

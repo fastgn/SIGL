@@ -41,7 +41,6 @@ export const FormChangePassword = ({ user, isAdmin }: PropsFormChangePassword) =
                   toast.success("Mot de passe modifié avec succès");
                   break;
                 default:
-                  console.log("here");
                   toast.error(getErrorInformation(res.status).name);
               }
             },

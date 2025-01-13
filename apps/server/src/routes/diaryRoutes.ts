@@ -45,6 +45,33 @@ router.delete(
   },
 );
 
+router.get("/:diaryId/owner", authMiddleware(), async (req, res) => {
+  try {
+    const { diaryId } = req.params;
+
+    if (!req.context.user) {
+      return reply(res, ControllerError.UNAUTHORIZED());
+    }
+    const roles = userService.getRoles(req.context.user);
+
+    if (
+      !roles.includes(EnumUserRole.ADMIN) &&
+      !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
+      !roles.includes(EnumUserRole.APPRENTICE_MENTOR) &&
+      !roles.includes(EnumUserRole.APPRENTICE)
+    ) {
+      return reply(res, ControllerError.UNAUTHORIZED());
+    }
+
+    const result = await diaryController.getOwner(parseInt(diaryId));
+
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
+
 router.get("/user/:id", authMiddleware(), async (req, res) => {
   try {
     const { id } = req.params;
@@ -58,6 +85,7 @@ router.get("/user/:id", authMiddleware(), async (req, res) => {
       req.context.user?.id !== parseInt(id) &&
       !roles.includes(EnumUserRole.ADMIN) &&
       !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
+      !roles.includes(EnumUserRole.APPRENTICE_MENTOR) &&
       !roles.includes(EnumUserRole.APPRENTICE)
     ) {
       return reply(res, ControllerError.UNAUTHORIZED());

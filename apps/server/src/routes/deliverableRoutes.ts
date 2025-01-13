@@ -69,7 +69,12 @@ router.get(
       }
       const roles = userService.getRoles(currentUser);
 
-      if (currentUser.id !== user.id && !roles.includes(EnumUserRole.ADMIN)) {
+      if (
+        currentUser.id !== user.id &&
+        !roles.includes(EnumUserRole.ADMIN) &&
+        !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
+        !roles.includes(EnumUserRole.APPRENTICE_MENTOR)
+      ) {
         logger.error("Utilisateur non autorisé");
         return reply(res, ControllerError.UNAUTHORIZED());
       }

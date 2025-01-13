@@ -4,7 +4,7 @@ import { Note } from "./notes-page";
 import { useAuth } from "@/contexts/AuthContext";
 
 export interface NoteContextType {
-  fetch: () => Promise<Note[]>;
+  fetch: (userId?: number) => Promise<Note[]>;
   create: (title?: string, content?: string) => Promise<Note>;
   remove: (note: Note) => Promise<void>;
   updateTitle: (note: Note, title: string) => Promise<Note>;
@@ -19,8 +19,8 @@ export const NoteProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const { token } = useAuth();
   const [remoteNotes, setRemoteNotes] = useState<Note[]>([]);
 
-  const fetch = async (): Promise<Note[]> => {
-    const result = await api.get("/note", {
+  const fetch = async (userId?: number): Promise<Note[]> => {
+    const result = await api.get(userId !== undefined ? `/note/${userId}` : "/note", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
