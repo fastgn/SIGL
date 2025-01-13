@@ -8,6 +8,7 @@ import logger from "../utils/logger";
 import { removePassword } from "../utils/user";
 import userService, { UserWithRoles } from "../services/user.service";
 import { emailService } from "../services/email.service";
+import deliverableController from "./deliverableController";
 
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
@@ -251,23 +252,42 @@ const userController = {
 
   delete: async (id: number): Promise<ControllerResponse> => {
     let user;
+
     try {
+      const relatedDeliverable = await db.deliverable.findMany({
+        where: {
+          trainingDiary: {
+            apprentice: {
+              userId: id,
+            },
+          },
+        },
+      });
+      if (relatedDeliverable) {
+        for (const deliverable of relatedDeliverable) {
+          await deliverableController.deleteDeliverable(deliverable.id);
+        }
+        logger.info("Tous les fichiers relatifs à l'utilisateurs ont été supprimés");
+      } else {
+        logger.info("Aucun livrable trouvé");
+      }
       user = await db.user.delete({
         where: {
           id,
         },
       });
+      if (!user) {
+        logger.error("User not found");
+        return ControllerError.NOT_FOUND();
+      }
     } catch (error: any) {
       logger.error(`Erreur serveur : ${error.message}`);
-      return ControllerError.INTERNAL();
+      return ControllerError.INTERNAL({ message: error.message });
     }
-
-    if (!user) {
-      logger.error("User not found");
-      return ControllerError.NOT_FOUND();
-    }
-
-    return ControllerSuccess.SUCCESS({ data: user });
+    return ControllerSuccess.SUCCESS({
+      message: "Suppression de toutes les données de l'utilisateur effectué avec succès",
+      data: user,
+    });
   },
 
   updatePasswordAdmin: async (
