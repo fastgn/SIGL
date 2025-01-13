@@ -45,6 +45,10 @@ export const EvaluationApprentice = () => {
     api.get(`/dashboard/evaluation/user/${userId}`).then(
       (res) => {
         const evaluations = res.data.data as EvaluationSchemaType[];
+        if (evaluations.length === 0) {
+          setIsLoading(false);
+          return;
+        }
 
         // ------- SEMESTER -------
         const semesters = evaluations.reduce((acc, evaluation) => {
@@ -53,6 +57,7 @@ export const EvaluationApprentice = () => {
           }
           return acc;
         }, [] as string[]);
+
         setSemesters(
           semesters.map((semester, _) => ({
             key: semester,
