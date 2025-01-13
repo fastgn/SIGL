@@ -94,7 +94,7 @@ export const CompanyForm = ({ onAddCompany, isOpen, onOpenChange }: CompanyFormP
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="relative grid gap-6 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -124,66 +124,69 @@ export const CompanyForm = ({ onAddCompany, isOpen, onOpenChange }: CompanyFormP
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-medium">Adresse</FormLabel>
-                  <Input
-                    className="w-full p-2 border rounded text-sm font-normal"
-                    {...field}
-                    disabled={submitting}
-                  />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-medium">Adresse</FormLabel>
+                    <Input
+                      className="w-full p-2 border rounded text-sm font-normal"
+                      {...field}
+                      disabled={submitting}
+                    />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-medium">Ville</FormLabel>
-                  <Input
-                    className="w-full p-2 border rounded text-sm font-normal"
-                    {...field}
-                    disabled={submitting}
-                  />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-medium">Ville</FormLabel>
+                    <Input
+                      className="w-full p-2 border rounded text-sm font-normal"
+                      {...field}
+                      disabled={submitting}
+                    />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-medium">Pays</FormLabel>
-                  <Input
-                    className="w-full p-2 border rounded text-sm font-normal"
-                    {...field}
-                    disabled={submitting}
-                  />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-medium">Pays</FormLabel>
+                    <Input
+                      className="w-full p-2 border rounded text-sm font-normal"
+                      {...field}
+                      disabled={submitting}
+                    />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="opco"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-medium">OPCO</FormLabel>
-                  <Input
-                    className="w-full p-2 border rounded text-sm font-normal"
-                    {...field}
-                    disabled={submitting}
-                  />
-                </FormItem>
-              )}
-            />
-
+              <FormField
+                control={form.control}
+                name="opco"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-medium">OPCO</FormLabel>
+                    <Input
+                      className="w-full p-2 border rounded text-sm font-normal"
+                      {...field}
+                      disabled={submitting}
+                    />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="flex flex-row gap-4 justify-end">
               <DialogClose asChild>
                 <Button type="button" variant="cancel" className="shadow-1">
