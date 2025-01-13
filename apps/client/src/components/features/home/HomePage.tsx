@@ -3,6 +3,7 @@ import { Banner } from "@/components/common/banner/Banner.tsx";
 import { useUser } from "@/contexts/UserContext";
 import { EnumUserRole } from "@sigl/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export const HomePage = () => {
   const { roles } = useUser();
@@ -20,12 +21,5 @@ export const HomePage = () => {
     }
   };
 
-  return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto">
-        <div className="flex flex-col gap-5 px-16 py-12">{getHomeContent()}</div>
-      </ScrollArea>
-    </div>
-  );
+  return <BasicPage title="Accueil">{getHomeContent()}</BasicPage>;
 };

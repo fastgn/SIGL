@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { useTranslation } from "react-i18next";
 import { FileForm } from "./event/FileForm";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 export type EventFileSchemaType = z.infer<typeof EventFileSchema.getData>;
@@ -160,55 +161,51 @@ export const EventsPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto ">
-        <div className="flex flex-col gap-5 px-16 py-12">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-3xl font-bold">{t("events.title")}</h1>
-            <EventForm
-              onAddEvent={handleAddEvent}
-              onUpdateEvent={handleUpdateEvent}
-              isOpen={isEventFormOpen}
-              onOpenChange={(value) => {
-                setIsEventFormOpen(value);
-                if (!value) {
-                  setSelectedEvent(null);
-                }
-              }}
-              eventObject={selectedEvent}
-            />
-            <FileForm
-              addFile={addFile}
-              isOpen={isFileFormOpen}
-              onOpenChange={(value) => {
-                setIsFileFormOpen(value);
-                if (!value) {
-                  setSelectedEvent(null);
-                }
-              }}
-              selectedEvent={selectedEvent}
-            />
-          </div>
-          <SearchBar
-            searchTerm={searchTerm || ""}
-            onSearchChange={setSearchTerm}
-            filters={filters}
-            setSelectedFilter={setListFilter}
-            sortOptions={sortOptions}
-            setSelectedSortOption={setSortOption}
-            clearSearch={() => {
-              setSearchTerm(null);
-              setListFilter(null);
-              setSortOption(null);
-            }}
-          />
-          <EventsTable
-            columns={getColumns({ onDelete, onEdit, onAddFiles, removeFiles })}
-            data={filteredEvents}
-          />
-        </div>
-      </ScrollArea>
-    </div>
+    <BasicPage
+      title={t("events.title")}
+      extraComponent={
+        <EventForm
+          onAddEvent={handleAddEvent}
+          onUpdateEvent={handleUpdateEvent}
+          isOpen={isEventFormOpen}
+          onOpenChange={(value) => {
+            setIsEventFormOpen(value);
+            if (!value) {
+              setSelectedEvent(null);
+            }
+          }}
+          eventObject={selectedEvent}
+        />
+      }
+    >
+      <FileForm
+        addFile={addFile}
+        isOpen={isFileFormOpen}
+        onOpenChange={(value) => {
+          setIsFileFormOpen(value);
+          if (!value) {
+            setSelectedEvent(null);
+          }
+        }}
+        selectedEvent={selectedEvent}
+      />
+      <SearchBar
+        searchTerm={searchTerm || ""}
+        onSearchChange={setSearchTerm}
+        filters={filters}
+        setSelectedFilter={setListFilter}
+        sortOptions={sortOptions}
+        setSelectedSortOption={setSortOption}
+        clearSearch={() => {
+          setSearchTerm(null);
+          setListFilter(null);
+          setSortOption(null);
+        }}
+      />
+      <EventsTable
+        columns={getColumns({ onDelete, onEdit, onAddFiles, removeFiles })}
+        data={filteredEvents}
+      />
+    </BasicPage>
   );
 };

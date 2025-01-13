@@ -69,7 +69,7 @@ export const AddUserSheet = ({ onAdd }: { onAdd: () => void }) => {
   };
 
   return (
-    <SheetContent>
+    <SheetContent className="w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="relative grid gap-6 py-4">
           <SheetHeader>

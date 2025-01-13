@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { ApprenticeRoleInfo } from "@/components/features/users/user/apprenticeRoleInfo.tsx";
 import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
 import z from "zod";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type GroupSchemaType = z.infer<typeof DiarySchema.getData>;
 
@@ -118,169 +119,179 @@ export const UserDetailsPage = () => {
     });
   };
 
-  const getRoleInfo = () => {
+  const getRoleInfo = (isEditable: boolean) => {
     switch (editedUser?.role[0]) {
       case EnumUserRole.APPRENTICE:
-        return <ApprenticeRoleInfo id={editedUser.id} />;
+        return <ApprenticeRoleInfo id={editedUser.id} isEditable={isEditable} />;
       default:
         return null;
     }
   };
 
-  return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto">
-        <div className="flex flex-col gap-5 px-16 py-12">
-          <div className="flex justify-between items-center gap-3">
-            <h1 className="text-3xl font-bold">Edition d'utilisateur</h1>
-            {user?.role.includes(EnumUserRole.APPRENTICE) &&
-              (diary ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant={"add"} onClick={() => navigate(`/users/${id}/training-diary`)}>
-                      Journal de formation
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Acceder au journal de formation</TooltipContent>
-                </Tooltip>
-              ) : (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant={"add"} onClick={createDiary}>
-                      <Plus className="mr-2 h-4 w-4" />
-                      Journal de formation
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Ajouter un nouveau journal de formation </TooltipContent>
-                </Tooltip>
-              ))}
-          </div>
-          {user && editedUser ? (
-            <div className="flex flex-row gap-5">
-              <div className="w-3/5">
-                <Bloc
-                  title="Informations utilisateur"
-                  actions={
-                    isAdmin || roles[0] === EnumUserRole.APPRENTICE_COORDINATOR
-                      ? userInfoActions
-                      : undefined
-                  }
-                  defaultOpen
-                  isOpenable
-                >
-                  <div className="flex justify-center">
-                    <Avatar className="w-24 h-24 rounded-full">
-                      <AvatarImage
-                        src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.name}`}
-                        alt={user.name}
-                      />
-                      <AvatarFallback>
-                        {user.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Nom</Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        value={editedUser.lastName}
-                        onChange={handleInputChange}
-                        readOnly={!isEditing}
-                        className={!isEditing ? noEditFields : ""}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">Prénom</Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        value={editedUser.firstName}
-                        onChange={handleInputChange}
-                        readOnly={!isEditing}
-                        className={!isEditing ? noEditFields : ""}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        value={editedUser.email}
-                        onChange={handleInputChange}
-                        readOnly={!isEditing}
-                        className={!isEditing ? noEditFields : ""}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Mot de passe</Label>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          id="password"
-                          name="password"
-                          value={editedUser.password}
-                          type="password"
-                          className={noEditFields}
-                          readOnly
-                        />
-                        <FormChangePassword user={editedUser} isAdmin={isAdmin} />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="role">Role</Label>
-                      <Input
-                        id="role"
-                        name="role"
-                        value={editedUser.role}
-                        onChange={handleInputChange}
-                        readOnly={true}
-                        className={noEditFields}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="birthDate">Date de Naissance</Label>
-                      <Input
-                        id="birthDate"
-                        name="birthDate"
-                        value={new Date(editedUser.birthDate).toLocaleDateString("fr-FR")}
-                        onChange={handleInputChange}
-                        readOnly={!isEditing}
-                        className={!isEditing ? noEditFields : ""}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Numéro de Portable</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={editedUser.phone}
-                        onChange={handleInputChange}
-                        readOnly={!isEditing}
-                        className={!isEditing ? noEditFields : ""}
-                      />
-                    </div>
-                  </div>
-                </Bloc>
-              </div>
+  const hasRole = () => {
+    switch (editedUser?.role[0]) {
+      case EnumUserRole.APPRENTICE:
+        return true;
+      default:
+        return false;
+    }
+  };
 
-              {getRoleInfo()}
-            </div>
-          ) : (
-            <UpdateIcon className="h-4 w-4 animate-spin" />
-          )}
-          <div className="flex justify-end">
-            <Button onClick={() => navigate(-1)} variant="cancel">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Quitter
+  const getDiary = () => {
+    return (
+      user?.role.includes(EnumUserRole.APPRENTICE) &&
+      (diary ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant={"add"} onClick={() => navigate(`/users/${id}/training-diary`)}>
+              Journal de formation
             </Button>
+          </TooltipTrigger>
+          <TooltipContent>Acceder au journal de formation</TooltipContent>
+        </Tooltip>
+      ) : (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant={"add"} onClick={createDiary}>
+              <Plus className="mr-2 h-4 w-4" />
+              Journal de formation
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Ajouter un nouveau journal de formation </TooltipContent>
+        </Tooltip>
+      ))
+    );
+  };
+
+  return (
+    <BasicPage title="Utilisateur" extraComponent={getDiary()}>
+      {user && editedUser ? (
+        <div className="flex flex-col md:flex-row gap-5">
+          <div className={`w-full ${hasRole() ? "md:w-3/5" : "md:w-full"}`}>
+            <Bloc
+              title="Informations utilisateur"
+              actions={
+                isAdmin || roles[0] === EnumUserRole.APPRENTICE_COORDINATOR
+                  ? userInfoActions
+                  : undefined
+              }
+              defaultOpen
+              isOpenable
+            >
+              <div className="flex justify-center">
+                <Avatar className="w-24 h-24 rounded-full">
+                  <AvatarImage
+                    src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.name}`}
+                    alt={user.name}
+                  />
+                  <AvatarFallback>
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Nom</Label>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    value={editedUser.lastName}
+                    onChange={handleInputChange}
+                    readOnly={!isEditing}
+                    className={!isEditing ? noEditFields : ""}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">Prénom</Label>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    value={editedUser.firstName}
+                    onChange={handleInputChange}
+                    readOnly={!isEditing}
+                    className={!isEditing ? noEditFields : ""}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    value={editedUser.email}
+                    onChange={handleInputChange}
+                    readOnly={!isEditing}
+                    className={!isEditing ? noEditFields : ""}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Mot de passe</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="password"
+                      name="password"
+                      value={editedUser.password}
+                      type="password"
+                      className={noEditFields}
+                      readOnly
+                    />
+                    <FormChangePassword user={editedUser} isAdmin={isAdmin} />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Input
+                    id="role"
+                    name="role"
+                    value={editedUser.role}
+                    onChange={handleInputChange}
+                    readOnly={true}
+                    className={noEditFields}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="birthDate">Date de Naissance</Label>
+                  <Input
+                    id="birthDate"
+                    name="birthDate"
+                    value={new Date(editedUser.birthDate).toLocaleDateString("fr-FR")}
+                    onChange={handleInputChange}
+                    readOnly={!isEditing}
+                    className={!isEditing ? noEditFields : ""}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Numéro de Portable</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    value={editedUser.phone}
+                    onChange={handleInputChange}
+                    readOnly={!isEditing}
+                    className={!isEditing ? noEditFields : ""}
+                  />
+                </div>
+              </div>
+            </Bloc>
           </div>
+
+          {hasRole() ? (
+            <div className="w-full md:w-2/5">
+              {getRoleInfo(isAdmin || roles[0] === EnumUserRole.APPRENTICE_COORDINATOR)}
+            </div>
+          ) : null}
         </div>
-      </ScrollArea>
-    </div>
+      ) : (
+        <UpdateIcon className="h-4 w-4 animate-spin" />
+      )}
+      <div className="flex justify-end">
+        <Button onClick={() => navigate(-1)} variant="cancel">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Quitter
+        </Button>
+      </div>
+    </BasicPage>
   );
 };

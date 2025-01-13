@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { GroupCard } from "./GroupCard";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type GroupSchemaType = z.infer<typeof GroupSchema.getData>;
 type UserShemaType = z.infer<typeof UserSchema.getData>;
@@ -119,47 +120,45 @@ export const GroupsPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Banner />
+    <BasicPage
+      title="Groupes"
+      extraComponent={
+        <GroupForm
+          onAddGroup={handleAddGroup}
+          isOpen={isGroupFormOpen}
+          onOpenChange={(value) => {
+            setIsGroupFormOpen(value);
+          }}
+        />
+      }
+    >
       {isLoading ? (
-        <div className="w-full flex justify-center items-center">
-          <UpdateIcon className="h-10 w-10 animate-spin" />
+        <div className="flex justify-center items-center">
+          <UpdateIcon className="w-10 animate-spin" />
         </div>
       ) : (
-        <ScrollArea className="w-full overflow-x-auto ">
-          <div className="flex flex-col gap-5 px-16 py-12">
-            <div className="flex flex-row justify-between">
-              <h1 className="text-3xl font-bold">Groupes</h1>
-              <GroupForm
-                onAddGroup={handleAddGroup}
-                isOpen={isGroupFormOpen}
-                onOpenChange={(value) => {
-                  setIsGroupFormOpen(value);
-                }}
-              />
-            </div>
-            <div className="w-full">
-              <SearchBar
-                searchTerm={searchTerm || ""}
-                onSearchChange={setSearchTerm}
-                clearSearch={() => {
-                  setSearchTerm(null);
-                }}
-              />
-            </div>
-            <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
-              {filteredGroups.map((group) => (
-                <GroupCard
-                  key={group.id}
-                  group={group}
-                  onDeleteGroup={handleDeleteGroup}
-                  users={users}
-                />
-              ))}
-            </div>
+        <>
+          <div className="w-full">
+            <SearchBar
+              searchTerm={searchTerm || ""}
+              onSearchChange={setSearchTerm}
+              clearSearch={() => {
+                setSearchTerm(null);
+              }}
+            />
           </div>
-        </ScrollArea>
+          <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
+            {filteredGroups.map((group) => (
+              <GroupCard
+                key={group.id}
+                group={group}
+                onDeleteGroup={handleDeleteGroup}
+                users={users}
+              />
+            ))}
+          </div>
+        </>
       )}
-    </div>
+    </BasicPage>
   );
 };

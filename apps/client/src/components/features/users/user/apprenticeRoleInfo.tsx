@@ -24,7 +24,9 @@ type companyType = z.infer<typeof UserSchema.company>;
 type tutorType = z.infer<typeof UserSchema.educationalTutor>;
 type mentorType = z.infer<typeof UserSchema.apprenticeMentor>;
 
-export const ApprenticeRoleInfo = ({ id }: { id: number }) => {
+export const ApprenticeRoleInfo = ({ id, isEditable }: { id: number; isEditable: boolean }) => {
+  const noEditFields =
+    "border bg-blue-10 border-blue-10 cursor-not-allowed rounded-md !opacity-100";
   const [rolesDesc, setRolesDesc] = useState<roleDescription>();
   const [roleDescEdit, setRoleDescEdit] = useState<roleDescription>();
   const [tutors, setTutors] = useState<tutorType[]>([]);
@@ -104,9 +106,6 @@ export const ApprenticeRoleInfo = ({ id }: { id: number }) => {
           poste: roleDescEdit?.apprentice.poste,
         }),
       ]);
-      console.log(postRes);
-      console.log(tutorsRes);
-      console.log(CompanyRes);
       setRolesDesc(roleDescEdit);
       setIsEditing(false);
       toast.success("Modifications enregistrées avec succès");
@@ -201,17 +200,17 @@ export const ApprenticeRoleInfo = ({ id }: { id: number }) => {
   }
 
   return (
-    <Bloc title="Apprenti" actions={userInfoActions} defaultOpen isOpenable>
+    <Bloc title="Apprenti" actions={isEditable && userInfoActions} defaultOpen isOpenable>
       <div className="mt-4 space-y-2">
         <div className="space-y-2">
-          <Label htmlFor="company">Entreprise: </Label>
+          <Label htmlFor="company">Entreprise </Label>
           <Select
             name="company"
             value={String(roleDescEdit.apprentice.companyId || "")}
             onValueChange={handleCompanyChange}
             disabled={!isEditing}
           >
-            <SelectTrigger className="border bg-background rounded-md">
+            <SelectTrigger className={!isEditing ? noEditFields : "border rounded-md"}>
               <SelectValue placeholder="Sélectionner une entreprise" />
             </SelectTrigger>
             <SelectContent>
@@ -228,24 +227,25 @@ export const ApprenticeRoleInfo = ({ id }: { id: number }) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="poste">Poste: </Label>
+          <Label htmlFor="poste">Poste </Label>
           <Input
             id="poste"
             name="poste"
             value={roleDescEdit.apprentice.poste || ""}
             onChange={handleInputChange}
             readOnly={!isEditing}
+            className={!isEditing ? noEditFields : ""}
           />
         </div>
 
         <div className="space-y-2">
-          <Label>Tuteur pédagogique: </Label>
+          <Label>Tuteur pédagogique</Label>
           <Select
             value={String(roleDescEdit.educationalTutorId || "")}
             onValueChange={handleTutorChange}
             disabled={!isEditing}
           >
-            <SelectTrigger className="border bg-background rounded-md">
+            <SelectTrigger className={!isEditing ? noEditFields : "border rounded-md"}>
               <SelectValue placeholder="Sélectionner un tuteur pédagogique" />
             </SelectTrigger>
             <SelectContent>
@@ -262,13 +262,13 @@ export const ApprenticeRoleInfo = ({ id }: { id: number }) => {
         </div>
 
         <div className="space-y-2">
-          <Label>Maître d'apprentissage: </Label>
+          <Label>Maître d'apprentissage</Label>
           <Select
             value={String(roleDescEdit.apprenticeMentorId || "")}
             onValueChange={handleMentorChange}
             disabled={!isEditing}
           >
-            <SelectTrigger className="border bg-background rounded-md">
+            <SelectTrigger className={!isEditing ? noEditFields : "border rounded-md"}>
               <SelectValue placeholder="Sélectionner un maître d'apprentissage" />
             </SelectTrigger>
             <SelectContent>
