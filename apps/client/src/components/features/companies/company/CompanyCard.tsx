@@ -35,7 +35,7 @@ export const CompanyCard = ({
   return (
     <Card
       key={company.id}
-      className="h-40 p-7 flex w-full justify-between items-start gap-3 rounded-2xl bg-white shadow-0"
+      className="h-full p-7 flex w-full justify-between items-start gap-3 rounded-2xl bg-white shadow-0"
     >
       <div className="flex flex-row h-full">
         <CardHeader className="p-0">

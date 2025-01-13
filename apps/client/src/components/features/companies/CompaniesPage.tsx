@@ -9,6 +9,7 @@ import { CompanySchema } from "@sigl/types";
 import { z } from "zod";
 import { CompanyForm } from "./company/CompanyForm";
 import { CompanyCard } from "./company/CompanyCard";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type CompanyShemaType = z.infer<typeof CompanySchema.getData>;
 
@@ -69,39 +70,31 @@ export const CompaniesPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto ">
-        <div className="flex flex-col gap-5 px-16 py-12">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-3xl font-bold">Entreprises</h1>
-            <CompanyForm
-              onAddCompany={handleAddCompany}
-              isOpen={isFormOpen}
-              onOpenChange={(value: boolean) => {
-                setIsFormOpen(value);
-              }}
-            />
-          </div>
-          {loading ? (
-            <div className="w-full flex justify-center items-center">
-              <UpdateIcon className="h-10 w-10 animate-spin" />
-            </div>
-          ) : companies.length > 0 ? (
-            <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
-              {companies.map((company) => (
-                <CompanyCard
-                  key={company.id}
-                  company={company}
-                  onDeleteCompany={handleDeleteCompany}
-                />
-              ))}
-            </div>
-          ) : (
-            <p>Aucune entreprise</p>
-          )}
+    <BasicPage
+      title="Entreprises"
+      extraComponent={
+        <CompanyForm
+          onAddCompany={handleAddCompany}
+          isOpen={isFormOpen}
+          onOpenChange={(value: boolean) => {
+            setIsFormOpen(value);
+          }}
+        />
+      }
+    >
+      {loading ? (
+        <div className="w-full flex justify-center items-center">
+          <UpdateIcon className="h-10 w-10 animate-spin" />
         </div>
-      </ScrollArea>
-    </div>
+      ) : companies.length > 0 ? (
+        <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
+          {companies.map((company) => (
+            <CompanyCard key={company.id} company={company} onDeleteCompany={handleDeleteCompany} />
+          ))}
+        </div>
+      ) : (
+        <p>Aucune entreprise</p>
+      )}
+    </BasicPage>
   );
 };

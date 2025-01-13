@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { DeliverableCard } from "./DeliverableCard";
 import { getErrorInformation } from "@/utilities/http";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
@@ -50,28 +51,22 @@ export const DeliverablePage = () => {
   }, [id]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Banner />
-
-      <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
-        <h1 className="text-3xl font-bold">Livrables</h1>
-
-        {isLoading ? (
-          <div className="w-full flex justify-center items-center">
-            <UpdateIcon className="h-10 w-10 animate-spin" />
+    <BasicPage title="Mes livrables">
+      {isLoading ? (
+        <div className="w-full flex justify-center items-center">
+          <UpdateIcon className="h-10 w-10 animate-spin" />
+        </div>
+      ) : events.length > 0 ? (
+        <div className="w-full">
+          <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
+            {events.map((event) => (
+              <DeliverableCard event={event} trainingDiaryId={trainingDiaryId} key={event.id} />
+            ))}
           </div>
-        ) : events.length > 0 ? (
-          <div className="w-full">
-            <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
-              {events.map((event) => (
-                <DeliverableCard event={event} trainingDiaryId={trainingDiaryId} key={event.id} />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <p className="text-gray-500">Aucun événement disponible.</p>
-        )}
-      </div>
-    </div>
+        </div>
+      ) : (
+        <p className="text-gray-500">Aucun événement disponible.</p>
+      )}
+    </BasicPage>
   );
 };

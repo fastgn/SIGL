@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { MeetingCard } from "./MeetingCard";
 import { AddMeetingDialog } from "./dialogs/AddMeetingDialog";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type MeetingSchemaType = z.infer<typeof MeetingSchema.getData>;
 
@@ -80,29 +81,20 @@ export const MeetingPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto ">
-        <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
-          <div className="flex flex-row justify-between w-full">
-            <h1 className="text-3xl font-bold">Réunions</h1>
-            <AddMeetingDialog onAddMeeting={onAddMeeting} />
-          </div>
-          {isLoading ? (
-            <div className="w-full flex justify-center items-center">
-              <UpdateIcon className="h-10 w-10 animate-spin" />
-            </div>
-          ) : meetings.length > 0 ? (
-            <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
-              {meetings.map((event) => (
-                <MeetingCard key={event.id} meeting={event} onDeleteMeeting={onDeleteMeeting} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">Aucun événement disponible.</p>
-          )}
+    <BasicPage title="Réunions" extraComponent={<AddMeetingDialog onAddMeeting={onAddMeeting} />}>
+      {isLoading ? (
+        <div className="w-full flex justify-center items-center">
+          <UpdateIcon className="h-10 w-10 animate-spin" />
         </div>
-      </ScrollArea>
-    </div>
+      ) : meetings.length > 0 ? (
+        <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
+          {meetings.map((event) => (
+            <MeetingCard key={event.id} meeting={event} onDeleteMeeting={onDeleteMeeting} />
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500">Aucun événement disponible.</p>
+      )}
+    </BasicPage>
   );
 };

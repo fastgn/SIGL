@@ -52,40 +52,32 @@ router.delete(
   },
 );
 
-router.get(
-  "/:company_id",
-  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
-  async (req, res) => {
-    try {
-      const { company_id } = req.params;
-      logger.info(`Récupération de l'entreprise`);
-      const result = await companyController.getCompany(parseInt(company_id));
-      logger.info(`Entreprise récupérée`);
+router.get("/:company_id", authMiddleware(), async (req, res) => {
+  try {
+    const { company_id } = req.params;
+    logger.info(`Récupération de l'entreprise`);
+    const result = await companyController.getCompany(parseInt(company_id));
+    logger.info(`Entreprise récupérée`);
 
-      reply(res, result);
-    } catch (error: any) {
-      logger.error(`Erreur serveur : ${error.message}`);
-      reply(res, ControllerError.INTERNAL());
-    }
-  },
-);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
 
-router.get(
-  "/",
-  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
-  async (req, res) => {
-    try {
-      logger.info(`Récupération de toutes les entreprises`);
-      const result = await companyController.getAllCompany();
-      logger.info(`Entreprises récupérées`);
+router.get("/", authMiddleware(), async (req, res) => {
+  try {
+    logger.info(`Récupération de toutes les entreprises`);
+    const result = await companyController.getAllCompany();
+    logger.info(`Entreprises récupérées`);
 
-      reply(res, result);
-    } catch (error: any) {
-      logger.error(`Erreur serveur : ${error.message}`);
-      reply(res, ControllerError.INTERNAL());
-    }
-  },
-);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
 
 router.patch(
   "/:id",

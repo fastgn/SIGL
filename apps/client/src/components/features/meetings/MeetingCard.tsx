@@ -54,7 +54,7 @@ export const MeetingCard = ({
   return (
     <Card
       key={meeting.id}
-      className="h-40 p-7 flex w-full justify-between items-start gap-3 rounded-2xl bg-white shadow-0"
+      className="h-full p-7 flex w-full justify-between items-start gap-3 rounded-2xl bg-white shadow-0"
     >
       <CardContent className="pb-0 h-full flex flex-col">
         <CardTitle className="text-lg font-semibold leading-7">{meeting.title}</CardTitle>

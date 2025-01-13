@@ -7,6 +7,7 @@ import { EnumSortOption, EnumUserRole } from "@sigl/types";
 import { getErrorInformation } from "@/utilities/http";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type UserTypeReq = {
   id: number;
@@ -102,12 +103,12 @@ export const UsersPage = () => {
       }
     }
 
-    if (listFilter === null && sortOption === null) {
+    if (listFilter === null && sortOption === null && searchTerm === "") {
       filteredUsers = [...usersCopy];
     }
 
     setFilteredUsers(filteredUsers);
-  }, [listFilter, searchTerm, sortOption, users]);
+  }, [searchTerm, listFilter, sortOption, users]);
 
   const handleDeleteUser = (id: number) => {
     api
@@ -150,31 +151,25 @@ export const UsersPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <Banner />
-      <ScrollArea className="w-full overflow-x-auto ">
-        <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
-          <h1 className="text-3xl font-bold">Utilisateurs</h1>
-          <div className="w-full">
-            <SearchBar
-              searchTerm={searchTerm || ""}
-              onSearchChange={setSearchTerm}
-              filters={filters}
-              setSelectedFilter={setFilter}
-              sortOptions={sortOptions}
-              setSelectedSortOption={setSortOptions}
-              clearSearch={clearSearch}
-            />
-          </div>
-          <UsersList
-            users={filteredUsers}
-            onDeleteUser={handleDeleteUser}
-            onRequestRefresh={() => {
-              fetchUsers();
-            }}
-          />
-        </div>
-      </ScrollArea>
-    </div>
+    <BasicPage title="Utilisateurs">
+      <div className="w-full">
+        <SearchBar
+          searchTerm={searchTerm || ""}
+          onSearchChange={setSearchTerm}
+          filters={filters}
+          setSelectedFilter={setFilter}
+          sortOptions={sortOptions}
+          setSelectedSortOption={setSortOptions}
+          clearSearch={clearSearch}
+        />
+      </div>
+      <UsersList
+        users={filteredUsers}
+        onDeleteUser={handleDeleteUser}
+        onRequestRefresh={() => {
+          fetchUsers();
+        }}
+      />
+    </BasicPage>
   );
 };

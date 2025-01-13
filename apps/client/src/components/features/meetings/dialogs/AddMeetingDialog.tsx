@@ -113,10 +113,10 @@ export const AddMeetingDialog = ({
     const presenterInt = presenter.map((p) => parseInt(p, 10));
 
     if (
-      !roles.includes(EnumUserRole.ADMIN) ||
-      !roles.includes(EnumUserRole.APPRENTICE_COORDINATOR) ||
-      id === null ||
-      !presenterInt.includes(id) ||
+      !roles.includes(EnumUserRole.ADMIN) &&
+      !roles.includes(EnumUserRole.APPRENTICE_COORDINATOR) &&
+      id === null &&
+      !presenterInt.includes(id) &&
       !juryInt.includes(id)
     ) {
       toast.error(
@@ -167,7 +167,7 @@ export const AddMeetingDialog = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="add">
-          <Plus className="h-4 w-4" />
+          <Plus className="mr-2 h-4 w-4" />
           Ajouter une réunion
         </Button>
       </DialogTrigger>
@@ -259,12 +259,12 @@ export const AddMeetingDialog = ({
               )}
             />
 
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <FormField
                 control={form.control}
                 name="presenter"
                 render={() => (
-                  <FormItem className="w-1/2">
+                  <FormItem className="w-full sm:w-1/2">
                     <FormLabel>Présentateur</FormLabel>
                     <MultiSelect
                       placeholder="Ajouter des utilisateurs"
@@ -283,7 +283,7 @@ export const AddMeetingDialog = ({
                 control={form.control}
                 name="jury"
                 render={() => (
-                  <FormItem className="w-1/2">
+                  <FormItem className="w-full sm:w-1/2">
                     <FormLabel>Jury</FormLabel>
                     <MultiSelect
                       placeholder="Ajouter des utilisateurs"
