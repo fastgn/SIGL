@@ -8,6 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { EventMicrocard } from "./microcards/EventMicrocard";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 
@@ -45,17 +46,19 @@ export const Deliverables = () => {
     <Card className="p-5 flex flex-col gap-5 h-full overflow-hidden">
       <h1 className="text-xl font-bold">Evénements</h1>
       <Separator />
-      <div className="flex flex-col gap-3">
-        {isLoading ? (
-          <div className="flex justify-center items-center h-32">
-            <Spinner />
-          </div>
-        ) : events && events.length > 0 ? (
-          events.map((event) => <EventMicrocard key={event.id} event={event} />)
-        ) : (
-          <p>Aucune note disponible</p>
-        )}
-      </div>
+      <ScrollArea className="overflow-x-auto">
+        <div className="flex flex-col gap-3">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-32">
+              <Spinner />
+            </div>
+          ) : events && events.length > 0 ? (
+            events.map((event) => <EventMicrocard key={event.id} event={event} />)
+          ) : (
+            <p>Aucune note disponible</p>
+          )}
+        </div>
+      </ScrollArea>
     </Card>
   );
 };
