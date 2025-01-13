@@ -13,6 +13,7 @@ interface ColumnsProps {
   onDelete: (event: EventSchemaType) => void;
   onEdit: (event: EventSchemaType) => void;
   onAddFiles: (event: EventSchemaType) => void;
+  onViewDeliverables: (event: EventSchemaType) => void;
   removeFiles: (event: EventSchemaType, file: EventFileSchemaType) => void;
 }
 
@@ -20,6 +21,7 @@ export const getColumns = ({
   onDelete,
   onEdit,
   onAddFiles,
+  onViewDeliverables,
   removeFiles,
 }: ColumnsProps): ColumnDef<EventSchemaType>[] => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -140,6 +142,7 @@ export const getColumns = ({
               onDelete={onDelete}
               onEdit={onEdit}
               onAddFiles={onAddFiles}
+              onViewDeliverables={onViewDeliverables}
             />
           </div>
         );

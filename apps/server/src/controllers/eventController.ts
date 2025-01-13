@@ -10,7 +10,24 @@ const eventController = {
     const events = await db.event.findMany({
       include: {
         files: true,
-        groups: true,
+        groups: {
+          include: {
+            users: true,
+          },
+        },
+        delivrables: {
+          include: {
+            trainingDiary: {
+              include: {
+                apprentice: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -388,5 +405,39 @@ const eventController = {
 
     return ControllerSuccess.SUCCESS({ message: "Fichier supprimé avec succès" });
   },
+
+  getDeliverablesFromEvent: async (eventId: number) => {
+    const event = await db.event.findFirst({
+      where: {
+        id: eventId,
+      },
+      include: {
+        delivrables: {
+          include: {
+            trainingDiary: {
+              include: {
+                apprentice: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!event) {
+      logger.error("L'évènement n'existe pas");
+      return ControllerError.INVALID_PARAMS({ message: "L'évènement n'existe pas" });
+    }
+
+    return ControllerSuccess.SUCCESS({
+      message: "Livrables récupérés avec succès",
+      data: event.delivrables,
+    });
+  },
 };
+
 export default eventController;

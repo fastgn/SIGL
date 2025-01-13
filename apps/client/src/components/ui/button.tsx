@@ -23,11 +23,13 @@ const buttonVariants = cva(
         userUnselected: "bg-white text-black shadow-1 hover:bg-blue-0/50 hover:text-white",
         add: "bg-admin text-white shadow-0 hover:bg-admin/50 rounded-[18px]",
         cancel: "bg-destructive text-white shadow-0 hover:bg-destructive/50 rounded-[18px]",
+        redDeactivate: "bg-red-500 text-white shadow-0 cursor-auto",
       },
       size: {
         default: "h-9 px-4 py-2 font-[600] text-[1rem] leading-[1.75rem]",
         xs: "h-7 rounded-md px-2 text-xs",
         sm: "h-8 rounded-md px-3 text-xs",
+        smIcon: "h-8 w-8 rounded-md p-1",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
       },

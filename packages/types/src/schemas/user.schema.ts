@@ -1,6 +1,7 @@
 import validator from "validator";
 import {z} from "zod";
 import {EnumUserRole} from "../enums";
+import { DeliverableSchema } from "./deliverable.schema";
 
 /**
  * Schéma de validation pour la création d'un utilisateur
