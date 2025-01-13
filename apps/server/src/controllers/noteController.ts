@@ -88,8 +88,8 @@ const noteController = {
       const { success, data: form } = NoteSchema.update.safeParse(payload);
       if (!success) return ControllerError.INVALID_PARAMS();
 
-      // Au moins un champ doit être renseigné (title ou contenu)
-      if (!form.title && !form.content) return ControllerError.INVALID_PARAMS();
+      // Le titre ne peut pas être vide
+      if (form.title !== undefined && !form.title) return ControllerError.INVALID_PARAMS();
 
       // Vérifier les droits de l'utilisateur
       // TODO : Autoriser l'équipe tutorale de l'apprenti
