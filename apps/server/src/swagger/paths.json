@@ -56,121 +56,234 @@
       }
     }
   },
-  "/user/count": {
-    "get": {
-      "summary": "Récupération du nombre total d'utilisateurs",
+  "/user": {
+    "post": {
+      "summary": "Créer un nouvel utilisateur",
       "tags": ["User"],
-      "description": "Permet à un admin de récupérer le nombre total d'utilisateurs",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "role": "APPRENTICE"
+              }
+            }
+          }
+        }
+      },
       "responses": {
         "200": {
-          "description": "Récupération du nombre total d'utilisateurs",
+          "description": "Utilisateur créé avec succès",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "integer",
-                    "description": "Status du succes de la requete"
-                  },
-                  "message": {
-                    "type": "string",
-                    "description": "Message de la requete"
-                  },
-                  "data": {
-                    "type": "integer",
-                    "description": "Nombre total d'utilisateurs"
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john.doe@example.com",
+                  "role": "APPRENTICE"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    },
+    "get": {
+      "summary": "Récupérer tous les utilisateurs",
+      "tags": ["User"],
+      "responses": {
+        "200": {
+          "description": "Liste des utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john.doe@example.com",
+                    "role": "ADMIN"
                   }
                 }
               }
             }
           }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/user/{id}": {
+    "get": {
+      "summary": "Récupérer un utilisateur spécifique",
+      "tags": ["User"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Informations de l'utilisateur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john.doe@example.com",
+                  "role": "APPRENTICE"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    },
+    "put": {
+      "summary": "Mettre à jour un utilisateur",
+      "tags": ["User"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": "Jane Doe",
+                "email": "jane.doe@example.com",
+                "role": "ADMIN"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Utilisateur mis à jour avec succès",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "id": 1,
+                  "name": "Jane Doe",
+                  "email": "jane.doe@example.com",
+                  "role": "ADMIN"
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Supprimer un utilisateur",
+      "tags": ["User"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Utilisateur supprimé avec succès"
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/user/count": {
+    "get": {
+      "summary": "Récupérer le nombre total d'utilisateurs",
+      "tags": ["User"],
+      "responses": {
+        "200": {
+          "description": "Nombre total d'utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "count": 150
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
         }
       }
     }
   },
   "/user/count/role": {
     "get": {
-      "summary": "Récupération du nombre total d'utilisateurs par role",
+      "summary": "Récupérer le nombre d'utilisateurs par rôle",
       "tags": ["User"],
-      "description": "Permet à un admin de récupérer le nombre total d'utilisateurs par role",
       "responses": {
         "200": {
-          "description": "Récupération du nombre total d'utilisateurs par role",
+          "description": "Nombre d'utilisateurs par rôle",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "integer",
-                    "description": "Status du succes de la requete"
-                  },
-                  "message": {
-                    "type": "string",
-                    "description": "Message de la requete"
-                  },
-                  "data": {
-                    "type": "object",
-                    "description": "Nombre total d'utilisateurs par role",
-                    "properties": {
-                      "apprentice": {
-                        "type": "integer",
-                        "description": "Nombre d'apprenti"
-                      },
-                      "apprentice_coordinator": {
-                        "type": "integer",
-                        "description": "Nombre de coordinateur d'apprenti"
-                      },
-                      "apprentice_mentor": {
-                        "type": "integer",
-                        "description": "Nombre de mentor d'apprenti"
-                      },
-                      "curiculum_manager": {
-                        "type": "integer",
-                        "description": "Nombre de gestionnaire de cursus"
-                      },
-                      "educational_tutor": {
-                        "type": "integer",
-                        "description": "Nombre de tuteur pédagogique"
-                      },
-                      "teacher": {
-                        "type": "integer",
-                        "description": "Nombre de professeur"
-                      },
-                      "admin": {
-                        "type": "integer",
-                        "description": "Nombre d'admin"
-                      }
-                    }
-                  }
+                "example": {
+                  "ADMIN": 10,
+                  "APPRENTICE": 120,
+                  "APPRENTICE_COORDINATOR": 20
                 }
               }
             }
           }
-        }
-      }
-    }
-  },
-  "/user/{id}/groups": {
-    "get": {
-      "summary": "Récupération des groupes d'un utilisateur",
-      "tags": ["User"],
-      "description": "Permet à un utilisateur de récupérer la liste des groupes auxquels il appartient",
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "integer"
-          },
-          "description": "ID de l'utilisateur"
-        }
-      ],
-      "responses": {
-        "200": {
-          "description": "Récupération des groupes d'un utilisateur"
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
         }
       }
     }

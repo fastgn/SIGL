@@ -885,8 +885,8 @@ async function main() {
     });
   }
   //pour chaque entreprise, compter le nombre d'apprentie et mettre à jour ApprenticeNumber
-  const companies = await db.company.findMany();
-  for (const company of companies) {
+  const companies2 = await db.company.findMany();
+  for (const company of companies2) {
     const NbApprentices = await db.apprentice.count({
       where: {
         companyId: company.id,

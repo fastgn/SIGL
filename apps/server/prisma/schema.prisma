@@ -245,7 +245,7 @@ model Deliverable {
   createdAt       DateTime       @default(now())
   event           Event?         @relation(fields: [eventId], references: [id])
   eventId         Int?
-  trainingDiary   TrainingDiary? @relation(fields: [trainingDiaryId], references: [id])
+  trainingDiary   TrainingDiary? @relation(fields: [trainingDiaryId], references: [id],onDelete: Cascade)
   trainingDiaryId Int?
 }
 
