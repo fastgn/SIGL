@@ -45,7 +45,7 @@ export const MyFilesPage = () => {
         <div className="flex flex-col px-16 py-12 items-start gap-5 self-stretch">
           <h1 className="text-3xl font-bold">Mes fichiers</h1>
           <div className="w-full">
-            <div>
+            {groups.length > 0 ? (
               <Accordion type={groups.length > 1 ? "multiple" : "single"} collapsible>
                 {groups.map((group) => (
                   <AccordionItem key={group.id} value={"group-" + group.id}>
@@ -83,7 +83,9 @@ export const MyFilesPage = () => {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </div>
+            ) : (
+              <p className="text-gray-500">Aucun fichier disponible</p>
+            )}
           </div>
         </div>
       </ScrollArea>

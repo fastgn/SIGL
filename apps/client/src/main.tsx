@@ -23,6 +23,7 @@ import { MyFilesPage } from "./components/features/myFiles/MyFilesPage";
 import { MeetingPage } from "./components/features/meetings/MeetingPage";
 import { EvalutionPage } from "./components/features/apprentice/EvaluationPage";
 import { MyApprenticePage } from "./components/features/tutor/MyApprenticePage";
+import { CompaniesPage } from "./components/features/companies/CompaniesPage";
 
 env.init();
 api.init(env.get.API_URL);
@@ -57,6 +58,7 @@ createRoot(document.getElementById("root")!).render(
                 path="/myApprentice"
                 element={<ProtectedRoute component={MyApprenticePage} />}
               />
+              <Route path="/companies" element={<ProtectedRoute component={CompaniesPage} />} />
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="*" element={<Navigate to="/home" />} />
             </Routes>

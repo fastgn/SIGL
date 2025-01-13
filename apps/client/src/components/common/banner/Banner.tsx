@@ -73,6 +73,10 @@ export const Banner = () => {
       name: "Réunions",
       link: "/meetings",
     },
+    {
+      name: "Entreprises",
+      link: "/companies",
+    },
   ];
 
   const navItemsUser = [

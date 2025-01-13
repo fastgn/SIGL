@@ -470,6 +470,56 @@ async function main() {
     });
   }
 
+  const companies = [
+    {
+      name: "Company 1",
+      address: "123 Main Street",
+      city: "City 1",
+      country: "Country 1",
+      description: "Description 1",
+      apprenticeNumber: 10,
+      opco: "OPCO 1",
+    },
+    {
+      name: "Company 2",
+      address: "456 Main Street",
+      city: "City 2",
+      country: "Country 2",
+      description: "Description 2",
+      apprenticeNumber: 20,
+      opco: "OPCO 2",
+    },
+  ];
+
+  // Création des entreprises
+  for (const company of companies) {
+    await db.company.create({
+      data: {
+        name: company.name,
+        address: company.address,
+        city: company.city,
+        country: company.country,
+        description: company.description,
+        apprenticeNumber: company.apprenticeNumber,
+        opco: company.opco,
+      },
+    });
+  }
+
+  // Assignation des apprentis aux entreprises
+  await db.user.update({
+    where: { email: "alice@fastgn.com" },
+    data: {
+      apprentice: {
+        update: {
+          company: {
+            connect: { id: 1 },
+          },
+        },
+      },
+    },
+  });
+
   // mail de confirmation
   await db.emailTemplate.create({
     data: {
