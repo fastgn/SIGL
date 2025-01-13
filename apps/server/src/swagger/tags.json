@@ -38,5 +38,9 @@
   {
     "name": "Meeting",
     "description": "Operations sur les réunions"
+  },
+  {
+    "name": "Dashboard",
+    "description": "Operations pour récupérer les données du tableau de bord"
   }
 ]

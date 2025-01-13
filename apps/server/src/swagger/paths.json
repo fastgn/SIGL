@@ -262,6 +262,36 @@
       }
     }
   },
+  "/user": {
+    "get": {
+      "summary": "Obtenir la liste de tous les utilisateurs",
+      "tags": ["User"],
+      "responses": {
+        "200": {
+          "description": "Liste des utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "john.doe@example.com",
+                    "role": "ADMIN"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
   "/user/count/role": {
     "get": {
       "summary": "Récupérer le nombre d'utilisateurs par rôle",
@@ -1858,6 +1888,298 @@
               }
             }
           }
+        }
+      }
+    }
+  },
+  "/dashboard/users/count": {
+    "get": {
+      "summary": "Obtenir le nombre total d'utilisateurs",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre total d'utilisateurs",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "example": 123
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/users/count/role": {
+    "get": {
+      "summary": "Obtenir le nombre d'utilisateurs par rôle",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre d'utilisateurs par rôle",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "ADMIN": 5,
+                  "APPRENTICE": 50,
+                  "APPRENTICE_COORDINATOR": 10
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/notes/{userId}": {
+    "get": {
+      "summary": "Obtenir les dernières notes d'un utilisateur",
+      "tags": ["Dashboard"],
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "nbNote",
+          "in": "query",
+          "required": false,
+          "description": "Nombre de notes à récupérer (par défaut 10)",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Les dernières notes de l'utilisateur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "noteId": 1,
+                    "content": "Exemple de note",
+                    "createdAt": "2025-01-10T12:34:56Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/events/{userId}": {
+    "get": {
+      "summary": "Obtenir les prochains événements d'un utilisateur",
+      "tags": ["Dashboard"],
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'utilisateur",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "maxEvent",
+          "in": "query",
+          "required": false,
+          "description": "Nombre maximum d'événements à récupérer (par défaut 10)",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Les prochains événements de l'utilisateur",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "eventId": 1,
+                    "title": "Réunion de projet",
+                    "date": "2025-01-15T14:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/groups": {
+    "get": {
+      "summary": "Obtenir le nombre d'apprentis par groupe",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre d'apprentis par groupe",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "groupe1": 50,
+                  "groupe2": 60
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/apprentices/promotion": {
+    "get": {
+      "summary": "Obtenir le nombre d'apprentis par promotion",
+      "parameters": [
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "description": "Nombre maximum de promotions à récupérer (par défaut 10)",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Le nombre d'apprentis par promotion",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "promotion1": 50,
+                  "promotion2": 60
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/deliverable/event/{eventId}": {
+    "get": {
+      "summary": "Obtenir les livrables par événement",
+      "tags": ["Dashboard"],
+      "parameters": [
+        {
+          "name": "eventId",
+          "in": "path",
+          "required": true,
+          "description": "ID de l'événement pour lequel récupérer les livrables",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Les livrables associés à l'événement",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "example": {
+                    "deliverableId": 1,
+                    "title": "Livrable 1",
+                    "description": "Description du livrable",
+                    "dueDate": "2025-01-15T12:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
+        }
+      }
+    }
+  },
+  "/dashboard/deliverable/event": {
+    "get": {
+      "summary": "Obtenir le nombre de livrables par événement",
+      "tags": ["Dashboard"],
+      "responses": {
+        "200": {
+          "description": "Les livrables associés à chaque événement",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "example": {
+                  "eventId1": [
+                    {
+                      "deliverableId": 1,
+                      "title": "Livrable 1",
+                      "description": "Description du livrable",
+                      "dueDate": "2025-01-15T12:00:00Z"
+                    }
+                  ],
+                  "eventId2": [
+                    {
+                      "deliverableId": 2,
+                      "title": "Livrable 2",
+                      "description": "Description du livrable",
+                      "dueDate": "2025-01-15T12:00:00Z"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Erreur interne du serveur"
         }
       }
     }

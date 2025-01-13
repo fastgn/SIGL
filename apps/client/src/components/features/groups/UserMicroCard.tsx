@@ -37,7 +37,7 @@ export const UserMicroCard = ({ user, last, users, setUsers, groupId }: UserMicr
   return (
     <>
       <div className="flex items-center gap-3">
-        <Avatar>
+        <Avatar className="h-10 w-10">
           <AvatarImage
             src={`https://api.dicebear.com/6.x/initials/svg?seed=${name}`}
             alt={name}

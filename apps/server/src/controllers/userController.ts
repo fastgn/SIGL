@@ -146,7 +146,11 @@ const userController = {
       }
       const user: UserWithRoles | null = await db.user.findUnique({
         include: {
-          apprentice: true,
+          apprentice: {
+            include: {
+              trainingDiary: true,
+            },
+          },
           apprenticeCoordinator: true,
           apprenticeMentor: true,
           curriculumManager: true,
