@@ -146,8 +146,7 @@ const LoginForm = () => {
               Se souvenir de moi
             </Label>
           </div>
-
-          <Button type="submit" variant="user" className="w-40">
+          <Button type="submit" variant="user" className="w-full">
             Se connecter
           </Button>
         </form>

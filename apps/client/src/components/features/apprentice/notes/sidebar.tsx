@@ -8,7 +8,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
 import { Note } from "./notes-page";
 import { Plus } from "lucide-react";
 import { cn } from "@/utilities/style";
@@ -18,7 +17,7 @@ import { useNote } from "./note-context";
 type Props = {
   remoteNotes: Note[];
   onNoteLoad?: (note: Note) => void;
-  onCreateNew: () => Promise<Note>;
+  onCreateNew?: () => Promise<Note>;
   selectedNoteId?: number;
   editingNoteId?: number;
 };
@@ -33,6 +32,7 @@ export const NoteEditorSidebar = ({
   const notes = useNote();
 
   const createNew = async () => {
+    if (!onCreateNew) return;
     const note = await onCreateNew();
     loadNote(note);
   };
@@ -47,14 +47,16 @@ export const NoteEditorSidebar = ({
 
   return (
     <Sidebar variant="block">
-      {/* <SidebarHeader /> */}
       <SidebarContent className="border-r-2">
         <ScrollArea>
           <SidebarGroup>
             <SidebarGroupLabel>Notes</SidebarGroupLabel>
-            <SidebarGroupAction title="Ajouter une note" onClick={createNew}>
-              <Plus /> <span className="sr-only">Ajouter une note</span>
-            </SidebarGroupAction>
+            {!!onCreateNew && (
+              <SidebarGroupAction title="Ajouter une note" onClick={createNew}>
+                <Plus /> <span className="sr-only">Ajouter une note</span>
+              </SidebarGroupAction>
+            )}
+
             <SidebarGroupContent>
               {remoteNotes.map((note) => (
                 <NoteItem
@@ -64,7 +66,7 @@ export const NoteEditorSidebar = ({
                   editing={note.id == editingNoteId}
                   onClick={() => loadNote(note)}
                   onDelete={deleteNote}
-                  onRename={(note) => {
+                  onRename={() => {
                     console.error("Method not implemented");
                   }}
                 />
@@ -73,7 +75,6 @@ export const NoteEditorSidebar = ({
           </SidebarGroup>
         </ScrollArea>
       </SidebarContent>
-      {/* <SidebarFooter /> */}
     </Sidebar>
   );
 };
@@ -83,8 +84,6 @@ const NoteItem = ({
   selected,
   editing,
   onClick,
-  onRename,
-  onDelete,
 }: {
   note: Note;
   selected?: boolean;
@@ -93,18 +92,7 @@ const NoteItem = ({
   onRename?: (note: Note) => void;
   onDelete?: (note: Note) => void;
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const onMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const onMouseLeave = () => {
-    setIsHovered(false);
-  };
-
   const onClickEvent = (e: any) => {
-    onMouseEnter();
     onClick(e);
   };
 
@@ -112,8 +100,6 @@ const NoteItem = ({
     <SidebarMenuItem key={note.id} className={cn("list-none group")}>
       <SidebarMenuButton
         onClick={onClickEvent}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         className={cn({
           "bg-gray-200": selected,
           italic: editing,

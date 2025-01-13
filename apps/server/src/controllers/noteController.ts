@@ -1,10 +1,11 @@
-import { NoteSchema } from "@sigl/types";
+import { EnumUserRole, NoteSchema } from "@sigl/types";
 import { ControllerError, ControllerSuccess } from "../utils/controller";
 import z from "zod";
 import { ControllerResponse } from "../types/controller";
 import { db } from "../providers/db";
 import logger from "../utils/logger";
 import { UserWithRoles } from "../services/user.service";
+import userService from "../services/user.service";
 
 const noteController = {
   add: async (
@@ -51,21 +52,24 @@ const noteController = {
   getAllFromUser: async (userId: number, user: UserWithRoles): Promise<ControllerResponse> => {
     try {
       // Vérifier les droits de l'utilisateur
-      // TODO : Autoriser l'équipe tutorale de l'apprenti
-      if (userId !== user.id) {
+      const roles = userService.getRoles(user);
+      if (
+        !roles.includes(EnumUserRole.ADMIN) &&
+        !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
+        !roles.includes(EnumUserRole.APPRENTICE_MENTOR) &&
+        userId !== user.id
+      ) {
         return ControllerError.UNAUTHORIZED();
-      }
-
-      if (!user.apprentice) {
-        return ControllerError.UNAUTHORIZED({
-          message: "Seuls les apprentis peuvent voir leurs notes",
-        });
       }
 
       const notes = await db.note.findMany({
         where: {
           trainingDiary: {
-            apprenticeId: user.apprentice.id,
+            apprentice: {
+              user: {
+                id: userId,
+              },
+            },
           },
         },
       });

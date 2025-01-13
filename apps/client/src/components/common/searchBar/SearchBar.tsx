@@ -111,7 +111,10 @@ export const SearchBar = ({
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="empty" className="w-fit p-2 h-fit md:hidden">
+            <Button
+              variant="empty"
+              className={`w-fit p-2 h-fit ${hasSortOptions || hasFilters ? "" : "hidden"} md:hidden`}
+            >
               <span className="relative">
                 <Filter className="w-5 h-5 text-gray-700" />
                 {(filterChoice || sortOptionChoice) && (

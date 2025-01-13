@@ -21,10 +21,11 @@ import api from "@/services/api.service";
 import { getErrorInformation } from "@/utilities/http";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BiannualEvaluationSchema, EnumSemester, EnumSkillStatus, SkillSchema } from "@sigl/types";
-import { Plus } from "lucide-react";
+import { Eye, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -33,10 +34,12 @@ const FormSchema = BiannualEvaluationSchema.sendData;
 
 export const BiEvalForm = ({ apprenticeId }: { apprenticeId: number }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [skills, setSkills] = useState<skillType[]>([]);
   const [currentSkillIndex, setCurrentSkillIndex] = useState<number>(-1);
+  const [diaryId, setDiaryId] = useState<number>();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -84,8 +87,8 @@ export const BiEvalForm = ({ apprenticeId }: { apprenticeId: number }) => {
       (response) => {
         switch (response.status) {
           case 200:
-            console.log(response.data.data.id);
             form.setValue("trainingDiaryId", response.data.data.id);
+            setDiaryId(response.data.data.id);
             break;
         }
       },
@@ -173,17 +176,27 @@ export const BiEvalForm = ({ apprenticeId }: { apprenticeId: number }) => {
   const isSemesterNextButtonDisabled = currentSkillIndex === -1 && !form.getValues("semester");
 
   return (
-    <div>
+    <div className="flex gap-5">
+      <Button
+        variant="add"
+        onClick={() => {
+          navigate(`/diary/${diaryId}`, { replace: true });
+        }}
+        className="p-2 pl-3 pr-4 flex flex-row justify-center gap-1"
+      >
+        <Eye className="h-5 w-5" />
+        Journal de formation
+      </Button>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="add"
               onClick={() => setOpen(true)}
-              className="p-2 flex flex-row justify-center gap-1"
+              className="p-2 pl-3 pr-4 flex flex-row justify-center gap-1"
             >
               <Plus className="h-5 w-5" />
-              Ajouter
+              Ajouter un évaluation
             </Button>
           </TooltipTrigger>
           <TooltipContent>Ajouter une évaluation semestrielle</TooltipContent>

@@ -72,6 +72,17 @@ export const Banner = () => {
     { name: "Apprentis", link: "/myApprentice" },
   ];
 
+  const navItemsMentor = [
+    {
+      name: "Accueil",
+      link: "/home",
+    },
+    {
+      name: "Mes apprentis",
+      link: "/myApprentice",
+    },
+  ];
+
   const navItemsApprentice = [
     { name: "Accueil", link: "/home" },
     { name: "Fichiers", link: "/myfiles" },
@@ -99,6 +110,8 @@ export const Banner = () => {
         return navItemsApprentice;
       case EnumUserRole.EDUCATIONAL_TUTOR:
         return navItemsTutor;
+      case EnumUserRole.APPRENTICE_MENTOR:
+        return navItemsMentor;
       default:
         return navItemsUser;
     }

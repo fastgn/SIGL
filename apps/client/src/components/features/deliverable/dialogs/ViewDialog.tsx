@@ -29,11 +29,13 @@ export const ViewDialog = ({
   deliverables,
   setDeliverables,
   trainingDiaryId,
+  readonly,
 }: {
   event: EventSchemaType;
   deliverables: DeliverableSchemaType[];
   setDeliverables: (deliverables: DeliverableSchemaType[]) => void;
   trainingDiaryId: number;
+  readonly?: boolean;
 }) => {
   const { t } = useTranslation();
   const [endDate, setEndDate] = useState<Date>(new Date(event.endDate));
@@ -103,6 +105,7 @@ export const ViewDialog = ({
               deliverable={deliverable}
               deliverables={deliverables}
               setDeliverables={setDeliverables}
+              readonly={readonly}
             />
           ))}
         </ScrollArea>

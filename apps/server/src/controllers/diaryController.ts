@@ -141,6 +141,36 @@ const diaryController = {
 
     return ControllerSuccess.SUCCESS({ message: "Journal trouvé avec succès", data: diary });
   },
+
+  // Récupérer le propriétaire du journal
+  getOwner: async (diaryId: number) => {
+    if (!diaryId) {
+      logger.error("diaryId est requis");
+      return ControllerError.INVALID_PARAMS({ message: "diaryId est requis" });
+    }
+
+    if (typeof diaryId !== "number") {
+      logger.error("diaryId doit être un nombre");
+      return ControllerError.INVALID_PARAMS({ message: "diaryId doit être un nombre" });
+    }
+
+    const owner = await db.user.findFirst({
+      where: {
+        apprentice: {
+          trainingDiary: {
+            id: diaryId,
+          },
+        },
+      },
+    });
+
+    if (owner === null) {
+      logger.error("L'utilisateur n'existe pas");
+      return ControllerError.USER_NOT_FOUND({ message: "L'utilisateur n'existe pas" });
+    }
+
+    return ControllerSuccess.SUCCESS({ message: "Utilisateur trouvé avec succès", data: owner });
+  },
 };
 
 export default diaryController;

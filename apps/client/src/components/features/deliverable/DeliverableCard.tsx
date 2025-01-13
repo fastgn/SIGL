@@ -7,15 +7,20 @@ import { DeliverableSchema } from "@sigl/types";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/utilities/style";
 
 type DeliverableSchemaType = z.infer<typeof DeliverableSchema.getData>;
 
 export const DeliverableCard = ({
+  className,
   event,
   trainingDiaryId,
+  readonly,
 }: {
+  className?: string;
   event: EventSchemaType;
   trainingDiaryId: number;
+  readonly?: boolean;
 }) => {
   const { t } = useTranslation();
   const [deliverables, setDeliverables] = useState<DeliverableSchemaType[]>([]);
@@ -33,7 +38,10 @@ export const DeliverableCard = ({
   return (
     <Card
       key={event.id}
-      className="h-40 p-7 flex w-full justify-between items-start gap-3 rounded-2xl bg-white shadow-0"
+      className={cn(
+        "h-40 p-7 flex w-full justify-between items-start gap-3 rounded-2xl bg-white shadow-0",
+        className,
+      )}
     >
       <div className="flex flex-row">
         <CardContent>
@@ -55,13 +63,16 @@ export const DeliverableCard = ({
           deliverables={deliverables}
           setDeliverables={setDeliverables}
           trainingDiaryId={trainingDiaryId}
+          readonly={readonly}
         />
 
-        <AddDeliverableDialog
-          event={event}
-          setDeliverables={setDeliverables}
-          trainingDiaryId={trainingDiaryId}
-        />
+        {!readonly && (
+          <AddDeliverableDialog
+            event={event}
+            setDeliverables={setDeliverables}
+            trainingDiaryId={trainingDiaryId}
+          />
+        )}
       </div>
     </Card>
   );
