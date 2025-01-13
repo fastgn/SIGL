@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, Files, MoreHorizontal, Trash2 } from "lucide-react";
+import { Edit, Eye, Files, MoreHorizontal, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface DataTableRowActionsProps<TData> {
@@ -13,6 +13,7 @@ interface DataTableRowActionsProps<TData> {
   onDelete: (value: TData) => void;
   onEdit: (value: TData) => void;
   onAddFiles: (value: TData) => void;
+  onViewDeliverables: (value: TData) => void;
 }
 
 export const DataTableRowActions = <TData,>({
@@ -20,6 +21,7 @@ export const DataTableRowActions = <TData,>({
   onDelete,
   onEdit,
   onAddFiles,
+  onViewDeliverables,
 }: DataTableRowActionsProps<TData>) => {
   const { t } = useTranslation();
 
@@ -43,6 +45,14 @@ export const DataTableRowActions = <TData,>({
         >
           <Files />
           Fichiers
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          onClick={() => onViewDeliverables(row.original)}
+          className="flex flex-row items-center"
+        >
+          <Eye />
+          Livrables
         </DropdownMenuItem>
 
         <DropdownMenuItem

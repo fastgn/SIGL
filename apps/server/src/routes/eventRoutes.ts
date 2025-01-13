@@ -165,6 +165,23 @@ router.delete(
   },
 );
 
+router.get(
+  "/:id/deliverables",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      logger.info(`Récupération des livrables de l'événement ${id}`);
+      const result = await eventController.getDeliverablesFromEvent(parseInt(id));
+      logger.info(`Livrables de l'événement ${id} récupérés`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
 // router.post("/:id/diary/:diaryId", authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]), async (req, res) => {
 //   try {
 //     const { id, diaryId } = req.params;

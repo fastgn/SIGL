@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 import { useTranslation } from "react-i18next";
 import { FileForm } from "./event/FileForm";
 import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { DeliverablesDialog } from "./event/DeliverablesDialog";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 export type EventFileSchemaType = z.infer<typeof EventFileSchema.getData>;
@@ -27,6 +28,7 @@ export const EventsPage = () => {
   const [sortOption, setSortOption] = useState<string | null>(null);
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
   const [isFileFormOpen, setIsFileFormOpen] = useState(false);
+  const [isViewDeliverablesOpen, setIsViewDeliverablesOpen] = useState(false);
 
   const [selectedEvent, setSelectedEvent] = useState<EventSchemaType | null>(null);
 
@@ -137,6 +139,11 @@ export const EventsPage = () => {
     setIsFileFormOpen(true);
   }, []);
 
+  const onViewDeliverables = useCallback((eventObject: EventSchemaType) => {
+    setSelectedEvent(eventObject);
+    setIsViewDeliverablesOpen(true);
+  }, []);
+
   const addFile = (file: EventFileSchemaType) => {
     if (!selectedEvent) {
       return;
@@ -189,6 +196,16 @@ export const EventsPage = () => {
         }}
         selectedEvent={selectedEvent}
       />
+      <DeliverablesDialog
+        selectedEvent={selectedEvent}
+        isOpen={isViewDeliverablesOpen}
+        onOpenChange={(value) => {
+          setIsViewDeliverablesOpen(value);
+          if (!value) {
+            setSelectedEvent(null);
+          }
+        }}
+      />
       <SearchBar
         searchTerm={searchTerm || ""}
         onSearchChange={setSearchTerm}
@@ -203,7 +220,7 @@ export const EventsPage = () => {
         }}
       />
       <EventsTable
-        columns={getColumns({ onDelete, onEdit, onAddFiles, removeFiles })}
+        columns={getColumns({ onDelete, onEdit, onAddFiles, onViewDeliverables, removeFiles })}
         data={filteredEvents}
       />
     </BasicPage>

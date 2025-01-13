@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { TrainingDiarySchema } from "./trainingDiary.schema";
 import { UserSchema } from "./user.schema";
+import { TrainingDiarySchema } from "./trainingDiary.schema";
 
 const getWithBiannualEvaluations = z.object({
   id: z.number(),

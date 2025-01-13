@@ -37,12 +37,6 @@ export interface CompanyEditFormProps {
 const FormSchema = CompanySchema.getData.omit({ id: true });
 type FormSchemaType = z.infer<typeof FormSchema>;
 
-const defaultValues = {
-  name: "",
-  description: "",
-  color: "",
-};
-
 export const CompanyEditForm = ({
   company,
   isOpen,
@@ -53,7 +47,7 @@ export const CompanyEditForm = ({
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
-    defaultValues: defaultValues,
+    defaultValues: company,
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {

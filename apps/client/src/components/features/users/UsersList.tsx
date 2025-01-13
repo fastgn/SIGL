@@ -41,7 +41,7 @@ export const UsersList = ({ users, onDeleteUser, onRequestRefresh }: UserCardLis
     <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
       <Sheet>
         <SheetTrigger asChild>
-          <Card className="w-full h-40 flex justify-center items-center rounded-2xl border-4 border-dashed border-blue-8 bg-transparent shadow-none hover:bg-blue-10">
+          <Card className="w-full h-40 flex justify-center items-center rounded-2xl border-4 border-dashed border-blue-8 bg-transparent shadow-none hover:bg-blue-10 cursor-pointer transition-colors">
             <Plus className="h-12 w-12 text-blue-8" />
           </Card>
         </SheetTrigger>
