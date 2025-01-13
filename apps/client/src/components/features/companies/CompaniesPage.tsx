@@ -1,5 +1,3 @@
-import { Banner } from "@/components/common/banner/Banner";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import api from "@/services/api.service";
@@ -89,7 +87,12 @@ export const CompaniesPage = () => {
       ) : companies.length > 0 ? (
         <div className="grid w-full justify-items-center gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 grid-cols-1">
           {companies.map((company) => (
-            <CompanyCard key={company.id} company={company} onDeleteCompany={handleDeleteCompany} />
+            <CompanyCard
+              key={company.id}
+              company={company}
+              onDeleteCompany={handleDeleteCompany}
+              fetchCompanies={fetchCompanies}
+            />
           ))}
         </div>
       ) : (

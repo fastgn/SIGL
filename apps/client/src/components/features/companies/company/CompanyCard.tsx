@@ -15,15 +15,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CompanyShemaType } from "../CompaniesPage";
+import { CompanyEditForm } from "@/components/features/companies/company/CompanyEditForm.tsx";
 
 export const CompanyCard = ({
   company,
   onDeleteCompany,
+  fetchCompanies,
 }: {
   company: CompanyShemaType;
   onDeleteCompany: (id: number) => void;
+  fetchCompanies: () => void;
 }) => {
   const [companyToDelete, setCompanyToDelete] = useState<number | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleDeleteConfirm = () => {
     if (companyToDelete !== null) {
@@ -100,6 +104,15 @@ export const CompanyCard = ({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <CompanyEditForm
+          company={company}
+          isOpen={isFormOpen}
+          onOpenChange={(value: boolean) => {
+            setIsFormOpen(value);
+          }}
+          fetchCompanies={fetchCompanies}
+        />
       </div>
     </Card>
   );
