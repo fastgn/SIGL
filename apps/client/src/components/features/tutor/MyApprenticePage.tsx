@@ -7,7 +7,7 @@ import { ApprenticesData } from "./apprenticesBiEval/Apprentices";
 export type ApprenticeSchemaType = z.infer<typeof ApprenticeSchema.getWithBiannualEvaluations>;
 
 export const MyApprenticePage = () => {
-  const { id, roles } = useUser();
+  const { id } = useUser();
 
-  return <BasicPage title="Mes apprentis">{ApprenticesData(id!, roles)}</BasicPage>;
+  return <BasicPage title="Mes apprentis">{ApprenticesData(id!)}</BasicPage>;
 };

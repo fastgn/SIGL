@@ -1,35 +1,39 @@
 import Bloc from "@/components/common/bloc/bloc";
+import { useUser } from "@/contexts/UserContext";
 import api from "@/services/api.service.ts";
+import { UpdateIcon } from "@radix-ui/react-icons";
 import { EnumUserRole, isBefore } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ApprenticeSchemaType } from "../MyApprenticePage";
-import { BiEvalForm } from "./BiEvalForm";
 import {
   BiannualEvaluation,
   BiEvalType,
 } from "../../apprentice/biannualEvaluation/BiannualEvaluation";
-import { UpdateIcon } from "@radix-ui/react-icons";
+import { ApprenticeSchemaType } from "../MyApprenticePage";
+import { BiEvalForm } from "./BiEvalForm";
 
-export const ApprenticesData = (id: number, roles: EnumUserRole[]) => {
+export const ApprenticesData = (id: number) => {
   const [apprentices, setApprentices] = useState<ApprenticeSchemaType[]>([]);
   const [loading, setLoading] = useState(true);
+  const { roles } = useUser();
 
   const fetchApprentices = async () => {
-    try {
-      const endpointPrefix = roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) ? "tutor" : "mentor";
-      const response = await api.get(`/${endpointPrefix}/apprentices/${id}`);
-      setApprentices(response.data.data);
-    } catch (error) {
-      toast.error("Erreur lors de la récupération des apprentis");
-    } finally {
-      setLoading(false);
+    if (roles.length !== 0) {
+      try {
+        const endpointPrefix = roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) ? "tutor" : "mentor";
+        const response = await api.get(`/${endpointPrefix}/apprentices/${id}`);
+        setApprentices(response.data.data);
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des apprentis");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
     fetchApprentices();
-  }, []);
+  }, [roles]);
 
   if (loading) {
     return (

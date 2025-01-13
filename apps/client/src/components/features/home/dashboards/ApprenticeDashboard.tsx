@@ -39,6 +39,7 @@ export const ApprenticeDashboard = () => {
       cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
       layouts={layouts}
       onLayoutChange={handleLayoutChange}
+      containerPadding={[0, 0]}
     >
       <div key="LastNotes">
         <LastNotes />

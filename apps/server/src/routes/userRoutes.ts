@@ -38,37 +38,29 @@ router.get("/", authMiddleware(), async (_req: Request, res: Response) => {
   }
 });
 
-router.get(
-  "/tutors",
-  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
-  async (req: Request, res: Response) => {
-    try {
-      logger.info(`Récupération des tuteurs`);
-      const result = await userController.getAllTutors();
-      logger.info(`Tuteurs récupérés`);
-      reply(res, result);
-    } catch (error: any) {
-      logger.error(`Erreur serveur : ${error.message}`);
-      reply(res, ControllerError.INTERNAL());
-    }
-  },
-);
+router.get("/tutors", authMiddleware(), async (req: Request, res: Response) => {
+  try {
+    logger.info(`Récupération des tuteurs`);
+    const result = await userController.getAllTutors();
+    logger.info(`Tuteurs récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
 
-router.get(
-  "/mentors",
-  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
-  async (req: Request, res: Response) => {
-    try {
-      logger.info(`Récupération des mentors`);
-      const result = await userController.getAllMentors();
-      logger.info(`Mentors récupérés`);
-      reply(res, result);
-    } catch (error: any) {
-      logger.error(`Erreur serveur : ${error.message}`);
-      reply(res, ControllerError.INTERNAL());
-    }
-  },
-);
+router.get("/mentors", authMiddleware(), async (req: Request, res: Response) => {
+  try {
+    logger.info(`Récupération des mentors`);
+    const result = await userController.getAllMentors();
+    logger.info(`Mentors récupérés`);
+    reply(res, result);
+  } catch (error: any) {
+    logger.error(`Erreur serveur : ${error.message}`);
+    reply(res, ControllerError.INTERNAL());
+  }
+});
 
 router.get("/apprentice/:id", authMiddleware(), async (req: Request, res: Response) => {
   try {

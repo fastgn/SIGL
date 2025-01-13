@@ -27,7 +27,7 @@ router.get(
 
 router.post(
   "/",
-  authMiddleware([EnumUserRole.EDUCATIONAL_TUTOR]),
+  authMiddleware([EnumUserRole.EDUCATIONAL_TUTOR, EnumUserRole.APPRENTICE_MENTOR]),
   async (req: Request, res: Response) => {
     try {
       logger.info("Création d'une evaluation semestrielle");

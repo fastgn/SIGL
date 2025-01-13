@@ -47,6 +47,7 @@ export const AdminDashboard = () => {
       layouts={layouts}
       onLayoutChange={handleLayoutChange}
       onResize={handleResize}
+      containerPadding={[0, 0]}
     >
       <div key="NbUser">
         <NbUser />
