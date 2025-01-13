@@ -64,7 +64,7 @@ CREATE TABLE "Apprentice" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "companyId" INTEGER,
-    "promotion" TEXT,
+    "promotion" TEXT DEFAULT 'promotion par défault',
     "poste" TEXT,
     "educationalTutorId" INTEGER,
     "apprenticeMentorId" INTEGER,
@@ -168,6 +168,17 @@ CREATE TABLE "EventFile" (
 );
 
 -- CreateTable
+CREATE TABLE "Meeting" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "date" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Meeting_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "TrainingDiary" (
     "id" SERIAL NOT NULL,
     "description" TEXT,
@@ -222,6 +233,39 @@ CREATE TABLE "EmailTemplate" (
 );
 
 -- CreateTable
+CREATE TABLE "Skill" (
+    "id" SERIAL NOT NULL,
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "inProgressSemester" TEXT,
+    "obtainedSemester" TEXT NOT NULL,
+
+    CONSTRAINT "Skill_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SkillEvaluation" (
+    "id" SERIAL NOT NULL,
+    "status" TEXT NOT NULL,
+    "comment" TEXT NOT NULL,
+    "skillId" INTEGER NOT NULL,
+    "biannualEvaluationId" INTEGER NOT NULL,
+
+    CONSTRAINT "SkillEvaluation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BiannualEvaluation" (
+    "id" SERIAL NOT NULL,
+    "semester" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "trainingDiaryId" INTEGER NOT NULL,
+
+    CONSTRAINT "BiannualEvaluation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_GroupToUser" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -241,6 +285,24 @@ CREATE TABLE "_SpecialityToTeacher" (
 
 -- CreateTable
 CREATE TABLE "_EventToGroup" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_EventToMeeting" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_MeetingPresenter" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_MeetingJury" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -282,6 +344,18 @@ CREATE UNIQUE INDEX "CompanyAccount_companyId_key" ON "CompanyAccount"("companyI
 CREATE UNIQUE INDEX "EmailTemplate_name_key" ON "EmailTemplate"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Skill_code_key" ON "Skill"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Skill_name_key" ON "Skill"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Skill_description_key" ON "Skill"("description");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "SkillEvaluation_skillId_biannualEvaluationId_key" ON "SkillEvaluation"("skillId", "biannualEvaluationId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_GroupToUser_AB_unique" ON "_GroupToUser"("A", "B");
 
 -- CreateIndex
@@ -304,6 +378,24 @@ CREATE UNIQUE INDEX "_EventToGroup_AB_unique" ON "_EventToGroup"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_EventToGroup_B_index" ON "_EventToGroup"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_EventToMeeting_AB_unique" ON "_EventToMeeting"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_EventToMeeting_B_index" ON "_EventToMeeting"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_MeetingPresenter_AB_unique" ON "_MeetingPresenter"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_MeetingPresenter_B_index" ON "_MeetingPresenter"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_MeetingJury_AB_unique" ON "_MeetingJury"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_MeetingJury_B_index" ON "_MeetingJury"("B");
 
 -- AddForeignKey
 ALTER TABLE "GroupFile" ADD CONSTRAINT "GroupFile_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "Group"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -366,7 +458,16 @@ ALTER TABLE "Note" ADD CONSTRAINT "Note_trainingDiaryId_fkey" FOREIGN KEY ("trai
 ALTER TABLE "Deliverable" ADD CONSTRAINT "Deliverable_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Deliverable" ADD CONSTRAINT "Deliverable_trainingDiaryId_fkey" FOREIGN KEY ("trainingDiaryId") REFERENCES "TrainingDiary"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Deliverable" ADD CONSTRAINT "Deliverable_trainingDiaryId_fkey" FOREIGN KEY ("trainingDiaryId") REFERENCES "TrainingDiary"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SkillEvaluation" ADD CONSTRAINT "SkillEvaluation_skillId_fkey" FOREIGN KEY ("skillId") REFERENCES "Skill"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SkillEvaluation" ADD CONSTRAINT "SkillEvaluation_biannualEvaluationId_fkey" FOREIGN KEY ("biannualEvaluationId") REFERENCES "BiannualEvaluation"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BiannualEvaluation" ADD CONSTRAINT "BiannualEvaluation_trainingDiaryId_fkey" FOREIGN KEY ("trainingDiaryId") REFERENCES "TrainingDiary"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_GroupToUser" ADD CONSTRAINT "_GroupToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Group"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -391,3 +492,21 @@ ALTER TABLE "_EventToGroup" ADD CONSTRAINT "_EventToGroup_A_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "_EventToGroup" ADD CONSTRAINT "_EventToGroup_B_fkey" FOREIGN KEY ("B") REFERENCES "Group"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_EventToMeeting" ADD CONSTRAINT "_EventToMeeting_A_fkey" FOREIGN KEY ("A") REFERENCES "Event"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_EventToMeeting" ADD CONSTRAINT "_EventToMeeting_B_fkey" FOREIGN KEY ("B") REFERENCES "Meeting"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MeetingPresenter" ADD CONSTRAINT "_MeetingPresenter_A_fkey" FOREIGN KEY ("A") REFERENCES "Meeting"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MeetingPresenter" ADD CONSTRAINT "_MeetingPresenter_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MeetingJury" ADD CONSTRAINT "_MeetingJury_A_fkey" FOREIGN KEY ("A") REFERENCES "Meeting"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MeetingJury" ADD CONSTRAINT "_MeetingJury_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
