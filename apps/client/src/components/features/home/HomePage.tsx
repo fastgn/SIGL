@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
-import { useUser } from "@/contexts/UserContext";
 import { BasicPage } from "@/components/common/basicPage/BasicPage";
-import { EnumUserRole, UserSchema } from "@sigl/types";
-
-import { Responsive, WidthProvider } from "react-grid-layout";
-import { NextEvent } from "./tiles/NextEvent";
+import { useUser } from "@/contexts/UserContext";
 import api from "@/services/api.service";
+import { EnumUserRole, UserSchema } from "@sigl/types";
+import { useEffect, useState } from "react";
+import { Responsive, WidthProvider } from "react-grid-layout";
 import { z } from "zod";
 import { AdminDashboard } from "./dashboards/AdminDashboard";
 import { ApprenticeDashboard } from "./dashboards/ApprenticeDashboard";

@@ -1,23 +1,21 @@
-import { Banner } from "@/components/common/banner/Banner";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 import Bloc from "@/components/common/bloc/bloc";
-import { FormChangePassword } from "@/components/features/users/user/FormChangePassword";
 import { UserTypeReq } from "@/components/features/users/UsersPage";
+import { FormChangePassword } from "@/components/features/users/user/FormChangePassword";
+import { ApprenticeRoleInfo } from "@/components/features/users/user/apprenticeRoleInfo.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/contexts/UserContext";
 import api from "@/services/api.service";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { DiarySchema, EnumUserRole } from "@sigl/types";
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { ApprenticeRoleInfo } from "@/components/features/users/user/apprenticeRoleInfo.tsx";
 import { ArrowLeft, Check, PencilIcon, Plus, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import z from "zod";
-import { BasicPage } from "@/components/common/basicPage/BasicPage";
 
 export type GroupSchemaType = z.infer<typeof DiarySchema.getData>;
 

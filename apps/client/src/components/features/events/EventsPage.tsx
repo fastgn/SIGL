@@ -1,19 +1,17 @@
-import { Banner } from "@/components/common/banner/Banner";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { SearchBar } from "@/components/common/searchBar/SearchBar";
+import { EventForm } from "@/components/features/events/event/EventForm";
 import { EventsTable } from "@/components/features/events/eventsTable/EventsTable";
 import { getColumns } from "@/components/features/events/eventsTable/getColumns";
-import { EventForm } from "@/components/features/events/event/EventForm";
-import { SearchBar } from "@/components/common/searchBar/SearchBar";
-import { useCallback, useEffect, useState } from "react";
-import { EnumEventType, EnumSortOption, EventFileSchema, EventSchema } from "@sigl/types";
 import api from "@/services/api.service";
-import z from "zod";
 import { getErrorInformation } from "@/utilities/http";
-import { toast } from "sonner";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
+import { EnumEventType, EnumSortOption, EventFileSchema, EventSchema } from "@sigl/types";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FileForm } from "./event/FileForm";
-import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { toast } from "sonner";
+import z from "zod";
 import { DeliverablesDialog } from "./event/DeliverablesDialog";
+import { FileForm } from "./event/FileForm";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 export type EventFileSchemaType = z.infer<typeof EventFileSchema.getData>;

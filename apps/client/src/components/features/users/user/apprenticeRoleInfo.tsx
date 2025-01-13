@@ -94,7 +94,7 @@ export const ApprenticeRoleInfo = ({ id, isEditable }: { id: number; isEditable:
   const handleSave = async () => {
     try {
       // Ici, ajoutez l'appel API pour sauvegarder les modifications
-      const [tutorsRes, CompanyRes, postRes] = await Promise.all([
+      await Promise.all([
         api.patch(`/user/${id}/tutors`, {
           educationalTutorId: roleDescEdit?.educationalTutorId,
           apprenticeMentorId: roleDescEdit?.apprenticeMentorId,
@@ -111,6 +111,7 @@ export const ApprenticeRoleInfo = ({ id, isEditable }: { id: number; isEditable:
       toast.success("Modifications enregistrées avec succès");
     } catch (error) {
       toast.error("Erreur lors de la sauvegarde des modifications");
+      console.error("Error saving apprentice role info:", error);
     }
   };
 

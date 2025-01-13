@@ -1,19 +1,17 @@
-import { Banner } from "@/components/common/banner/Banner";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEffect, useState } from "react";
-import api from "@/services/api.service.ts";
-import env from "@/services/env.service.ts";
-import { useUser } from "@/contexts/UserContext";
+import { BasicPage } from "@/components/common/basicPage/BasicPage";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { GroupSchemaType } from "../groups/GroupsPage";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
+import api from "@/services/api.service.ts";
+import env from "@/services/env.service.ts";
 import { FileDown } from "lucide-react";
-import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { useEffect, useState } from "react";
+import { GroupSchemaType } from "../groups/GroupsPage";
 
 export const MyFilesPage = () => {
   const { id } = useUser();
