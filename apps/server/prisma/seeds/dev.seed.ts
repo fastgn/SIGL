@@ -119,7 +119,34 @@ async function main() {
       },
     },
   });
-
+  // Apprentie dans la promotion Poincaré
+  await db.user.create({
+    data: {
+      lastName: "de la Fontaine",
+      firstName: "Djibril",
+      birthDate: new Date("1993-04-05"),
+      active: true,
+      email: "Djibril.delafontaine@free.com",
+      password: await password.crypt("password"),
+      gender: "Genderfluid Queer",
+      phone: "1111111111",
+      apprentice: {
+        create: {
+          promotion: "Poincaré",
+          trainingDiary: {
+            create: {
+              notes: {
+                create: {
+                  title: "Semaine 1",
+                  content: `<h1 class="heading-node">Première semaine en entreprise</h1><p class="text-node">La première semaine en entreprise a été intense et enrichissante</p>`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
   const groups = [
     { name: "Pointcaré", description: "Promotion 2022/2025", color: "blue" },
     { name: "Newton", description: "Promotion 2021/2024", color: "green" },
@@ -774,8 +801,9 @@ async function main() {
     },
     {
       code: "C8",
-      name: "Spécifique à l'entreprise et non requis au diplôme ESEO, connaissance métiers de la santé, normes et législation associées, …",
-      description: "RGPD, ...",
+      name: "Spécifique",
+      description:
+        "Spécifique à l'entreprise et non requis au diplôme ESEO, connaissance métiers de la santé, normes et législation associées, …",
       inProgressSemester: null,
       obtainedSemester: "S10",
     },

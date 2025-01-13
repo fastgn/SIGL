@@ -1,25 +1,63 @@
-import { Banner } from "@/components/common/banner/Banner.tsx";
-
+import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@/contexts/UserContext";
-import { EnumUserRole } from "@sigl/types";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { BasicPage } from "@/components/common/basicPage/BasicPage";
+import { EnumUserRole, UserSchema } from "@sigl/types";
+
+import { Responsive, WidthProvider } from "react-grid-layout";
+import { NextEvent } from "./tiles/NextEvent";
+import api from "@/services/api.service";
+import { z } from "zod";
+import { AdminDashboard } from "./dashboards/AdminDashboard";
+import { ApprenticeDashboard } from "./dashboards/ApprenticeDashboard";
+import { TutorDashboard } from "./dashboards/TutorDashboard";
+
+type UserSchemaType = z.infer<typeof UserSchema.getData>;
+
+export const ResponsiveGridLayout = WidthProvider(Responsive);
+
+export const getSavedLayouts = (key: string) => {
+  if (typeof window !== "undefined") {
+    const savedLayouts = localStorage.getItem(key);
+    return savedLayouts ? JSON.parse(savedLayouts) : null;
+  }
+  return null;
+};
+
+export const saveLayouts = (key: string, layouts: any) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(key, JSON.stringify(layouts));
+  }
+};
 
 export const HomePage = () => {
-  const { roles } = useUser();
+  const { roles, id } = useUser();
+
+  const [user, setUser] = useState(null as UserSchemaType | null);
+
+  useEffect(() => {
+    if (!id) return;
+    api.get(`/user/${id}`).then((response) => {
+      setUser(response.data.data);
+    });
+  }, [id]);
 
   const getHomeContent = () => {
     switch (roles[0]) {
       case EnumUserRole.ADMIN:
-        return <h2>Admin</h2>;
+      case EnumUserRole.APPRENTICE_COORDINATOR:
+        return <AdminDashboard />;
+
       case EnumUserRole.APPRENTICE:
-        return <h2>Apprenti</h2>;
+        return <ApprenticeDashboard />;
+
       case EnumUserRole.EDUCATIONAL_TUTOR:
-        return <h2>Tuteur pédagogique</h2>;
+      case EnumUserRole.APPRENTICE_MENTOR:
+        return <TutorDashboard />;
+
       default:
-        return <h2>Page non trouvée</h2>;
+        return <h2>Vous n'avez pas de dashboard.</h2>;
     }
   };
 
-  return <BasicPage title="Accueil">{getHomeContent()}</BasicPage>;
+  return <BasicPage title={`Bienvenue ${user?.firstName}`}>{getHomeContent()}</BasicPage>;
 };

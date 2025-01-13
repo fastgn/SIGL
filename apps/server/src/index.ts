@@ -17,6 +17,7 @@ import compagnyAccountRoute from "./routes/compagnyAccountRoute";
 import companyRoutes from "./routes/companyRoutes";
 import meetingRoutes from "./routes/meetingRoutes";
 import tutorRoutes from "./routes/tutorRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
 // Stream /files to Azure Blob Storage
 import { AZURE_STORAGE_CONNECTION_STRING, CONTAINER_NAME } from "./middleware/fileMiddleware";
 // Swagger
@@ -78,6 +79,7 @@ app.use("/company", companyRoutes);
 app.use("/meeting", meetingRoutes);
 app.use("/biannualEvaluations", biannualEvaluationRoutes);
 app.use("/tutor", tutorRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 app.get("/file/:blobName", async (req: Request, res: Response) => {
   const containerName = CONTAINER_NAME;

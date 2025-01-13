@@ -94,7 +94,7 @@ model Apprentice {
   user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyId          Int?
   company            Company?          @relation(fields: [companyId], references: [id])
-  promotion          String?
+  promotion          String?           @default("promotion par défault")
   poste              String?
   educationalTutorId Int?
   educationalTutor   EducationalTutor? @relation(fields: [educationalTutorId], references: [id])
@@ -211,8 +211,8 @@ model Meeting {
 }
 
 model TrainingDiary {
-  id                 Int                  @id @default(autoincrement())
-  description        String?
+  id           Int           @id @default(autoincrement())
+  description  String?
   apprentice   Apprentice    @relation(fields: [apprenticeId], references: [id], onDelete: Cascade)
   apprenticeId Int           @unique
   notes        Note[]

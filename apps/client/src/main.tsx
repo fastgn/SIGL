@@ -9,6 +9,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./components/features/login/LoginPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
+import "./styles/grid.css";
+import "./styles/resize.css";
 import api from "./services/api.service";
 import env from "./services/env.service";
 import { HomePage } from "./components/features/home/HomePage";
