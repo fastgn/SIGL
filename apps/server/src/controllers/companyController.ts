@@ -78,7 +78,15 @@ const companyController = {
   },
   getAllCompany: async () => {
     try {
-      const compagny = await db.company.findMany();
+      const compagny = await db.company.findMany({
+        include: {
+          apprentices: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
       return ControllerSuccess.SUCCESS({
         message: "Tous les Compte compagny récupéré avec succès",
         data: compagny,

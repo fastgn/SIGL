@@ -12,3 +12,4 @@ export * from "./skillEvaluation.schema";
 export * from "./trainingDiary.schema";
 export * from "./apprentice.schema";
 export * from "./meeting.schema";
+export * from "./company.schema";
