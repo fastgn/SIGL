@@ -74,7 +74,7 @@ describe("/company", async () => {
       const { status } = await request(app)
         .get(`/company`)
         .set({
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${"abc"}`,
         });
       expect(status).toBe(401);
     });

@@ -40,7 +40,7 @@ createRoot(document.getElementById("root")!).render(
           <AdminProvider>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/home" element={<HomePage />} />
+              <Route path="/home" element={<ProtectedRoute component={HomePage} />} />
               <Route path="/users" element={<ProtectedRoute component={UsersPage} />} />
               <Route path="/users/:id" element={<ProtectedRoute component={UserDetailsPage} />} />
               <Route
