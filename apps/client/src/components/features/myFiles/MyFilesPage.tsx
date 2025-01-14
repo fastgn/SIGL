@@ -12,6 +12,7 @@ import env from "@/services/env.service.ts";
 import { FileDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GroupSchemaType } from "../groups/GroupsPage";
+import { toast } from "sonner";
 
 export const MyFilesPage = () => {
   const { id } = useUser();
@@ -32,7 +33,7 @@ export const MyFilesPage = () => {
         }
       },
       (err) => {
-        console.log(err);
+        toast.error("Une erreur s'est produite lors de la connexion.");
       },
     );
   }, []);

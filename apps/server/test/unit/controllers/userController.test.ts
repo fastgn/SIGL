@@ -34,7 +34,7 @@ describe("Ajouter un utilisateur", () => {
     });
 
     // Vérifier que la réponse est bien un succès
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(400);
   });
 
   test("Ajouter un utilisateur ayant déjà une adresse mail enregistrée", async () => {

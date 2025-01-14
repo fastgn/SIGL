@@ -5,6 +5,8 @@ test("init Env Service with valid required values", () => {
   const env: RequiredAppEnv = {
     CLIENT_URL: "http://localhost:3000",
     TOKEN_SECRET: "secret",
+    EMAIL_USER: "mail@mail.com",
+    EMAIL_PASS: "password",
   };
   expect(() => EnvService.init({ skipEnvFile: true, skipProcessEnv: true, env })).not.toThrow();
 });

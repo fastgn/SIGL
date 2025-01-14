@@ -86,7 +86,7 @@ export const Banner = () => {
   const navItemsApprentice = [
     { name: "Accueil", link: "/home" },
     { name: "Fichiers", link: "/myfiles" },
-    { name: "Livrables", link: "/deliverables" },
+    { name: "Évènements", link: "/deliverables" },
     { name: "Notes", link: "/notes" },
     { name: "Réunions", link: "/meetings" },
     { name: "Évaluation", link: "/evaluation" },

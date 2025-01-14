@@ -50,7 +50,7 @@ export const DeliverablePage = () => {
   }, [id]);
 
   return (
-    <BasicPage title="Mes livrables">
+    <BasicPage title="Mes événements">
       {isLoading ? (
         <div className="w-full flex justify-center items-center">
           <UpdateIcon className="h-10 w-10 animate-spin" />

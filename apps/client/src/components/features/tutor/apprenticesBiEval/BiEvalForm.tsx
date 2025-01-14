@@ -196,7 +196,7 @@ export const BiEvalForm = ({ apprenticeId }: { apprenticeId: number }) => {
               className="p-2 pl-3 pr-4 flex flex-row justify-center gap-1"
             >
               <Plus className="h-5 w-5" />
-              Ajouter un évaluation
+              Ajouter une évaluation
             </Button>
           </TooltipTrigger>
           <TooltipContent>Ajouter une évaluation semestrielle</TooltipContent>

@@ -309,7 +309,7 @@ const eventController = {
 
     try {
       await Promise.all(promises);
-      console.log("Envoi d'email à des groupes:", groups_id, "avec les variables:", variables);
+      logger.info("Envoi d'email à des groupes:", groups_id, "avec les variables:", variables);
       await emailService.sendEmailToGroups(groups_id, "EVENT_CREATION", variables);
     } catch (error) {
       return ControllerError.INTERNAL({
