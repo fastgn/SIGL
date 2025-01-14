@@ -134,6 +134,8 @@ jobs:
           echo "CLIENT_URL+${{ secrets.PREPROD_CLIENT_URL }}" >> apps/server/.env
           echo "TOKEN_SECRET=${{ secrets.TOKEN_SECRET }}" >> apps/server/.env
           echo "DATABASE_URL=${{ secrets.PREPROD_DATABASE_URL }}" >> apps/server/.env
+          echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> apps/server/.env
+          echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> apps/server/.env
 
       - name: Install Dependencies
         run: pnpm install
