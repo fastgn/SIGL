@@ -2016,6 +2016,15 @@
           "schema": {
             "type": "integer"
           }
+        },
+        {
+          "name": "role",
+          "in": "query",
+          "required": true,
+          "description": "role de l'utilisateur",
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "responses": {
