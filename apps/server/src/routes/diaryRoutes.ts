@@ -84,6 +84,7 @@ router.get("/user/:id", authMiddleware(), async (req, res) => {
     if (
       req.context.user?.id !== parseInt(id) &&
       !roles.includes(EnumUserRole.ADMIN) &&
+      !roles.includes(EnumUserRole.APPRENTICE_COORDINATOR) &&
       !roles.includes(EnumUserRole.EDUCATIONAL_TUTOR) &&
       !roles.includes(EnumUserRole.APPRENTICE_MENTOR) &&
       !roles.includes(EnumUserRole.APPRENTICE)
