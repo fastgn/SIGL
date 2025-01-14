@@ -49,7 +49,10 @@ export const GroupForm = ({ onAddGroup, isOpen, onOpenChange }: GroupFormProps) 
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      files: [],
+    },
   });
 
   useEffect(() => {

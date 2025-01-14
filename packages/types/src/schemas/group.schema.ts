@@ -11,7 +11,7 @@ const getData = z.object({
   description: z.string(),
   color: z.string(),
   users: z.array(UserSchema.getData).optional().nullable(),
-  files: z.array(GroupFileSchema.getData),
+  files: z.array(GroupFileSchema.getData).optional(),
 });
 
 const GroupSchema = {

@@ -52,25 +52,29 @@ export const MyFilesPage = () => {
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="flex flex-col gap-3">
-                    {group.files.map((file) => (
-                      <div
-                        key={file.id}
-                        className="flex flex-row gap-3 p-3 rounded-lg justify-between
+                    {group.files && group.files.length > 0 ? (
+                      group.files.map((file) => (
+                        <div
+                          key={file.id}
+                          className="flex flex-row gap-3 p-3 rounded-lg justify-between
                                                             items-center cursor-pointer bg-blue-10 border-[1px] border-gray-700"
-                      >
-                        <div className="flex flex-row gap-3 items-end">
-                          <h6 className="leading-none text-xl font-semibold">{file.name}</h6>
-                          <p className="leading-none text-base text-gray-500">{file.comment}</p>
-                        </div>
-                        <Button
-                          variant={"user"}
-                          size={"sm"}
-                          onClick={() => window.open(env.get.API_URL + "/file/" + file.blobName)}
                         >
-                          <FileDown className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
+                          <div className="flex flex-row gap-3 items-end">
+                            <h6 className="leading-none text-xl font-semibold">{file.name}</h6>
+                            <p className="leading-none text-base text-gray-500">{file.comment}</p>
+                          </div>
+                          <Button
+                            variant={"user"}
+                            size={"sm"}
+                            onClick={() => window.open(env.get.API_URL + "/file/" + file.blobName)}
+                          >
+                            <FileDown className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500">Aucun fichier disponible</p>
+                    )}
                   </div>
                 </AccordionContent>
               </AccordionItem>
