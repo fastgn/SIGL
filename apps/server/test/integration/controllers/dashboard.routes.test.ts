@@ -140,7 +140,7 @@ describe("/dashboard", () => {
     const token = login.data.token;
     const userId = user.id; // Adjust according to your seeded data
     const response = await request(app)
-      .get(`/dashboard/events/${userId}`)
+      .get(`/dashboard/events/${userId}?role=apprentice`)
       .set({ Authorization: `Bearer ${token}` });
     expect(response.status).toBe(200);
     const response2 = await request(app)
