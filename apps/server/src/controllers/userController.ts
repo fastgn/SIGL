@@ -10,6 +10,31 @@ import userService, { UserWithRoles } from "../services/user.service";
 import { emailService } from "../services/email.service";
 import deliverableController from "./deliverableController";
 
+// Objet role créé en fonction du rôle de l'utilisateur
+const defaultRoleObjects: Record<EnumUserRole, { [key: string]: { create: {} } }> = {
+  [EnumUserRole.APPRENTICE]: {
+    apprentice: { create: {} },
+  },
+  [EnumUserRole.APPRENTICE_COORDINATOR]: {
+    apprenticeCoordinator: { create: {} },
+  },
+  [EnumUserRole.APPRENTICE_MENTOR]: {
+    apprenticeMentor: { create: {} },
+  },
+  [EnumUserRole.CURICULUM_MANAGER]: {
+    curriculumManager: { create: {} },
+  },
+  [EnumUserRole.EDUCATIONAL_TUTOR]: {
+    educationalTutor: { create: {} },
+  },
+  [EnumUserRole.TEACHER]: {
+    teacher: { create: {} },
+  },
+  [EnumUserRole.ADMIN]: {
+    admin: { create: {} },
+  },
+};
+
 const userController = {
   add: async (payload: z.infer<typeof UserSchema.create>): Promise<ControllerResponse> => {
     try {
@@ -37,31 +62,6 @@ const userController = {
 
       const newPassword = Math.random().toString(36).slice(-8);
       const passwordHash = bcrypt.hashSync(newPassword, 10);
-
-      // Objet role créé en fonction du rôle de l'utilisateur
-      const defaultRoleObjects: Record<EnumUserRole, { [key: string]: { create: {} } }> = {
-        [EnumUserRole.APPRENTICE]: {
-          apprentice: { create: {} },
-        },
-        [EnumUserRole.APPRENTICE_COORDINATOR]: {
-          apprenticeCoordinator: { create: {} },
-        },
-        [EnumUserRole.APPRENTICE_MENTOR]: {
-          apprenticeMentor: { create: {} },
-        },
-        [EnumUserRole.CURICULUM_MANAGER]: {
-          curriculumManager: { create: {} },
-        },
-        [EnumUserRole.EDUCATIONAL_TUTOR]: {
-          educationalTutor: { create: {} },
-        },
-        [EnumUserRole.TEACHER]: {
-          teacher: { create: {} },
-        },
-        [EnumUserRole.ADMIN]: {
-          admin: { create: {} },
-        },
-      };
 
       // Forcer l'heure de naissance à 00:00:00
       form.birthDate.setHours(0, 0, 0, 0);
@@ -598,6 +598,133 @@ const userController = {
 
       const roles = userService.getRoles(user);
       return ControllerSuccess.SUCCESS({ data: roles });
+    } catch (error: any) {
+      console.error(error);
+      return ControllerError.INTERNAL();
+    }
+  },
+
+  addMultiple: async (file: Express.Multer.File): Promise<ControllerResponse> => {
+    try {
+      const users = userService.readXlsFile(file);
+      const createdUsers = await Promise.all(
+        users.map(async (user, index) => {
+          const { student, tuteur, maitreApprentissage } = user;
+
+          // Create educational tutor
+          let tuteurUser = await db.user.findUnique({
+            where: { email: tuteur.email },
+            include: {
+              educationalTutor: true,
+            },
+          });
+          if (!tuteurUser) {
+            tuteurUser = await db.user.create({
+              data: {
+                firstName: tuteur.prenom,
+                lastName: tuteur.nom,
+                email: tuteur.email,
+                phone: tuteur.phone || "0000000000",
+                birthDate: tuteur.birthDate ? new Date(tuteur.birthDate) : new Date(),
+                active: true,
+                gender: tuteur.gender || "male",
+                password: bcrypt.hashSync(tuteur.password || "password", 10),
+                ...defaultRoleObjects[EnumUserRole.EDUCATIONAL_TUTOR],
+              },
+              include: {
+                educationalTutor: true,
+              },
+            });
+          }
+
+          // Create apprentice mentor
+          let maitreApprentissageUser = await db.user.findUnique({
+            where: { email: maitreApprentissage.email },
+            include: {
+              apprenticeMentor: true,
+            },
+          });
+
+          if (!maitreApprentissageUser) {
+            maitreApprentissageUser = await db.user.create({
+              data: {
+                firstName: maitreApprentissage.prenom,
+                lastName: maitreApprentissage.nom,
+                email: maitreApprentissage.email,
+                phone: maitreApprentissage.phone || "0000000000",
+                birthDate: maitreApprentissage.birthDate
+                  ? new Date(maitreApprentissage.birthDate)
+                  : new Date(),
+                active: true,
+                gender: maitreApprentissage.gender || "male",
+                password: bcrypt.hashSync(maitreApprentissage.password || "password", 10),
+                ...defaultRoleObjects[EnumUserRole.APPRENTICE_MENTOR],
+              },
+              include: {
+                apprenticeMentor: true,
+              },
+            });
+          }
+          let studentUser = await db.user.findUnique({
+            where: { email: student.email },
+            include: {
+              apprentice: true,
+            },
+          });
+
+          if (studentUser === null) {
+            const tuteurId = tuteurUser.educationalTutor?.id;
+            const maitreApprentissageId = maitreApprentissageUser.apprenticeMentor?.id;
+            if (
+              (!tuteurId && tuteurId !== 0) ||
+              (!maitreApprentissageId && maitreApprentissageId !== 0)
+            ) {
+              return ControllerError.INVALID_PARAMS({
+                message: "Tuteur ou maitre d'apprentissage non trouvé",
+              });
+            }
+
+            studentUser = await db.user.create({
+              data: {
+                firstName: student.prenom,
+                lastName: student.nom,
+                email: student.email,
+                phone: student.phone || "0000000000",
+                birthDate: student.birthDate ? new Date(student.birthDate) : new Date(),
+                active: true,
+                gender: student.gender || "male",
+                password: bcrypt.hashSync(student.password || "password", 10),
+                ...defaultRoleObjects[EnumUserRole.APPRENTICE],
+              },
+              include: {
+                apprentice: true,
+              },
+            });
+            console.log("######################################################################");
+            console.log(
+              await db.educationalTutor.findFirst({
+                where: {
+                  id: tuteurId,
+                },
+              }),
+            );
+            console.log("######################################################################");
+
+            await db.apprentice.update({
+              where: {
+                id: studentUser.apprentice!.id,
+              },
+              data: {
+                educationalTutor: { connect: { id: tuteurId } },
+                apprenticeMentor: { connect: { id: maitreApprentissageId } },
+              },
+            });
+          }
+
+          return { studentUser, tuteurUser, maitreApprentissageUser };
+        }),
+      );
+      return ControllerSuccess.SUCCESS({ data: createdUsers });
     } catch (error: any) {
       console.error(error);
       return ControllerError.INTERNAL();

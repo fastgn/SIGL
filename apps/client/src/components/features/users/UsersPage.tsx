@@ -6,6 +6,10 @@ import { getErrorInformation } from "@/utilities/http";
 import { EnumSortOption, EnumUserRole } from "@sigl/types";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ImportUserForm } from "@/components/features/users/user/ImportUserForm";
+import { GroupSchema } from "@sigl/types";
+import z from "zod";
 
 export type UserTypeReq = {
   id: number;
@@ -35,12 +39,15 @@ export type UserType = {
   roles: string[];
 };
 
+export type GroupSchemaType = z.infer<typeof GroupSchema.getData>;
+
 export const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState<string | null>();
   const [users, setUsers] = useState([] as UserType[]);
   const [listFilter, setListFilter] = useState<string | null>();
   const [sortOption, setSortOption] = useState<string | null>();
   const [filteredUsers, setFilteredUsers] = useState([] as UserType[]);
+  const [isGroupFormOpen, setIsGroupFormOpen] = useState(false);
 
   const fetchUsers = async () => {
     api
@@ -149,7 +156,10 @@ export const UsersPage = () => {
   };
 
   return (
-    <BasicPage title="Utilisateurs">
+    <BasicPage
+      title="Utilisateurs"
+      extraComponent={<ImportUserForm onOpenChange={setIsGroupFormOpen} isOpen={isGroupFormOpen} />}
+    >
       <div className="w-full">
         <SearchBar
           searchTerm={searchTerm || ""}

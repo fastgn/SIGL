@@ -6,6 +6,9 @@ import logger from "../utils/logger";
 import authMiddleware, { CustomRequestUser } from "../middleware/authMiddleware";
 import { EnumUserRole } from "@sigl/types";
 import userService from "../services/user.service";
+import multer from "multer";
+import { MulterRequest } from "../middleware/fileMiddleware";
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
@@ -49,6 +52,43 @@ router.get("/tutors", authMiddleware(), async (req: Request, res: Response) => {
     reply(res, ControllerError.INTERNAL());
   }
 });
+router.post(
+  "/multiples",
+  upload.single("file"),
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (req: MulterRequest, res: Response) => {
+    try {
+      logger.info("Création de plusieurs utilisateurs depuis un csv");
+      console.log(req.file);
+      const file = req.file;
+      if (!file) {
+        throw new Error("File is missing");
+      }
+      const result = await userController.addMultiple(file);
+      logger.info(`Utilisateurs créés`);
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
+
+router.get(
+  "/count",
+  authMiddleware([EnumUserRole.ADMIN, EnumUserRole.APPRENTICE_COORDINATOR]),
+  async (_req: Request, res: Response) => {
+    try {
+      logger.info("Récupération du nombre total d'utilisateurs");
+      const result = await userController.getCount();
+      logger.info("Nombre total d'utilisateurs récupéré");
+      reply(res, result);
+    } catch (error: any) {
+      logger.error(`Erreur serveur : ${error.message}`);
+      reply(res, ControllerError.INTERNAL());
+    }
+  },
+);
 
 router.get("/mentors", authMiddleware(), async (req: Request, res: Response) => {
   try {
