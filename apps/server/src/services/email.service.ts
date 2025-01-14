@@ -64,7 +64,7 @@ class EmailService {
       }
 
       const mailOptions = {
-        from: "ndenoumis@gmail.com",
+        from: process.env.EMAIL_USER!,
         to,
         subject: template.subject,
         html: emailBody,

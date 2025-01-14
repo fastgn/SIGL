@@ -8,6 +8,8 @@ import logger from "../utils/logger";
 export type RequiredAppEnv = {
   CLIENT_URL: string;
   TOKEN_SECRET: string;
+  EMAIL_USER: string;
+  EMAIL_PASS: string;
 };
 
 /**
@@ -53,6 +55,8 @@ class EnvService {
     CLIENT_URL: z.string(),
     TOKEN_SECRET: z.string(),
     NODE_ENV: z.nativeEnum(EnvironmentName),
+    EMAIL_USER: z.string(),
+    EMAIL_PASS: z.string(),
   });
 
   /**
