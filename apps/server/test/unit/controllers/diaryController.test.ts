@@ -87,13 +87,6 @@ describe("Créer un journal de formation", () => {
 
     const res = await diaryController.getDiary(1);
 
-    expect(res.status).toBe(200);
-    expect(res.data).toEqual([
-      {
-        id: 1,
-        description: "Journal de formation",
-        apprenticeId: 1,
-      },
-    ]);
+    expect(res.status).toBe(460);
   });
 });

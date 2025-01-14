@@ -24,17 +24,13 @@ import { Button } from "@/components/ui/button.tsx";
 import { Pencil } from "lucide-react";
 
 export interface CompanyEditFormProps {
-  /** The company data to edit */
   company: CompanyShemaType;
-  /** Whether the dialog is open */
   isOpen: boolean;
-  /** Callback function when dialog open state changes */
   onOpenChange: (open: boolean) => void;
-  /** Callback function to fetch companies */
   fetchCompanies: () => void;
 }
 
-const FormSchema = CompanySchema.getData.omit({ id: true });
+const FormSchema = CompanySchema.getData.omit({ id: true, apprentices: true });
 type FormSchemaType = z.infer<typeof FormSchema>;
 
 export const CompanyEditForm = ({

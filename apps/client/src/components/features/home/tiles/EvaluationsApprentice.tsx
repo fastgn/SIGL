@@ -136,7 +136,6 @@ export const EvaluationApprentice = () => {
             <RadarChart data={data} outerRadius="90%" cx="50%" cy="45%">
               <PolarGrid />
               {semesters.map((semester, index) => {
-                console.log(semester);
                 return (
                   <Radar
                     key={index}

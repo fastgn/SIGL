@@ -87,7 +87,7 @@ export const DeliverablesDialog = ({
                         <p>{user.email}</p>
                       </div>
                     </div>
-                    {user.deliverables.length > 0 ? (
+                    {user.deliverables && user.deliverables.length > 0 ? (
                       <DropdownMenu>
                         <DropdownMenuTrigger>
                           <Button variant="admin" size="smIcon" className="rounded-full">
@@ -95,7 +95,7 @@ export const DeliverablesDialog = ({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          {user.deliverables.map((deliverable, index) => (
+                          {user.deliverables?.map((deliverable, index) => (
                             <DropdownMenuItem
                               key={deliverable.id}
                               onClick={() =>

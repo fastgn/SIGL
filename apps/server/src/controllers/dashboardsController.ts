@@ -22,7 +22,9 @@ const dashboardController = {
         user: true,
       },
       where: {
-        apprenticeMentorId: userId,
+        apprenticeMentor: {
+          userId: userId,
+        },
       },
     });
 
@@ -47,7 +49,9 @@ const dashboardController = {
         user: true,
       },
       where: {
-        educationalTutorId: userId,
+        educationalTutor: {
+          userId: userId,
+        },
       },
     });
 
@@ -119,18 +123,20 @@ const dashboardController = {
   },
 
   getNextEventForApprentices: async (
-    userId: number[],
+    apprenticeIds: number[],
     nbEvent: number,
   ): Promise<ControllerResponse> => {
     const users = await db.user.findMany({
       where: {
-        id: {
-          in: userId,
+        apprentice: {
+          id: {
+            in: apprenticeIds,
+          },
         },
       },
     });
 
-    if (users.length !== userId.length) {
+    if (users.length !== apprenticeIds.length) {
       logger.error("L'utilisateur n'existe pas");
       return ControllerError.INVALID_PARAMS({ message: "L'utilisateur n'existe pas" });
     }
@@ -145,7 +151,7 @@ const dashboardController = {
             users: {
               some: {
                 id: {
-                  in: userId,
+                  in: users.map((user) => user.id),
                 },
               },
             },

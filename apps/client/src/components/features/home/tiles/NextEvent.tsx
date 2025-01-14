@@ -9,6 +9,7 @@ import { useUser } from "@/contexts/UserContext";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { NextEventMicrocard } from "./microcards/NextEventMicrocard";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type EventSchemaType = z.infer<typeof EventSchema.getData>;
 export type ApprenticeSchemaType = z.infer<typeof ApprenticeSchema.getData>;
@@ -88,42 +89,49 @@ export const NextEvent = () => {
   };
 
   useEffect(() => {
-    fetchEvents().finally(() => setIsLoading(false));
     if (
       roles.includes(EnumUserRole.APPRENTICE_MENTOR) ||
       roles.includes(EnumUserRole.EDUCATIONAL_TUTOR)
     ) {
       fetchApprentices();
     }
+    fetchEvents().finally(() => setIsLoading(false));
   }, []);
 
   return (
     <Card className="p-5 flex flex-col gap-5 h-full overflow-hidden">
-      <h1 className="text-xl font-bold">Prochains événements</h1>
+      <h1 className="text-xl font-bold">
+        {roles.includes(EnumUserRole.APPRENTICE_MENTOR) ||
+        roles.includes(EnumUserRole.EDUCATIONAL_TUTOR)
+          ? "Événements des apprentis"
+          : "Prochains événements"}
+      </h1>
       <Separator />
-      <div className="flex flex-col gap-3">
-        {isLoading ? (
-          <div className="flex justify-center items-center h-32">
-            <Spinner />
-          </div>
-        ) : (roles.includes(EnumUserRole.APPRENTICE_MENTOR) ||
-            roles.includes(EnumUserRole.EDUCATIONAL_TUTOR)) &&
-          apprentices.length === 0 ? (
-          <p className="text-sm text-gray-500">Vous n'avez pas d'apprentis</p>
-        ) : events && events.length > 0 ? (
-          events.map((event, index) => (
-            <NextEventMicrocard
-              key={event.id}
-              event={event}
-              index={index}
-              totalEvents={events.length}
-              apprentices={apprentices}
-            />
-          ))
-        ) : (
-          <p className="text-sm text-gray-500">Aucun événement à venir</p>
-        )}
-      </div>
+      <ScrollArea className="overflow-x-auto">
+        <div className="flex flex-col gap-3">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-32">
+              <Spinner />
+            </div>
+          ) : (roles.includes(EnumUserRole.APPRENTICE_MENTOR) ||
+              roles.includes(EnumUserRole.EDUCATIONAL_TUTOR)) &&
+            apprentices.length === 0 ? (
+            <p className="text-sm text-gray-500">Vous n'avez pas d'apprentis</p>
+          ) : events && events.length > 0 ? (
+            events.map((event, index) => (
+              <NextEventMicrocard
+                key={event.id}
+                event={event}
+                index={index}
+                totalEvents={events.length}
+                apprentices={apprentices}
+              />
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">Aucun événement à venir</p>
+          )}
+        </div>
+      </ScrollArea>
     </Card>
   );
 };

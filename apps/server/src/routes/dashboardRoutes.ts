@@ -164,9 +164,10 @@ router.get(
         reply(res, result);
       } else if (role === "mentor") {
         const apprenticeRes = await dashboardController.getApprenticeOfMentor(parseInt(userId));
-        const apprentices = apprenticeRes.data as number[];
+        const apprentices = apprenticeRes.data;
+        const apprenticesIds = apprentices.map((apprentice: any) => apprentice.id);
         const result = await dashboardController.getNextEventForApprentices(
-          apprentices,
+          apprenticesIds,
           parseInt(limit),
         );
         logger.info("Prochain événement récupéré");
@@ -174,8 +175,9 @@ router.get(
       } else if (role === "tutor") {
         const apprenticeRes = await dashboardController.getApprenticesOfTutor(parseInt(userId));
         const apprentices = apprenticeRes.data as number[];
+        const apprenticesIds = apprentices.map((apprentice: any) => apprentice.id);
         const result = await dashboardController.getNextEventForApprentices(
-          apprentices,
+          apprenticesIds,
           parseInt(limit),
         );
         logger.info("Prochain événement récupéré");
