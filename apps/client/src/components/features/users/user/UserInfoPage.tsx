@@ -141,7 +141,7 @@ export const UserDetailsPage = () => {
       (diary ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant={"add"} onClick={() => navigate(`/users/${id}/training-diary`)}>
+            <Button variant={"add"} onClick={() => navigate(`/diary/${diary.id}`)}>
               Journal de formation
             </Button>
           </TooltipTrigger>
