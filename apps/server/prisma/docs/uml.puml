@@ -1,14 +1,15 @@
 @startuml
-hide circle
+
+title Diagramme UML de la base de données Prisma SIGL
 
 entity User {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   lastName: String
   firstName: String
   birthDate: DateTime
   gender: String
-  email: String <<Unique>>
+  email: String [Unique]
   password: String
   phone: String
   active: Boolean
@@ -17,110 +18,142 @@ entity User {
 }
 
 entity Group {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   name: String
   description: String
   color: String
 }
 
+entity Note {
+  * id: Int [PK]
+  --
+  title: String
+  content: String
+}
+
+entity CurriculumManager{
+  * id: Int [PK]
+  --
+  DateDebut: date
+  DateFin: date
+}
+
 entity GroupFile {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   name: String
-  comment: String
+  comment: String?
   blobName: String
   createdAt: DateTime
 }
 
 entity FormationCenter {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   name: String
   address: String
   city: String
   country: String
-  studentNumber: Int
-  description: String
-  field: String
+  studentNumber: Int?
+  description: String?
+  field: String?
 }
 
 entity EducationalTutor {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
+  userId: Int [Unique]
 }
 
 entity Apprentice {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
-  promotion: String
-  poste: String
-}
-
-entity ApprenticeMentor {
-  * id: Int <<PK>>
-  --
-  poste: String
-}
-
-entity Teacher {
-  * id: Int <<PK>>
-  --
-  startDate: DateTime
-  endDate: DateTime
-}
-
-entity CurriculumManager {
-  * id: Int <<PK>>
-  --
-  dateDebut: DateTime
-  dateFin: DateTime
-}
-
-entity ApprenticeCoordinator {
-  * id: Int <<PK>>
-  --
-  dateDebut: DateTime
-  dateFin: DateTime
-}
-
-entity Admin {
-  * idAdmin: Int <<PK>>
-  --
+  userId: Int [Unique]
+  companyId: Int?
+  promotion: String?
+  poste: String?
 }
 
 entity Company {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   name: String
   address: String
   city: String
   country: String
-  description: String
-  apprenticeNumber: Int
+  description: String?
+  apprenticeNumber: Int?
+  opco: String?
+}
+
+entity Speciality {
+  * id: Int [PK]
+  --
+  name: String
 }
 
 entity Event {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   type: String
-  description: String
+  description: String?
   endDate: DateTime
 }
 
+entity EventFile {
+  * id: Int [PK]
+  --
+  name: String
+  comment: String?
+  blobName: String
+  createdAt: DateTime
+}
+
 entity Meeting {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
   title: String
-  description: String
+  description: String?
   date: DateTime
   createdAt: DateTime
 }
 
 entity TrainingDiary {
-  * id: Int <<PK>>
+  * id: Int [PK]
   --
+  description: String?
+}
+
+entity Skill {
+  * id: Int [PK]
+  --
+  code: String [Unique]
+  name: String [Unique]
   description: String
+  inProgressSemester: String?
+  obtainedSemester: String
+}
+
+entity SkillEvaluation {
+  * id: Int [PK]
+  --
+  status: String
+  comment: String
+}
+
+entity BiannualEvaluation {
+  * id: Int [PK]
+  --
+  semester: String
+  createdAt: DateTime
+}
+
+entity ApprenticeCoordinator {
+  * id: Int [PK]
+  --
+  DateDebut: date
+  DateFin: date
 }
 
 entity Deliverable {
@@ -131,108 +164,34 @@ entity Deliverable {
   createdAt: DateTime
 }
 
-entity Note {
-  * id: Int <<PK>>
-  --
-  title: String
-  content: String
-  creationDate: DateTime
-  updateDate: DateTime
-}
-
-entity Speciality {
-  * id: Int <<PK>>
-  --
-  name: String
-}
-
-entity EmailTemplate {
-  * id: Int <<PK>>
-  --
-  name: String <<Unique>>
-  subject: String
-  body: String
-}
-
-entity Skill {
-  * id: Int <<PK>>
-  --
-  code: String <<Unique>>
-  name: String <<Unique>>
-  description: String <<Unique>>
-  inProgressSemester: String
-  obtainedSemester: String
-}
-
-entity SkillEvaluation {
-  * id: Int <<PK>>
-  --
-  status: String
-  comment: String
-}
-
-entity EventFile {
-  * id: Int <<PK>>
-  --
-  name: String
-  comment: String
-  blobName: String
-  createdAt: DateTime
-}
-
-entity BiannualEvaluation {
-  * id: Int <<PK>>
-  --
-  semester: String
-  createdAt: DateTime
-}
-
-entity CompanyAccount {
-  * id: Int <<PK>>
-  --
-  userId: Int <<Unique>>
-  companyId: Int <<Unique>>
-}
-
-' Relations pour User
-User ||--o| EducationalTutor : educationalTutor
-User ||--o| Apprentice : apprentice
-User ||--o| ApprenticeMentor : apprenticeMentor
-User ||--o| Teacher : teacher
-User ||--o| CurriculumManager : curriculumManager
-User ||--o| ApprenticeCoordinator : apprenticeCoordinator
-User ||--o| Admin : admin
-User ||--o| CompanyAccount : companyAccount
-User ||--o{ Group : groups
-User ||--o{ Meeting : presenterMeetings
-User ||--o{ Meeting : juryMeetings
-
-' Relations entre les autres modèles
-Group ||--o{ GroupFile : files
-Group ||--o{ Event : events
-FormationCenter ||--o{ ApprenticeCoordinator : apprenticeCoordinators
-FormationCenter ||--o{ CurriculumManager : curriculumManagers
-EducationalTutor ||--o{ Apprentice : apprentices
-Apprentice ||--o| Company : company
-Apprentice ||--o| EducationalTutor : educationalTutor
-Apprentice ||--o| ApprenticeMentor : apprenticeMentor
-Apprentice ||--o| TrainingDiary : trainingDiary
-ApprenticeMentor ||--o{ Apprentice : apprentices
-Company ||--o{ Apprentice : apprentices
-Company ||--o{ ApprenticeMentor : apprenticeMentors
-Company ||--o{ Speciality : specialities
-Company ||--o{ CompanyAccount : companyAccounts
-Event ||--o{ Group : groups
-Event ||--o{ Deliverable : delivrables
-Event ||--o{ EventFile : files
-Event ||--o{ Meeting : meetings
-TrainingDiary ||--o{ Deliverable : delivrables
-TrainingDiary ||--o{ Note : notes
-TrainingDiary ||--o{ BiannualEvaluation : biannualEvaluations
-Speciality ||--o{ Teacher : teachers
-Speciality ||--o{ Company : companies
-Skill ||--o{ SkillEvaluation : skillEvaluations
-BiannualEvaluation ||--o{ SkillEvaluation : skillEvaluations
-BiannualEvaluation ||--o| TrainingDiary : trainingDiary
+User "1" -- "*" Group : belongs to
+User "1" -- "*" Meeting : presenter or jury
+User "1" -- "*" EducationalTutor : tutor role
+User "1" -- "*" Apprentice : apprentice role
+User "1" -- "*" Admin : admin role
+User "1" -- "1" ApprenticeMentor : mentor role
+User "1" -- "1" CurriculumManager : curriculum manager role
+User "1" -- "1" CompanyAccount : company account role
+Group "1" -- "*" GroupFile : contains
+Group "1" -- "*" Event : participates in
+Apprentice "1" -- "1" TrainingDiary : has a
+FormationCenter "1" -- "*" EducationalTutor : includes
+FormationCenter "1" -- "*" CurriculumManager : hosts manager
+FormationCenter "1" -- "*" ApprenticeCoordinator : coordinates apprentices
+EducationalTutor "1" -- "*" Apprentice : tutors
+Company "1" -- "*" Apprentice : employs
+Company "1" -- "*" ApprenticeMentor : mentors
+Company "1" -- "*" Speciality : specializes in
+Company "1" -- "*" CompanyAccount : has accounts
+Event "1" -- "*" EventFile : includes
+Event "1" -- "*" Meeting : linked to
+Event "1" -- "*" Deliverable : produces
+TrainingDiary "1" -- "*" SkillEvaluation : evaluates
+TrainingDiary "1" -- "*" Note : has notes
+TrainingDiary "1" -- "*" BiannualEvaluation : schedules
+Skill "1" -- "*" SkillEvaluation : part of
+BiannualEvaluation "1" -- "*" SkillEvaluation : aggregates
+Meeting "1" -- "*" Event : includes
 
 @enduml
+
