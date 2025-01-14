@@ -3,7 +3,7 @@ import multer from "multer";
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
-type MulterRequest = Request & { file?: Express.Multer.File };
+export type MulterRequest = Request & { file?: Express.Multer.File };
 const upload = multer({ storage: multer.memoryStorage() });
 
 export const AZURE_STORAGE_CONNECTION_STRING =
